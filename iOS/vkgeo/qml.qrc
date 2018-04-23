@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/Util.js</file>
+        <file>qml/main.qml</file>
+        <file>qml/Core/MainPage.qml</file>
+    </qresource>
+</RCC>
