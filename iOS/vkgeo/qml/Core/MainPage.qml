@@ -101,11 +101,13 @@ Page {
                     id:          myMapItem
                     anchorPoint: Qt.point(sourceItem.width / 2, sourceItem.height / 2)
 
+                    property bool valid: false
+
                     sourceItem: OpacityMask {
                         id:      opacityMask
                         width:   UtilScript.pt(48)
                         height:  UtilScript.pt(48)
-                        visible: positionSource.valid
+                        visible: myMapItem.valid
 
                         source: Image {
                             width:    opacityMask.width
@@ -125,6 +127,8 @@ Page {
                     }
 
                     onCoordinateChanged: {
+                        valid = true;
+
                         if (map.trackingMyLocation) {
                             map.centerOnMyItem();
 
@@ -143,7 +147,7 @@ Page {
                 z:                    1
                 implicitWidth:        UtilScript.pt(64)
                 implicitHeight:       UtilScript.pt(64)
-                enabled:              positionSource.valid
+                enabled:              myMapItem.valid
 
                 background: Rectangle {
                     color: "transparent"
@@ -174,9 +178,7 @@ Page {
         preferredPositioningMethods: PositionSource.AllPositioningMethods
 
         onPositionChanged: {
-            if (valid) {
-                myMapItem.coordinate = positionSource.position.coordinate;
-            }
+            myMapItem.coordinate = positionSource.position.coordinate;
         }
     }
 }
