@@ -128,7 +128,7 @@ Page {
                         source: Image {
                             width:    opacityMask.width
                             height:   opacityMask.height
-                            source:   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7EjayPhJBi0OEjMthBxFA5Z9X6Ckji13CqQPiPDJ3Gc1YTNKY"
+                            source:   VKHelper.photoUrl
                             fillMode: Image.Stretch
                             visible:  false
                         }

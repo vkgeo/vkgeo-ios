@@ -1,9 +1,10 @@
 #import <VKSdkFramework/VKSdkFramework.h>
 
-#include <QtCore/QString>
 #include <QtCore/QDebug>
 
 #include "vkhelper.h"
+
+const QString VKHelper::DEFAULT_PHOTO_URL("https://vk.com/images/camera_50.png");
 
 static NSArray *AUTH_SCOPE = @[@"friends", @"notes"];
 
@@ -95,7 +96,9 @@ VKHelper *VKHelper::Instance = NULL;
         *stop = (root_view_controller != nil);
     }];
 
-    [root_view_controller presentViewController:controller animated:YES completion:nil];
+    if (root_view_controller != nil) {
+        [root_view_controller presentViewController:controller animated:YES completion:nil];
+    }
 }
 
 - (void)vkSdkNeedCaptchaEnter:(VKError *)captchaError
@@ -108,9 +111,11 @@ VKHelper *VKHelper::Instance = NULL;
         *stop = (root_view_controller != nil);
     }];
 
-    VKCaptchaViewController *captcha_view_controller = [[VKCaptchaViewController captchaControllerWithError:captchaError] autorelease];
+    if (root_view_controller != nil) {
+        VKCaptchaViewController *captcha_view_controller = [[VKCaptchaViewController captchaControllerWithError:captchaError] autorelease];
 
-    [captcha_view_controller presentIn:root_view_controller];
+        [captcha_view_controller presentIn:root_view_controller];
+    }
 }
 
 @end
@@ -119,6 +124,7 @@ VKHelper::VKHelper(QObject *parent) : QObject(parent)
 {
     Initialized        = false;
     AuthState          = VKAuthState::StateUnknown;
+    PhotoUrl           = DEFAULT_PHOTO_URL;
     Instance           = this;
     VKDelegateInstance = NULL;
 }
@@ -133,6 +139,11 @@ VKHelper::~VKHelper()
 int VKHelper::authState() const
 {
     return AuthState;
+}
+
+QString VKHelper::photoUrl() const
+{
+    return PhotoUrl;
 }
 
 void VKHelper::initialize()
@@ -165,4 +176,18 @@ void VKHelper::setAuthState(const int &state)
     Instance->AuthState = state;
 
     emit Instance->authStateChanged(Instance->AuthState);
+
+    if (Instance->AuthState == VKAuthState::StateAuthorized) {
+        VKAccessToken *token = [VKSdk accessToken];
+
+        if (token != nil && token.localUser != nil && token.localUser.photo_50 != nil) {
+            Instance->PhotoUrl = QString::fromNSString(token.localUser.photo_50);
+        } else {
+            Instance->PhotoUrl = DEFAULT_PHOTO_URL;
+        }
+    } else {
+        Instance->PhotoUrl = DEFAULT_PHOTO_URL;
+    }
+
+    emit Instance->photoUrlChanged(Instance->PhotoUrl);
 }
