@@ -6,10 +6,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += src/main.cpp
 
 OBJECTIVE_SOURCES += \
-    src/admobhelper.mm
+    src/vkgeoappdelegate.mm \
+    src/admobhelper.mm \
+    src/vkhelper.mm
 
 HEADERS += \
-    src/admobhelper.h
+    src/admobhelper.h \
+    src/vkhelper.h
 
 RESOURCES += \
     qml.qrc \
@@ -28,6 +31,7 @@ QML_DESIGNER_IMPORT_PATH =
 ios {
     LIBS += -F $$PWD/ios/frameworks \
             -framework GoogleMobileAds \
+            -framework VKSdkFramework \
             -framework AdSupport \
             -framework AvFoundation \
             -framework CFNetwork \
@@ -39,8 +43,14 @@ ios {
             -framework GLKit \
             -framework MediaPlayer \
             -framework MessageUI \
+            -framework SafariServices \
             -framework StoreKit \
             -framework SystemConfiguration
+
+    VK_SDK_FRAMEWORK.files = ios/Frameworks/VKSdkFramework.framework
+    VK_SDK_FRAMEWORK.path = Frameworks
+
+    QMAKE_BUNDLE_DATA += VK_SDK_FRAMEWORK
 
     QMAKE_APPLE_DEVICE_ARCHS = arm64
     QMAKE_INFO_PLIST = ios/Info.plist

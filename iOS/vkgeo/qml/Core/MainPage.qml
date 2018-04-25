@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.3
 import QtGraphicalEffects 1.0
 import QtPositioning 5.8
 import QtLocation 5.9
+import VKHelper 1.0
 
 import "../Util.js" as UtilScript
 
@@ -37,6 +38,7 @@ Page {
     }
 
     property bool appInForeground:  Qt.application.active
+    property int  vkAuthState:      VKHelper.authState
     property int  bannerViewHeight: AdMobHelper.bannerViewHeight
 
     onAppInForegroundChanged: {
@@ -47,11 +49,21 @@ Page {
         }
     }
 
+    onVkAuthStateChanged: {
+        if (vkAuthState === VKAuthState.StateNotAuthorized && StackView.status === StackView.Active) {
+            VKHelper.login();
+        }
+    }
+
     StackView.onStatusChanged: {
         if (appInForeground && StackView.status === StackView.Active) {
             positionSource.active = true;
         } else {
             positionSource.active = false;
+        }
+
+        if (vkAuthState === VKAuthState.StateNotAuthorized && StackView.status === StackView.Active) {
+            VKHelper.login();
         }
     }
 

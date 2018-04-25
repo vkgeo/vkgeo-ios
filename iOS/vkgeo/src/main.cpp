@@ -5,6 +5,7 @@
 #include <QtQml/QQmlContext>
 
 #include "admobhelper.h"
+#include "vkhelper.h"
 
 int main(int argc, char *argv[])
 {
@@ -15,9 +16,12 @@ int main(int argc, char *argv[])
         app.installTranslator(&translator);
     }
 
+    qmlRegisterType<VKAuthState>("VKHelper", 1, 0, "VKAuthState");
+
     QQmlApplicationEngine engine;
 
     engine.rootContext()->setContextProperty(QStringLiteral("AdMobHelper"), new AdMobHelper(&app));
+    engine.rootContext()->setContextProperty(QStringLiteral("VKHelper"), new VKHelper(&app));
 
     engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
 

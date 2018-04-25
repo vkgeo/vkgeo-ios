@@ -83,6 +83,7 @@ Window {
 
     Component.onCompleted: {
         AdMobHelper.initialize();
+        VKHelper.initialize();
 
         mainStackView.push(mainPage);
     }
