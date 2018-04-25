@@ -166,8 +166,8 @@ Page {
                 }
 
                 contentItem: Image {
-                    source:   trackLocationButton.enabled ? "qrc:/resources/images/main/track_location.png" :
-                                                            "qrc:/resources/images/main/track_location_disabled.png"
+                    source:   trackLocationButton.enabled ? "qrc:/resources/images/main/button_track.png" :
+                                                            "qrc:/resources/images/main/button_track_disabled.png"
                     fillMode: Image.PreserveAspectFit
                 }
 

@@ -1,9 +1,9 @@
 <RCC>
     <qresource prefix="/">
         <file>resources/images/main/avatar_mask.png</file>
+        <file>resources/images/main/button_track.png</file>
+        <file>resources/images/main/button_track_disabled.png</file>
         <file>resources/images/main/tab_map.png</file>
         <file>resources/images/main/tab_people.png</file>
-        <file>resources/images/main/track_location.png</file>
-        <file>resources/images/main/track_location_disabled.png</file>
     </qresource>
 </RCC>
