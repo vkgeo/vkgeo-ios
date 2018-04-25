@@ -4,7 +4,6 @@ import QtQuick.Layouts 1.3
 import QtGraphicalEffects 1.0
 import QtPositioning 5.8
 import QtLocation 5.9
-import VKHelper 1.0
 
 import "../Util.js" as UtilScript
 
@@ -16,9 +15,17 @@ Page {
         topPadding:    mainPage.bannerViewHeight
         contentHeight: Math.max(mapTabButton.implicitHeight, peopleTabButton.implicitHeight)
 
+        background: Rectangle {
+            color: "lightsteelblue"
+        }
+
         TabButton {
             id:             mapTabButton
             implicitHeight: UtilScript.pt(48)
+
+            background: Rectangle {
+                color: tabBar.currentIndex === 0 ? "steelblue" : "lightsteelblue"
+            }
 
             contentItem: Image {
                 source:   "qrc:/resources/images/main/tab_map.png"
@@ -30,6 +37,10 @@ Page {
             id:             peopleTabButton
             implicitHeight: UtilScript.pt(48)
 
+            background: Rectangle {
+                color: tabBar.currentIndex === 1 ? "steelblue" : "lightsteelblue"
+            }
+
             contentItem: Image {
                 source:   "qrc:/resources/images/main/tab_people.png"
                 fillMode: Image.PreserveAspectFit
@@ -37,9 +48,8 @@ Page {
         }
     }
 
-    property bool appInForeground:  Qt.application.active
-    property int  vkAuthState:      VKHelper.authState
-    property int  bannerViewHeight: AdMobHelper.bannerViewHeight
+    property bool appInForeground: Qt.application.active
+    property int bannerViewHeight: AdMobHelper.bannerViewHeight
 
     onAppInForegroundChanged: {
         if (appInForeground && StackView.status === StackView.Active) {
@@ -49,21 +59,11 @@ Page {
         }
     }
 
-    onVkAuthStateChanged: {
-        if (vkAuthState === VKAuthState.StateNotAuthorized && StackView.status === StackView.Active) {
-            VKHelper.login();
-        }
-    }
-
     StackView.onStatusChanged: {
         if (appInForeground && StackView.status === StackView.Active) {
             positionSource.active = true;
         } else {
             positionSource.active = false;
-        }
-
-        if (vkAuthState === VKAuthState.StateNotAuthorized && StackView.status === StackView.Active) {
-            VKHelper.login();
         }
     }
 

@@ -4,32 +4,24 @@
 
 #include "vkhelper.h"
 
+static NSArray *AUTH_SCOPE = @[@"friends", @"notes"];
+
 VKHelper *VKHelper::Instance = NULL;
 
 @interface VKDelegate : NSObject<VKSdkDelegate, VKSdkUIDelegate>
 
 - (id)init;
 - (void)dealloc;
-- (void)login;
-- (void)logout;
-
-@property (nonatomic, assign) BOOL Authorized;
 
 @end
 
 @implementation VKDelegate
-
-@synthesize Authorized;
-
-static NSArray *AUTH_SCOPE = @[@"friends", @"notes"];
 
 - (id)init
 {
     self = [super init];
 
     if (self) {
-        Authorized = NO;
-
         [[VKSdk instance] registerDelegate:self];
         [[VKSdk instance] setUiDelegate:self];
 
@@ -37,16 +29,10 @@ static NSArray *AUTH_SCOPE = @[@"friends", @"notes"];
             if (error != nil) {
                 qWarning() << QString::fromNSString([error localizedDescription]);
 
-                Authorized = NO;
-
                 VKHelper::setAuthState(VKAuthState::StateNotAuthorized);
             } else if (state == VKAuthorizationAuthorized) {
-                Authorized = YES;
-
                 VKHelper::setAuthState(VKAuthState::StateAuthorized);
             } else {
-                Authorized = NO;
-
                 VKHelper::setAuthState(VKAuthState::StateNotAuthorized);
             }
         }];
@@ -60,38 +46,21 @@ static NSArray *AUTH_SCOPE = @[@"friends", @"notes"];
     [super dealloc];
 }
 
-- (void)login
-{
-    [VKSdk authorize:AUTH_SCOPE];
-}
-
-- (void)logout
-{
-}
-
 - (void)vkSdkAccessAuthorizationFinishedWithResult:(VKAuthorizationResult *)result
 {
     if (result.error != nil) {
         qWarning() << QString::fromNSString([result.error localizedDescription]);
 
-        Authorized = NO;
-
         VKHelper::setAuthState(VKAuthState::StateNotAuthorized);
     } else if (result.token != nil) {
-        Authorized = YES;
-
         VKHelper::setAuthState(VKAuthState::StateAuthorized);
     } else {
-        Authorized = NO;
-
         VKHelper::setAuthState(VKAuthState::StateNotAuthorized);
     }
 }
 
 - (void)vkSdkUserAuthorizationFailed
 {
-    Authorized = NO;
-
     VKHelper::setAuthState(VKAuthState::StateNotAuthorized);
 }
 
@@ -100,16 +69,10 @@ static NSArray *AUTH_SCOPE = @[@"friends", @"notes"];
     if (result.error != nil) {
         qWarning() << QString::fromNSString([result.error localizedDescription]);
 
-        Authorized = NO;
-
         VKHelper::setAuthState(VKAuthState::StateNotAuthorized);
     } else if (result.token != nil) {
-        Authorized = YES;
-
         VKHelper::setAuthState(VKAuthState::StateAuthorized);
     } else {
-        Authorized = NO;
-
         VKHelper::setAuthState(VKAuthState::StateNotAuthorized);
     }
 }
@@ -117,8 +80,6 @@ static NSArray *AUTH_SCOPE = @[@"friends", @"notes"];
 - (void)vkSdkTokenHasExpired:(VKAccessToken *)expiredToken
 {
     Q_UNUSED(expiredToken)
-
-    Authorized = NO;
 
     VKHelper::setAuthState(VKAuthState::StateNotAuthorized);
 }
@@ -185,14 +146,16 @@ void VKHelper::initialize()
 void VKHelper::login()
 {
     if (Initialized) {
-        [VKDelegateInstance login];
+        [VKSdk authorize:AUTH_SCOPE];
     }
 }
 
 void VKHelper::logout()
 {
     if (Initialized) {
-        [VKDelegateInstance logout];
+        [VKSdk forceLogout];
+
+        setAuthState(VKAuthState::StateNotAuthorized);
     }
 }
 
