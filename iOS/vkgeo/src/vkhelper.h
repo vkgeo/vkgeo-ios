@@ -2,7 +2,6 @@
 #define VKHELPER_H
 
 #include <QtCore/QObject>
-#include <QtCore/QString>
 
 #ifdef __OBJC__
 @class VKDelegate;

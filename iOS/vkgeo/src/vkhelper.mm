@@ -1,5 +1,6 @@
 #import <VKSdkFramework/VKSdkFramework.h>
 
+#include <QtCore/QString>
 #include <QtCore/QDebug>
 
 #include "vkhelper.h"
