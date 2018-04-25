@@ -58,10 +58,10 @@ AdMobHelper *AdMobHelper::Instance = NULL;
 
             [NSLayoutConstraint activateConstraints:@[
                 [BannerView.centerXAnchor constraintEqualToAnchor:guide.centerXAnchor],
-                [BannerView.topAnchor     constraintEqualToAnchor:guide.topAnchor]
+                [BannerView.bottomAnchor  constraintEqualToAnchor:guide.bottomAnchor]
             ]];
 
-            AdMobHelper::setBannerViewHeight(BannerView.frame.size.height + root_view_controller.view.safeAreaInsets.top);
+            AdMobHelper::setBannerViewHeight(BannerView.frame.size.height + root_view_controller.view.safeAreaInsets.bottom);
         } else {
             assert(0);
         }

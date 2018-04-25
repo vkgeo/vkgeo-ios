@@ -12,7 +12,6 @@ Page {
 
     header: TabBar {
         id:            tabBar
-        topPadding:    mainPage.bannerViewHeight
         contentHeight: Math.max(mapTabButton.implicitHeight, peopleTabButton.implicitHeight)
 
         background: Rectangle {
@@ -46,6 +45,11 @@ Page {
                 fillMode: Image.PreserveAspectFit
             }
         }
+    }
+
+    footer: Rectangle {
+        height: mainPage.bannerViewHeight
+        color:  "white"
     }
 
     property bool appInForeground: Qt.application.active
