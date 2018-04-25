@@ -34,8 +34,12 @@ static NSArray *AUTH_SCOPE = @[@"friends", @"notes"];
         [[VKSdk instance] setUiDelegate:self];
 
         [VKSdk wakeUpSession:AUTH_SCOPE completeBlock:^(VKAuthorizationState state, NSError *error) {
-            if (error) {
+            if (error != nil) {
                 qWarning() << QString::fromNSString([error localizedDescription]);
+
+                Authorized = NO;
+
+                VKHelper::setAuthState(VKAuthState::StateNotAuthorized);
             } else if (state == VKAuthorizationAuthorized) {
                 Authorized = YES;
 
@@ -67,13 +71,13 @@ static NSArray *AUTH_SCOPE = @[@"friends", @"notes"];
 
 - (void)vkSdkAccessAuthorizationFinishedWithResult:(VKAuthorizationResult *)result
 {
-    if (result.error) {
+    if (result.error != nil) {
         qWarning() << QString::fromNSString([result.error localizedDescription]);
 
         Authorized = NO;
 
         VKHelper::setAuthState(VKAuthState::StateNotAuthorized);
-    } else if (result.token) {
+    } else if (result.token != nil) {
         Authorized = YES;
 
         VKHelper::setAuthState(VKAuthState::StateAuthorized);
@@ -93,13 +97,13 @@ static NSArray *AUTH_SCOPE = @[@"friends", @"notes"];
 
 - (void)vkSdkAuthorizationStateUpdatedWithResult:(VKAuthorizationResult *)result
 {
-    if (result.error) {
+    if (result.error != nil) {
         qWarning() << QString::fromNSString([result.error localizedDescription]);
 
         Authorized = NO;
 
         VKHelper::setAuthState(VKAuthState::StateNotAuthorized);
-    } else if (result.token) {
+    } else if (result.token != nil) {
         Authorized = YES;
 
         VKHelper::setAuthState(VKAuthState::StateAuthorized);
