@@ -10,7 +10,12 @@ import "../Util.js" as UtilScript
 Page {
     id: mainPage
 
-    header: TabBar {
+    header: Rectangle {
+        height: mainPage.bannerViewHeight
+        color:  "white"
+    }
+
+    footer: TabBar {
         id:            tabBar
         contentHeight: Math.max(mapTabButton.implicitHeight, peopleTabButton.implicitHeight)
 
@@ -45,11 +50,6 @@ Page {
                 fillMode: Image.PreserveAspectFit
             }
         }
-    }
-
-    footer: Rectangle {
-        height: mainPage.bannerViewHeight
-        color:  "white"
     }
 
     property bool appInForeground: Qt.application.active
