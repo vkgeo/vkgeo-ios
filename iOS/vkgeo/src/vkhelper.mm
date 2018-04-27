@@ -1,10 +1,13 @@
-#import <VKSdkFramework/VKSdkFramework.h>
-
+#include <QtCore/QDateTime>
+#include <QtCore/QJsonObject>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonDocument>
 #include <QtCore/QDebug>
 
 #include "vkhelper.h"
 
 const QString VKHelper::DEFAULT_PHOTO_URL("https://vk.com/images/camera_50.png");
+const QString VKHelper::DATA_NOTE_TITLE  ("VKGeo Data");
 
 static NSArray *AUTH_SCOPE = @[@"friends", @"notes"];
 
@@ -112,7 +115,7 @@ VKHelper *VKHelper::Instance = NULL;
     }];
 
     if (root_view_controller != nil) {
-        VKCaptchaViewController *captcha_view_controller = [[VKCaptchaViewController captchaControllerWithError:captchaError] autorelease];
+        VKCaptchaViewController *captcha_view_controller = [VKCaptchaViewController captchaControllerWithError:captchaError];
 
         [captcha_view_controller presentIn:root_view_controller];
     }
@@ -125,8 +128,14 @@ VKHelper::VKHelper(QObject *parent) : QObject(parent)
     Initialized        = false;
     AuthState          = VKAuthState::StateUnknown;
     PhotoUrl           = DEFAULT_PHOTO_URL;
+    DataNoteId         = "";
     Instance           = this;
     VKDelegateInstance = NULL;
+
+    connect(&RequestQueueTimer, SIGNAL(timeout()), this, SLOT(requestQueueTimerTimeout()));
+
+    RequestQueueTimer.setInterval(1000);
+    RequestQueueTimer.start();
 }
 
 VKHelper::~VKHelper()
@@ -171,6 +180,42 @@ void VKHelper::logout()
     }
 }
 
+void VKHelper::reportCoordinate(qreal latitude, qreal longitude)
+{
+    if (Initialized) {
+        QVariantMap request;
+        QVariantMap user_data;
+
+        user_data["update_time"] = QDateTime::currentSecsSinceEpoch();
+        user_data["latitude"]    = latitude;
+        user_data["longitude"]   = longitude;
+
+        QString user_data_string = QString::fromUtf8(QJsonDocument::fromVariant(user_data).toJson(QJsonDocument::Compact));
+
+        if (DataNoteId == "") {
+            request["method"]    = "notes.get";
+            request["context"]   = "reportCoordinate";
+            request["user_data"] = user_data_string;
+
+            EnqueueRequest(request);
+        } else {
+            QVariantMap parameters;
+
+            parameters["note_id"]         = DataNoteId.toInt();
+            parameters["title"]           = DATA_NOTE_TITLE;
+            parameters["text"]            = user_data_string;
+            parameters["privacy_view"]    = "friends";
+            parameters["privacy_comment"] = "nobody";
+
+            request["method"]     = "notes.edit";
+            request["context"]    = "reportCoordinate";
+            request["parameters"] = parameters;
+
+            EnqueueRequest(request);
+        }
+    }
+}
+
 void VKHelper::setAuthState(const int &state)
 {
     Instance->AuthState = state;
@@ -190,4 +235,216 @@ void VKHelper::setAuthState(const int &state)
     }
 
     emit Instance->photoUrlChanged(Instance->PhotoUrl);
+}
+
+void VKHelper::requestQueueTimerTimeout()
+{
+    if (!RequestQueue.isEmpty()) {
+        NSMutableArray *vk_request_array = [NSMutableArray arrayWithCapacity:MAX_BATCH_SIZE];
+
+        for (int i = 0; i < MAX_BATCH_SIZE && !RequestQueue.isEmpty(); i++) {
+            VKRequest *vk_request = ProcessRequest(RequestQueue.dequeue());
+
+            if (vk_request != nil) {
+                [vk_request_array addObject:vk_request];
+            }
+        }
+
+        if (vk_request_array.count > 0) {
+            VKBatchRequest *vk_batch_request = [[[VKBatchRequest alloc] initWithRequestsArray:vk_request_array] autorelease];
+
+            [vk_batch_request executeWithResultBlock:^(NSArray *responses) {
+                Q_UNUSED(responses)
+            } errorBlock:^(NSError *error) {
+                Q_UNUSED(error)
+            }];
+        }
+    }
+}
+
+void VKHelper::EnqueueRequest(QVariantMap request)
+{
+    RequestQueue.enqueue(request);
+
+    if (!RequestQueueTimer.isActive()) {
+        RequestQueueTimer.start();
+    }
+}
+
+VKRequest *VKHelper::ProcessRequest(QVariantMap request)
+{
+    if (request.contains("method") && request.contains("context")) {
+        NSMutableDictionary *vk_parameters = nil;
+
+        if (request.contains("parameters")) {
+            QVariantMap parameters = request["parameters"].toMap();
+
+            vk_parameters = [NSMutableDictionary dictionaryWithCapacity:parameters.size()];
+
+            foreach (QString key, parameters.keys()) {
+                vk_parameters[key.toNSString()] = parameters[key].toString().toNSString();
+            }
+        } else {
+            vk_parameters = [NSMutableDictionary dictionaryWithCapacity:0];
+        }
+
+        if (request["method"] == "notes.get") {
+            VKRequest *vk_request = [VKRequest requestWithMethod:request["method"].toString().toNSString() parameters:vk_parameters];
+
+            vk_request.completeBlock = ^(VKResponse *response) {
+                ProcessNotesGetResponse(request, QString::fromNSString(response.responseString));
+            };
+            vk_request.errorBlock = ^(NSError *error) {
+                Q_UNUSED(error)
+
+                qWarning() << QString("ProcessRequest() : %1 request failed").arg(QString::fromNSString(vk_request.methodName));
+            };
+
+            return vk_request;
+        } else if (request["method"] == "notes.add") {
+            VKRequest *vk_request = [VKRequest requestWithMethod:request["method"].toString().toNSString() parameters:vk_parameters];
+
+            vk_request.completeBlock = ^(VKResponse *response) {
+                ProcessNotesAddResponse(request, QString::fromNSString(response.responseString));
+            };
+            vk_request.errorBlock = ^(NSError *error) {
+                Q_UNUSED(error)
+
+                qWarning() << QString("ProcessRequest() : %1 request failed").arg(QString::fromNSString(vk_request.methodName));
+            };
+
+            return vk_request;
+        } else if (request["method"] == "notes.edit") {
+            VKRequest *vk_request = [VKRequest requestWithMethod:request["method"].toString().toNSString() parameters:vk_parameters];
+
+            vk_request.completeBlock = ^(VKResponse *response) {
+                Q_UNUSED(response)
+            };
+            vk_request.errorBlock = ^(NSError *error) {
+                Q_UNUSED(error)
+
+                qWarning() << QString("ProcessRequest() : %1 request failed").arg(QString::fromNSString(vk_request.methodName));
+
+                if (request["context"] == "reportCoordinate") {
+                    DataNoteId = "";
+                }
+            };
+
+            return vk_request;
+        } else {
+            qWarning() << QString("ProcessRequest() : unknown request method: %1").arg(request["method"].toString());
+
+            return nil;
+        }
+    } else {
+        qWarning() << "ProcessRequest() : invalid request";
+
+        return nil;
+    }
+}
+
+void VKHelper::ProcessNotesGetResponse(QVariantMap request, QString response)
+{
+    if (request["context"] == "reportCoordinate") {
+        QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
+
+        if (!json_document.isNull() && json_document.object().contains("response")) {
+            QJsonObject json_response = json_document.object().value("response").toObject();
+
+            if (json_response.contains("count") && json_response.contains("items")) {
+                QString data_note_id;
+
+                int offset      = 0;
+                int notes_count = json_response.value("count").toInt();
+
+                if (request.contains("parameters") && request["parameters"].toMap().contains("offset")) {
+                    offset = (request["parameters"].toMap())["offset"].toInt();
+                }
+
+                QJsonArray json_items = json_response.value("items").toArray();
+
+                for (int i = 0; i < json_items.count(); i++) {
+                    QJsonObject json_note = json_items.at(i).toObject();
+
+                    if (json_note.contains("id") && json_note.contains("title")) {
+                        if (json_note.value("title") == DATA_NOTE_TITLE) {
+                            data_note_id = QString::number(json_note.value("id").toInt());
+
+                            if (data_note_id != "") {
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (data_note_id != "") {
+                    DataNoteId = data_note_id;
+
+                    if (request.contains("user_data")) {
+                        QVariantMap parameters;
+
+                        parameters["note_id"]         = DataNoteId.toInt();
+                        parameters["title"]           = DATA_NOTE_TITLE;
+                        parameters["text"]            = request["user_data"].toString();
+                        parameters["privacy_view"]    = "friends";
+                        parameters["privacy_comment"] = "nobody";
+
+                        request["method"]     = "notes.edit";
+                        request["context"]    = "reportCoordinate";
+                        request["parameters"] = parameters;
+
+                        EnqueueRequest(request);
+                    } else {
+                        qWarning() << "ProcessNotesGetResponse() : invalid request";
+                    }
+                } else if (offset + json_items.count() < notes_count) {
+                    QVariantMap parameters;
+
+                    parameters["offset"] = offset + json_items.count();
+
+                    request["method"]     = "notes.get";
+                    request["context"]    = "reportCoordinate";
+                    request["parameters"] = parameters;
+
+                    EnqueueRequest(request);
+                } else if (request.contains("user_data")) {
+                    QVariantMap parameters;
+
+                    parameters["title"]           = DATA_NOTE_TITLE;
+                    parameters["text"]            = request["user_data"].toString();
+                    parameters["privacy_view"]    = "friends";
+                    parameters["privacy_comment"] = "nobody";
+
+                    request["method"]     = "notes.add";
+                    request["context"]    = "reportCoordinate";
+                    request["parameters"] = parameters;
+
+                    EnqueueRequest(request);
+                } else {
+                    qWarning() << "ProcessNotesGetResponse() : invalid request";
+                }
+            } else {
+                qWarning() << "ProcessNotesGetResponse() : invalid response";
+            }
+        } else {
+            qWarning() << "ProcessNotesGetResponse() : invalid json";
+        }
+    } else {
+        qWarning() << "ProcessNotesGetResponse() : invalid context";
+    }
+}
+
+void VKHelper::ProcessNotesAddResponse(QVariantMap request, QString response)
+{
+    if (request["context"] == "reportCoordinate") {
+        QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
+
+        if (!json_document.isNull() && json_document.object().contains("response")) {
+            DataNoteId = QString::number(json_document.object().value("response").toInt());
+        } else {
+            qWarning() << "ProcessNotesGetResponse() : invalid json";
+        }
+    } else {
+        qWarning() << "ProcessNotesGetResponse() : invalid context";
+    }
 }
