@@ -243,7 +243,11 @@ void VKHelper::requestQueueTimerTimeout()
         NSMutableArray *vk_request_array = [NSMutableArray arrayWithCapacity:MAX_BATCH_SIZE];
 
         for (int i = 0; i < MAX_BATCH_SIZE && !RequestQueue.isEmpty(); i++) {
-            VKRequest *vk_request = ProcessRequest(RequestQueue.dequeue());
+            QVariantMap request = RequestQueue.dequeue();
+
+            TrackerDelRequest(request);
+
+            VKRequest *vk_request = ProcessRequest(request);
 
             if (vk_request != nil) {
                 [vk_request_array addObject:vk_request];
@@ -262,9 +266,54 @@ void VKHelper::requestQueueTimerTimeout()
     }
 }
 
+void VKHelper::TrackerAddRequest(QVariantMap request)
+{
+    if (request.contains("context")) {
+        QString context = request["context"].toString();
+
+        if (RequestContextTracker.contains(context)) {
+            RequestContextTracker[context]++;
+        } else {
+            RequestContextTracker[context] = 1;
+        }
+    } else {
+        qWarning() << "TrackerAddRequest() : request have no context";
+    }
+}
+
+void VKHelper::TrackerDelRequest(QVariantMap request)
+{
+    if (request.contains("context")) {
+        QString context = request["context"].toString();
+
+        if (RequestContextTracker.contains(context)) {
+            if (RequestContextTracker[context] > 0) {
+                RequestContextTracker[context]--;
+            } else {
+                qWarning() << QString("TrackerDelRequest() : negative tracker value for context: %1").arg(context);
+            }
+        } else {
+            qWarning() << QString("TrackerDelRequest() : no tracker value for context: %1").arg(context);
+        }
+    } else {
+        qWarning() << "TrackerDelRequest() : request have no context";
+    }
+}
+
+bool VKHelper::ContextHaveActiveRequests(QString context)
+{
+    if (RequestContextTracker.contains(context) && RequestContextTracker[context] > 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 void VKHelper::EnqueueRequest(QVariantMap request)
 {
     RequestQueue.enqueue(request);
+
+    TrackerAddRequest(request);
 
     if (!RequestQueueTimer.isActive()) {
         RequestQueueTimer.start();
@@ -292,26 +341,38 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
             VKRequest *vk_request = [VKRequest requestWithMethod:request["method"].toString().toNSString() parameters:vk_parameters];
 
             vk_request.completeBlock = ^(VKResponse *response) {
+                TrackerDelRequest(request);
+
                 ProcessNotesGetResponse(request, QString::fromNSString(response.responseString));
             };
             vk_request.errorBlock = ^(NSError *error) {
                 Q_UNUSED(error)
 
                 qWarning() << QString("ProcessRequest() : %1 request failed").arg(QString::fromNSString(vk_request.methodName));
+
+                TrackerDelRequest(request);
             };
+
+            TrackerAddRequest(request);
 
             return vk_request;
         } else if (request["method"] == "notes.add") {
             VKRequest *vk_request = [VKRequest requestWithMethod:request["method"].toString().toNSString() parameters:vk_parameters];
 
             vk_request.completeBlock = ^(VKResponse *response) {
+                TrackerDelRequest(request);
+
                 ProcessNotesAddResponse(request, QString::fromNSString(response.responseString));
             };
             vk_request.errorBlock = ^(NSError *error) {
                 Q_UNUSED(error)
 
                 qWarning() << QString("ProcessRequest() : %1 request failed").arg(QString::fromNSString(vk_request.methodName));
+
+                TrackerDelRequest(request);
             };
+
+            TrackerAddRequest(request);
 
             return vk_request;
         } else if (request["method"] == "notes.edit") {
@@ -319,16 +380,22 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
 
             vk_request.completeBlock = ^(VKResponse *response) {
                 Q_UNUSED(response)
+
+                TrackerDelRequest(request);
             };
             vk_request.errorBlock = ^(NSError *error) {
                 Q_UNUSED(error)
 
                 qWarning() << QString("ProcessRequest() : %1 request failed").arg(QString::fromNSString(vk_request.methodName));
 
+                TrackerDelRequest(request);
+
                 if (request["context"] == "reportCoordinate") {
                     DataNoteId = "";
                 }
             };
+
+            TrackerAddRequest(request);
 
             return vk_request;
         } else {

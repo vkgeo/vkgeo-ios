@@ -7,6 +7,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
+#include <QtCore/QMap>
 #include <QtCore/QVariantMap>
 #include <QtCore/QQueue>
 #include <QtCore/QTimer>
@@ -63,20 +64,27 @@ private slots:
     void requestQueueTimerTimeout();
 
 private:
+    void TrackerAddRequest(QVariantMap request);
+    void TrackerDelRequest(QVariantMap request);
+
+    bool ContextHaveActiveRequests(QString context);
+
     void       EnqueueRequest(QVariantMap request);
 #ifdef __OBJC__
     VKRequest *ProcessRequest(QVariantMap request);
 #else
     void      *ProcessRequest(QVariantMap request);
 #endif
-    void       ProcessNotesGetResponse(QVariantMap request, QString response);
-    void       ProcessNotesAddResponse(QVariantMap request, QString response);
+
+    void ProcessNotesGetResponse(QVariantMap request, QString response);
+    void ProcessNotesAddResponse(QVariantMap request, QString response);
 
     bool                Initialized;
     int                 AuthState;
     QString             PhotoUrl, DataNoteId;
     QQueue<QVariantMap> RequestQueue;
     QTimer              RequestQueueTimer;
+    QMap<QString, int>  RequestContextTracker;
     static VKHelper    *Instance;
 #ifdef __OBJC__
     VKDelegate         *VKDelegateInstance;
