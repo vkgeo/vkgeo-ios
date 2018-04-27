@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.3
 import QtGraphicalEffects 1.0
 import QtPositioning 5.8
 import QtLocation 5.9
+import VKHelper 1.0
 
 import "../Util.js" as UtilScript
 
@@ -191,7 +192,8 @@ Page {
         onPositionChanged: {
             myMapItem.coordinate = position.coordinate;
 
-            if ((new Date()).getTime() > lastReportTime + reportInterval) {
+            if ((new Date()).getTime() > lastReportTime + reportInterval &&
+                VKHelper.authState === VKAuthState.StateAuthorized) {
                 lastReportTime = (new Date()).getTime();
 
                 VKHelper.reportCoordinate(position.coordinate.latitude,
