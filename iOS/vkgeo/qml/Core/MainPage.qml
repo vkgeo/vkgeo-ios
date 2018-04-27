@@ -56,15 +56,7 @@ Page {
     property int bannerViewHeight: AdMobHelper.bannerViewHeight
 
     onAppInForegroundChanged: {
-        if (appInForeground && StackView.status === StackView.Active) {
-            positionSource.active = true;
-        } else {
-            positionSource.active = false;
-        }
-    }
-
-    StackView.onStatusChanged: {
-        if (appInForeground && StackView.status === StackView.Active) {
+        if (appInForeground) {
             positionSource.active = true;
         } else {
             positionSource.active = false;

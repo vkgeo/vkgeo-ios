@@ -182,7 +182,7 @@ void VKHelper::logout()
 
 void VKHelper::reportCoordinate(qreal latitude, qreal longitude)
 {
-    if (Initialized) {
+    if (Initialized && !ContextHaveActiveRequests("reportCoordinate")) {
         QVariantMap request;
         QVariantMap user_data;
 
