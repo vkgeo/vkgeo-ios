@@ -193,8 +193,18 @@ Page {
         updateInterval:              1000
         preferredPositioningMethods: PositionSource.AllPositioningMethods
 
+        property int reportInterval:  15000
+        property real lastReportTime: 0.0
+
         onPositionChanged: {
-            myMapItem.coordinate = positionSource.position.coordinate;
+            myMapItem.coordinate = position.coordinate;
+
+            if ((new Date()).getTime() > lastReportTime + reportInterval) {
+                lastReportTime = (new Date()).getTime();
+
+                VKHelper.reportCoordinate(position.coordinate.latitude,
+                                          position.coordinate.longitude);
+            }
         }
     }
 }
