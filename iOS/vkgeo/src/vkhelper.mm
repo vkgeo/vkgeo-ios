@@ -183,8 +183,7 @@ void VKHelper::logout()
 void VKHelper::reportCoordinate(qreal latitude, qreal longitude)
 {
     if (Initialized && !ContextHaveActiveRequests("reportCoordinate")) {
-        QVariantMap request;
-        QVariantMap user_data;
+        QVariantMap request, user_data, parameters;
 
         user_data["update_time"] = QDateTime::currentSecsSinceEpoch();
         user_data["latitude"]    = latitude;
@@ -193,14 +192,13 @@ void VKHelper::reportCoordinate(qreal latitude, qreal longitude)
         QString user_data_string = QString::fromUtf8(QJsonDocument::fromVariant(user_data).toJson(QJsonDocument::Compact));
 
         if (DataNoteId == "") {
-            request["method"]    = "notes.get";
-            request["context"]   = "reportCoordinate";
-            request["user_data"] = user_data_string;
+            parameters["count"] = MAX_NOTES_GET_COUNT;
 
-            EnqueueRequest(request);
+            request["method"]     = "notes.get";
+            request["context"]    = "reportCoordinate";
+            request["user_data"]  = user_data_string;
+            request["parameters"] = parameters;
         } else {
-            QVariantMap parameters;
-
             parameters["note_id"]         = DataNoteId.toInt();
             parameters["title"]           = DATA_NOTE_TITLE;
             parameters["text"]            = user_data_string;
@@ -210,9 +208,9 @@ void VKHelper::reportCoordinate(qreal latitude, qreal longitude)
             request["method"]     = "notes.edit";
             request["context"]    = "reportCoordinate";
             request["parameters"] = parameters;
-
-            EnqueueRequest(request);
         }
+
+        EnqueueRequest(request);
     }
 }
 
@@ -343,7 +341,7 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
             vk_request.completeBlock = ^(VKResponse *response) {
                 TrackerDelRequest(request);
 
-                ProcessNotesGetResponse(request, QString::fromNSString(response.responseString));
+                ProcessNotesGetResponse(QString::fromNSString(response.responseString), request);
             };
             vk_request.errorBlock = ^(NSError *error) {
                 Q_UNUSED(error)
@@ -362,7 +360,7 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
             vk_request.completeBlock = ^(VKResponse *response) {
                 TrackerDelRequest(request);
 
-                ProcessNotesAddResponse(request, QString::fromNSString(response.responseString));
+                ProcessNotesAddResponse(QString::fromNSString(response.responseString), request);
             };
             vk_request.errorBlock = ^(NSError *error) {
                 Q_UNUSED(error)
@@ -410,9 +408,9 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
     }
 }
 
-void VKHelper::ProcessNotesGetResponse(QVariantMap request, QString response)
+void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_request)
 {
-    if (request["context"] == "reportCoordinate") {
+    if (resp_request["context"] == "reportCoordinate") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
 
         if (!json_document.isNull() && json_document.object().contains("response")) {
@@ -424,8 +422,8 @@ void VKHelper::ProcessNotesGetResponse(QVariantMap request, QString response)
                 int offset      = 0;
                 int notes_count = json_response.value("count").toInt();
 
-                if (request.contains("parameters") && request["parameters"].toMap().contains("offset")) {
-                    offset = (request["parameters"].toMap())["offset"].toInt();
+                if (resp_request.contains("parameters") && resp_request["parameters"].toMap().contains("offset")) {
+                    offset = (resp_request["parameters"].toMap())["offset"].toInt();
                 }
 
                 QJsonArray json_items = json_response.value("items").toArray();
@@ -444,47 +442,39 @@ void VKHelper::ProcessNotesGetResponse(QVariantMap request, QString response)
                     }
                 }
 
-                if (data_note_id != "") {
-                    DataNoteId = data_note_id;
+                if (resp_request.contains("user_data")) {
+                    QVariantMap request, parameters;
 
-                    if (request.contains("user_data")) {
-                        QVariantMap parameters;
+                    if (data_note_id != "") {
+                        DataNoteId = data_note_id;
 
                         parameters["note_id"]         = DataNoteId.toInt();
                         parameters["title"]           = DATA_NOTE_TITLE;
-                        parameters["text"]            = request["user_data"].toString();
+                        parameters["text"]            = resp_request["user_data"].toString();
                         parameters["privacy_view"]    = "friends";
                         parameters["privacy_comment"] = "nobody";
 
                         request["method"]     = "notes.edit";
                         request["context"]    = "reportCoordinate";
                         request["parameters"] = parameters;
+                    } else if (offset + json_items.count() < notes_count) {
+                        parameters["count"]  = MAX_NOTES_GET_COUNT;
+                        parameters["offset"] = offset + json_items.count();
 
-                        EnqueueRequest(request);
+                        request["method"]     = "notes.get";
+                        request["context"]    = "reportCoordinate";
+                        request["user_data"]  = resp_request["user_data"].toString();
+                        request["parameters"] = parameters;
                     } else {
-                        qWarning() << "ProcessNotesGetResponse() : invalid request";
+                        parameters["title"]           = DATA_NOTE_TITLE;
+                        parameters["text"]            = resp_request["user_data"].toString();
+                        parameters["privacy_view"]    = "friends";
+                        parameters["privacy_comment"] = "nobody";
+
+                        request["method"]     = "notes.add";
+                        request["context"]    = "reportCoordinate";
+                        request["parameters"] = parameters;
                     }
-                } else if (offset + json_items.count() < notes_count) {
-                    QVariantMap parameters;
-
-                    parameters["offset"] = offset + json_items.count();
-
-                    request["method"]     = "notes.get";
-                    request["context"]    = "reportCoordinate";
-                    request["parameters"] = parameters;
-
-                    EnqueueRequest(request);
-                } else if (request.contains("user_data")) {
-                    QVariantMap parameters;
-
-                    parameters["title"]           = DATA_NOTE_TITLE;
-                    parameters["text"]            = request["user_data"].toString();
-                    parameters["privacy_view"]    = "friends";
-                    parameters["privacy_comment"] = "nobody";
-
-                    request["method"]     = "notes.add";
-                    request["context"]    = "reportCoordinate";
-                    request["parameters"] = parameters;
 
                     EnqueueRequest(request);
                 } else {
@@ -501,9 +491,9 @@ void VKHelper::ProcessNotesGetResponse(QVariantMap request, QString response)
     }
 }
 
-void VKHelper::ProcessNotesAddResponse(QVariantMap request, QString response)
+void VKHelper::ProcessNotesAddResponse(QString response, QVariantMap resp_request)
 {
-    if (request["context"] == "reportCoordinate") {
+    if (resp_request["context"] == "reportCoordinate") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
 
         if (!json_document.isNull() && json_document.object().contains("response")) {

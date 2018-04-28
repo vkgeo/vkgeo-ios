@@ -38,7 +38,8 @@ class VKHelper : public QObject
     Q_PROPERTY(QString photoUrl  READ photoUrl  NOTIFY photoUrlChanged)
 
 public:
-    static const int MAX_BATCH_SIZE = 25;
+    static const int MAX_BATCH_SIZE      = 25,
+                     MAX_NOTES_GET_COUNT = 100;
 
     static const QString DEFAULT_PHOTO_URL,
                          DATA_NOTE_TITLE;
@@ -76,8 +77,8 @@ private:
     void      *ProcessRequest(QVariantMap request);
 #endif
 
-    void ProcessNotesGetResponse(QVariantMap request, QString response);
-    void ProcessNotesAddResponse(QVariantMap request, QString response);
+    void ProcessNotesGetResponse(QString response, QVariantMap resp_request);
+    void ProcessNotesAddResponse(QString response, QVariantMap resp_request);
 
     bool                Initialized;
     int                 AuthState;
