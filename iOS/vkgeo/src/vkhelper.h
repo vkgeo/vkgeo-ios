@@ -38,8 +38,9 @@ class VKHelper : public QObject
     Q_PROPERTY(QString photoUrl  READ photoUrl  NOTIFY photoUrlChanged)
 
 public:
-    static const int MAX_BATCH_SIZE      = 25,
-                     MAX_NOTES_GET_COUNT = 100;
+    static const int MAX_BATCH_SIZE        = 25,
+                     MAX_NOTES_GET_COUNT   = 100,
+                     MAX_FRIENDS_GET_COUNT = 5000;
 
     static const QString DEFAULT_PHOTO_URL,
                          DATA_NOTE_TITLE;
@@ -54,12 +55,14 @@ public:
     Q_INVOKABLE void login();
     Q_INVOKABLE void logout();
     Q_INVOKABLE void reportCoordinate(qreal latitude, qreal longitude);
+    Q_INVOKABLE void getFriends();
 
     static void setAuthState(const int &state);
 
 signals:
     void authStateChanged(int authState);
     void photoUrlChanged(QString photoUrl);
+    void friendsReceived(QVariantList friendsList);
 
 private slots:
     void requestQueueTimerTimeout();
@@ -79,6 +82,7 @@ private:
 
     void ProcessNotesGetResponse(QString response, QVariantMap resp_request);
     void ProcessNotesAddResponse(QString response, QVariantMap resp_request);
+    void ProcessFriendsGetResponse(QString response, QVariantMap resp_request);
 
     bool                Initialized;
     int                 AuthState;

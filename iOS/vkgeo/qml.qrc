@@ -4,5 +4,7 @@
         <file>qml/main.qml</file>
         <file>qml/Core/LoginPage.qml</file>
         <file>qml/Core/MainPage.qml</file>
+        <file>qml/Core/Main/FriendsSwipe.qml</file>
+        <file>qml/Core/Main/MapSwipe.qml</file>
     </qresource>
 </RCC>
