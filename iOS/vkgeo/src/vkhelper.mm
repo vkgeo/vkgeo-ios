@@ -740,12 +740,6 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
                         frnd["dataNoteId"] = data_note_id;
 
                         FriendsData[resp_request["user_id"].toString()] = frnd;
-
-                        QVariantList friends_list = FriendsData.values();
-
-                        std::sort(friends_list.begin(), friends_list.end(), compareFriends);
-
-                        emit friendsUpdated(friends_list);
                     } else if (offset + json_items.count() < notes_count) {
                         QVariantMap request, parameters;
 
@@ -769,12 +763,28 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
         } else {
             qWarning() << "ProcessNotesGetResponse() : invalid json";
         }
+
+        if (!ContextHaveActiveRequests(resp_request["context"].toString())) {
+            QVariantList friends_list = FriendsData.values();
+
+            std::sort(friends_list.begin(), friends_list.end(), compareFriends);
+
+            emit friendsUpdated(friends_list);
+        }
     }
 }
 
 void VKHelper::ProcessNotesGetError(QVariantMap err_request)
 {
-    Q_UNUSED(err_request)
+    if (err_request["context"].toString() == "updateFriends") {
+        if (!ContextHaveActiveRequests(err_request["context"].toString())) {
+            QVariantList friends_list = FriendsData.values();
+
+            std::sort(friends_list.begin(), friends_list.end(), compareFriends);
+
+            emit friendsUpdated(friends_list);
+        }
+    }
 }
 
 void VKHelper::ProcessNotesAddResponse(QString response, QVariantMap resp_request)
@@ -923,12 +933,6 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
 
                     EnqueueRequest(request);
                 } else {
-                    QVariantList friends_list = FriendsData.values();
-
-                    std::sort(friends_list.begin(), friends_list.end(), compareFriends);
-
-                    emit friendsUpdated(friends_list);
-
                     if (list_id == "") {
                         QVariantMap request;
 
@@ -962,12 +966,28 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
         } else {
             qWarning() << "ProcessFriendsGetResponse() : invalid json";
         }
+
+        if (!ContextHaveActiveRequests(resp_request["context"].toString())) {
+            QVariantList friends_list = FriendsData.values();
+
+            std::sort(friends_list.begin(), friends_list.end(), compareFriends);
+
+            emit friendsUpdated(friends_list);
+        }
     }
 }
 
 void VKHelper::ProcessFriendsGetError(QVariantMap err_request)
 {
-    Q_UNUSED(err_request)
+    if (err_request["context"].toString() == "updateFriends") {
+        if (!ContextHaveActiveRequests(err_request["context"].toString())) {
+            QVariantList friends_list = FriendsData.values();
+
+            std::sort(friends_list.begin(), friends_list.end(), compareFriends);
+
+            emit friendsUpdated(friends_list);
+        }
+    }
 }
 
 void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp_request)
@@ -1049,12 +1069,30 @@ void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp
         } else {
             qWarning() << "ProcessFriendsGetListsResponse() : invalid json";
         }
+
+        if (resp_request["context"].toString() == "updateFriends") {
+            if (!ContextHaveActiveRequests(resp_request["context"].toString())) {
+                QVariantList friends_list = FriendsData.values();
+
+                std::sort(friends_list.begin(), friends_list.end(), compareFriends);
+
+                emit friendsUpdated(friends_list);
+            }
+        }
     }
 }
 
 void VKHelper::ProcessFriendsGetListsError(QVariantMap err_request)
 {
-    Q_UNUSED(err_request)
+    if (err_request["context"].toString() == "updateFriends") {
+        if (!ContextHaveActiveRequests(err_request["context"].toString())) {
+            QVariantList friends_list = FriendsData.values();
+
+            std::sort(friends_list.begin(), friends_list.end(), compareFriends);
+
+            emit friendsUpdated(friends_list);
+        }
+    }
 }
 
 void VKHelper::ProcessFriendsAddListResponse(QString response, QVariantMap resp_request)
