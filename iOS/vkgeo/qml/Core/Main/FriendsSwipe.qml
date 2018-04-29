@@ -55,6 +55,8 @@ Item {
 
             Row {
                 anchors.fill: parent
+                leftPadding:  UtilScript.pt(8)
+                rightPadding: UtilScript.pt(8)
                 spacing:      UtilScript.pt(8)
 
                 OpacityMask {
@@ -81,7 +83,11 @@ Item {
                 }
 
                 Text {
-                    width:               parent.width - opacityMask.width
+                    width:               parent.width - parent.spacing * 2
+                                                      - parent.leftPadding
+                                                      - parent.rightPadding
+                                                      - opacityMask.width
+                                                      - showOnMapButton.width
                     height:              parent.height
                     text:                "%1 %2".arg(firstName).arg(lastName)
                     color:               "black"
@@ -90,6 +96,16 @@ Item {
                     horizontalAlignment: Text.AlignLeft
                     verticalAlignment:   Text.AlignVCenter
                     wrapMode:            Text.Wrap
+                }
+
+                Image {
+                    id:                     showOnMapButton
+                    anchors.verticalCenter: parent.verticalCenter
+                    width:                  UtilScript.pt(48)
+                    height:                 UtilScript.pt(48)
+                    source:                 "qrc:/resources/images/main/button_show_on_map.png"
+                    fillMode:               Image.PreserveAspectFit
+                    visible:                dataNoteId !== ""
                 }
             }
         }
@@ -123,12 +139,12 @@ Item {
             onTriggered: {
                 refreshImage.visible = true;
 
-                VKHelper.getFriends();
+                VKHelper.updateFriends();
             }
         }
     }
 
     Component.onCompleted: {
-        VKHelper.friendsReceived.connect(updateFriends);
+        VKHelper.friendsUpdated.connect(updateFriends);
     }
 }

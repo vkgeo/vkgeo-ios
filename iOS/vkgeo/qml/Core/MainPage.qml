@@ -66,7 +66,7 @@ Page {
 
     onVkAuthStateChanged: {
         if (vkAuthState === VKAuthState.StateAuthorized) {
-            VKHelper.getFriends();
+            VKHelper.updateFriends();
         }
     }
 

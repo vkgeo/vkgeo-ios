@@ -55,14 +55,14 @@ public:
     Q_INVOKABLE void login();
     Q_INVOKABLE void logout();
     Q_INVOKABLE void reportCoordinate(qreal latitude, qreal longitude);
-    Q_INVOKABLE void getFriends();
+    Q_INVOKABLE void updateFriends();
 
     static void setAuthState(const int &state);
 
 signals:
     void authStateChanged(int authState);
     void photoUrlChanged(QString photoUrl);
-    void friendsReceived(QVariantList friendsList);
+    void friendsUpdated(QVariantList friendsList);
 
 private slots:
     void requestQueueTimerTimeout();
@@ -90,6 +90,7 @@ private:
     QQueue<QVariantMap> RequestQueue;
     QTimer              RequestQueueTimer;
     QMap<QString, int>  RequestContextTracker;
+    QVariantMap         FriendsData;
     static VKHelper    *Instance;
 #ifdef __OBJC__
     VKDelegate         *VKDelegateInstance;
