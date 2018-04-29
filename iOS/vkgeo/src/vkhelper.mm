@@ -388,7 +388,7 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
             vk_parameters = [NSMutableDictionary dictionaryWithCapacity:0];
         }
 
-        if (request["method"] == "notes.get") {
+        if (request["method"].toString() == "notes.get") {
             VKRequest *vk_request = [VKRequest requestWithMethod:request["method"].toString().toNSString() parameters:vk_parameters];
 
             vk_request.completeBlock = ^(VKResponse *response) {
@@ -402,12 +402,14 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
                 qWarning() << QString("ProcessRequest() : %1 request failed").arg(QString::fromNSString(vk_request.methodName));
 
                 TrackerDelRequest(request);
+
+                ProcessNotesGetError(request);
             };
 
             TrackerAddRequest(request);
 
             return vk_request;
-        } else if (request["method"] == "notes.add") {
+        } else if (request["method"].toString() == "notes.add") {
             VKRequest *vk_request = [VKRequest requestWithMethod:request["method"].toString().toNSString() parameters:vk_parameters];
 
             vk_request.completeBlock = ^(VKResponse *response) {
@@ -421,18 +423,20 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
                 qWarning() << QString("ProcessRequest() : %1 request failed").arg(QString::fromNSString(vk_request.methodName));
 
                 TrackerDelRequest(request);
+
+                ProcessNotesAddError(request);
             };
 
             TrackerAddRequest(request);
 
             return vk_request;
-        } else if (request["method"] == "notes.edit") {
+        } else if (request["method"].toString() == "notes.edit") {
             VKRequest *vk_request = [VKRequest requestWithMethod:request["method"].toString().toNSString() parameters:vk_parameters];
 
             vk_request.completeBlock = ^(VKResponse *response) {
-                Q_UNUSED(response)
-
                 TrackerDelRequest(request);
+
+                ProcessNotesEditResponse(QString::fromNSString(response.responseString), request);
             };
             vk_request.errorBlock = ^(NSError *error) {
                 Q_UNUSED(error)
@@ -441,15 +445,13 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
 
                 TrackerDelRequest(request);
 
-                if (request["context"] == "reportCoordinate") {
-                    DataNoteId = "";
-                }
+                ProcessNotesEditError(request);
             };
 
             TrackerAddRequest(request);
 
             return vk_request;
-        } else if (request["method"] == "friends.get") {
+        } else if (request["method"].toString() == "friends.get") {
             VKRequest *vk_request = [VKRequest requestWithMethod:request["method"].toString().toNSString() parameters:vk_parameters];
 
             vk_request.completeBlock = ^(VKResponse *response) {
@@ -463,6 +465,8 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
                 qWarning() << QString("ProcessRequest() : %1 request failed").arg(QString::fromNSString(vk_request.methodName));
 
                 TrackerDelRequest(request);
+
+                ProcessFriendsGetError(request);
             };
 
             TrackerAddRequest(request);
@@ -626,9 +630,12 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
         } else {
             qWarning() << "ProcessNotesGetResponse() : invalid json";
         }
-    } else {
-        qWarning() << "ProcessNotesGetResponse() : invalid context";
     }
+}
+
+void VKHelper::ProcessNotesGetError(QVariantMap err_request)
+{
+    Q_UNUSED(err_request)
 }
 
 void VKHelper::ProcessNotesAddResponse(QString response, QVariantMap resp_request)
@@ -641,8 +648,24 @@ void VKHelper::ProcessNotesAddResponse(QString response, QVariantMap resp_reques
         } else {
             qWarning() << "ProcessNotesGetResponse() : invalid json";
         }
-    } else {
-        qWarning() << "ProcessNotesGetResponse() : invalid context";
+    }
+}
+
+void VKHelper::ProcessNotesAddError(QVariantMap err_request)
+{
+    Q_UNUSED(err_request)
+}
+
+void VKHelper::ProcessNotesEditResponse(QString response, QVariantMap resp_request)
+{
+    Q_UNUSED(response)
+    Q_UNUSED(resp_request)
+}
+
+void VKHelper::ProcessNotesEditError(QVariantMap err_request)
+{
+    if (err_request["context"].toString() == "reportCoordinate") {
+        DataNoteId = "";
     }
 }
 
@@ -762,7 +785,10 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
         } else {
             qWarning() << "ProcessFriendsGetResponse() : invalid json";
         }
-    } else {
-        qWarning() << "ProcessFriendsGetResponse() : invalid context";
     }
+}
+
+void VKHelper::ProcessFriendsGetError(QVariantMap err_request)
+{
+    Q_UNUSED(err_request)
 }

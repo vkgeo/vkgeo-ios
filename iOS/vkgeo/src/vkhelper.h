@@ -81,8 +81,16 @@ private:
 #endif
 
     void ProcessNotesGetResponse(QString response, QVariantMap resp_request);
+    void ProcessNotesGetError(QVariantMap err_request);
+
     void ProcessNotesAddResponse(QString response, QVariantMap resp_request);
+    void ProcessNotesAddError(QVariantMap err_request);
+
+    void ProcessNotesEditResponse(QString response, QVariantMap resp_request);
+    void ProcessNotesEditError(QVariantMap err_request);
+
     void ProcessFriendsGetResponse(QString response, QVariantMap resp_request);
+    void ProcessFriendsGetError(QVariantMap err_request);
 
     bool                Initialized;
     int                 AuthState;
