@@ -124,8 +124,8 @@ VKHelper *VKHelper::Instance = NULL;
 @end
 
 bool compareFriends(const QVariant &friend_1, const QVariant &friend_2) {
-    bool friend_1_online = friend_1.toMap().contains("hasMobile") ? (friend_1.toMap())["hasMobile"].toBool() : false;
-    bool friend_2_online = friend_2.toMap().contains("hasMobile") ? (friend_2.toMap())["hasMobile"].toBool() : false;
+    bool friend_1_online = friend_1.toMap().contains("online") ? (friend_1.toMap())["online"].toBool() : false;
+    bool friend_2_online = friend_2.toMap().contains("online") ? (friend_2.toMap())["online"].toBool() : false;
 
     QString friend_1_name = friend_1.toMap().contains("firstName") &&
                             friend_1.toMap().contains("lastName") ?
