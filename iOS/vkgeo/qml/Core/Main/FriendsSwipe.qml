@@ -15,9 +15,31 @@ Item {
         }
     }
 
+    Image {
+        id:                       refreshImage
+        anchors.top:              parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        width:                    UtilScript.pt(64)
+        height:                   UtilScript.pt(64)
+        source:                   "qrc:/resources/images/main/refresh.png"
+        fillMode:                 Image.PreserveAspectFit
+        visible:                  false
+
+        PropertyAnimation {
+            target:   refreshImage
+            property: "rotation"
+            from:     0
+            to:       360
+            duration: 500
+            loops:    Animation.Infinite
+            running:  refreshImage.visible
+        }
+    }
+
     ListView {
         id:           friendsListView
         anchors.fill: parent
+        z:            1
         orientation:  ListView.Vertical
 
         model: ListModel {
@@ -76,14 +98,31 @@ Item {
             policy: ScrollBar.AlwaysOn
         }
 
-        property real refreshY: 0.0 - UtilScript.pt(64)
+        property bool refreshStarted: false
+
+        onContentYChanged: {
+            if (contentY < 0 - refreshImage.height) {
+                if (!refreshStarted) {
+                    refreshStarted = true;
+
+                    refreshTimer.start();
+                }
+            } else {
+                refreshImage.visible = false;
+
+                refreshStarted = false;
+
+                refreshTimer.stop();
+            }
+        }
 
         Timer {
             id:       refreshTimer
-            interval: 1000
-            running:  friendsListView.contentY < friendsListView.refreshY
+            interval: 500
 
             onTriggered: {
+                refreshImage.visible = true;
+
                 VKHelper.getFriends();
             }
         }
