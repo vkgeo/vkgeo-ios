@@ -56,6 +56,19 @@ Page {
                 anchors.fill: parent
 
                 onClicked: {
+                    var trusted_friends_list = [];
+
+                    for (var i = 0; i < trustedFriendsListModel.count; i++) {
+                        var frnd = trustedFriendsListModel.get(i);
+
+                        if (typeof frnd.id      !== "undefined" &&
+                            typeof frnd.trusted !== "undefined" && frnd.trusted) {
+                            trusted_friends_list.push(frnd.id);
+                        }
+                    }
+
+                    VKHelper.updateTrustedFriendsList(trusted_friends_list);
+
                     mainStackView.pop();
                 }
             }
@@ -63,6 +76,7 @@ Page {
     }
 
     ListView {
+        id:           friendsListView
         anchors.fill: parent
         orientation:  ListView.Vertical
 
@@ -71,11 +85,14 @@ Page {
         }
 
         delegate: Rectangle {
-            width:        ListView.view.width
+            id:           friendDelegate
+            width:        listView.width
             height:       UtilScript.pt(80)
             clip:         true
             border.width: UtilScript.pt(1)
             border.color: "lightsteelblue"
+
+            property var listView: ListView.view
 
             Row {
                 anchors.fill: parent
@@ -127,6 +144,13 @@ Page {
                 Switch {
                     id:                     trustedSwitch
                     anchors.verticalCenter: parent.verticalCenter
+                    checked:                trusted
+
+                    onToggled: {
+                        if (!friendDelegate.listView.setTrust(index, checked)) {
+                            checked = !checked;
+                        }
+                    }
                 }
             }
         }
@@ -134,15 +158,39 @@ Page {
         ScrollBar.vertical: ScrollBar {
             policy: ScrollBar.AlwaysOn
         }
-    }
 
-    Component.onCompleted: {
-        trustedFriendsListModel.clear();
+        property int trustedFriendsCount: 0
 
-        var friends_list = VKHelper.getFriends();
+        function setTrust(index, trusted) {
+            if (trustedFriendsCount < VKHelper.maxTrustedFriendsCount || !trusted) {
+                var frnd_update = { "trusted": trusted };
 
-        for (var i = 0; i < friends_list.length; i++) {
-            trustedFriendsListModel.append(friends_list[i]);
+                trustedFriendsListModel.set(index, frnd_update);
+
+                if (trusted) {
+                    trustedFriendsCount++;
+                } else {
+                    trustedFriendsCount--;
+                }
+
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        Component.onCompleted: {
+            trustedFriendsListModel.clear();
+
+            var friends_list = VKHelper.getFriends();
+
+            for (var i = 0; i < friends_list.length; i++) {
+                trustedFriendsListModel.append(friends_list[i]);
+
+                if (typeof friends_list[i].trusted !== "undefined" && friends_list[i].trusted) {
+                    trustedFriendsCount++;
+                }
+            }
         }
     }
 }

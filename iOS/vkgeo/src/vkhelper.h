@@ -68,6 +68,8 @@ public:
     Q_INVOKABLE void updateFriends();
     Q_INVOKABLE QVariantList getFriends();
 
+    Q_INVOKABLE void updateTrustedFriendsList(QVariantList list);
+
     static void setAuthState(const int &state);
 
 signals:
@@ -102,6 +104,15 @@ private:
 
     void ProcessFriendsGetResponse(QString response, QVariantMap resp_request);
     void ProcessFriendsGetError(QVariantMap err_request);
+
+    void ProcessFriendsGetListsResponse(QString response, QVariantMap resp_request);
+    void ProcessFriendsGetListsError(QVariantMap err_request);
+
+    void ProcessFriendsAddListResponse(QString response, QVariantMap resp_request);
+    void ProcessFriendsAddListError(QVariantMap err_request);
+
+    void ProcessFriendsEditListResponse(QString response, QVariantMap resp_request);
+    void ProcessFriendsEditListError(QVariantMap err_request);
 
     bool                Initialized;
     int                 AuthState, MaxTrustedFriendsCount;
