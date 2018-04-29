@@ -1,5 +1,4 @@
 import QtQuick 2.9
-import QtQuick.Controls 2.2
 import QtGraphicalEffects 1.0
 import QtPositioning 5.8
 import QtLocation 5.9
@@ -90,31 +89,27 @@ Item {
         }
     }
 
-    Button {
-        id:                   trackLocationButton
+    Image {
         anchors.right:        parent.right
         anchors.bottom:       parent.bottom
-        anchors.rightMargin:  UtilScript.pt(4)
-        anchors.bottomMargin: UtilScript.pt(16)
+        anchors.rightMargin:  UtilScript.pt(8)
+        anchors.bottomMargin: UtilScript.pt(24)
         z:                    1
-        implicitWidth:        UtilScript.pt(64)
-        implicitHeight:       UtilScript.pt(64)
+        width:                UtilScript.pt(48)
+        height:               UtilScript.pt(48)
+        source:               enabled ? "qrc:/resources/images/main/button_track.png" :
+                                        "qrc:/resources/images/main/button_track_disabled.png"
+        fillMode:             Image.PreserveAspectFit
         enabled:              myMapItem.valid
 
-        background: Rectangle {
-            color: "transparent"
-        }
+        MouseArea {
+            anchors.fill: parent
 
-        contentItem: Image {
-            source:   trackLocationButton.enabled ? "qrc:/resources/images/main/button_track.png" :
-                                                    "qrc:/resources/images/main/button_track_disabled.png"
-            fillMode: Image.PreserveAspectFit
-        }
+            onClicked: {
+                map.centerOnMyItem();
 
-        onClicked: {
-            map.centerOnMyItem();
-
-            map.trackingMyLocation = true;
+                map.trackingMyLocation = true;
+            }
         }
     }
 }

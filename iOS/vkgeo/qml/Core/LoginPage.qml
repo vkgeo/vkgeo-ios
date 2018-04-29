@@ -36,22 +36,19 @@ Page {
                 wrapMode:            Text.Wrap
             }
 
-            Button {
+            Image {
                 anchors.horizontalCenter: parent.horizontalCenter
                 width:                    UtilScript.pt(280)
                 height:                   UtilScript.pt(140)
+                source:                   "qrc:/resources/images/login/button_login.png"
+                fillMode:                 Image.PreserveAspectFit
 
-                background: Rectangle {
-                    color: "transparent"
-                }
+                MouseArea {
+                    anchors.fill: parent
 
-                contentItem: Image {
-                    source:   "qrc:/resources/images/login/button_login.png"
-                    fillMode: Image.PreserveAspectFit
-                }
-
-                onClicked: {
-                    VKHelper.login();
+                    onClicked: {
+                        VKHelper.login();
+                    }
                 }
             }
         }
