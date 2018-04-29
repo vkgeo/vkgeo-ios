@@ -33,6 +33,7 @@ Item {
 
             Row {
                 anchors.fill: parent
+                spacing:      UtilScript.pt(8)
 
                 OpacityMask {
                     id:                     opacityMask
@@ -64,7 +65,7 @@ Item {
                     color:               "black"
                     font.pointSize:      16
                     font.family:         "Helvetica"
-                    horizontalAlignment: Text.AlignHCenter
+                    horizontalAlignment: Text.AlignLeft
                     verticalAlignment:   Text.AlignVCenter
                     wrapMode:            Text.Wrap
                 }
