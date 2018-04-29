@@ -68,7 +68,7 @@ public:
     Q_INVOKABLE void updateFriends();
     Q_INVOKABLE QVariantList getFriends();
 
-    Q_INVOKABLE void updateTrustedFriendsList(QVariantList list);
+    Q_INVOKABLE void updateTrustedFriendsList(QVariantList trusted_friends_list);
 
     static void setAuthState(const int &state);
 

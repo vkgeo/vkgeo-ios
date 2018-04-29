@@ -291,25 +291,43 @@ QVariantList VKHelper::getFriends()
     }
 }
 
-void VKHelper::updateTrustedFriendsList(QVariantList list)
+void VKHelper::updateTrustedFriendsList(QVariantList trusted_friends_list)
 {
     if (Initialized && !ContextHaveActiveRequests("updateTrustedFriendsList")) {
-        QStringList trusted_friends_list;
+        QStringList user_id_list;
         QVariantMap request, parameters;
 
-        for (int i = 0; i < list.size(); i++) {
-            trusted_friends_list.append(list[i].toString());
+        foreach (QString key, FriendsData.keys()) {
+            QVariantMap frnd = FriendsData[key].toMap();
+
+            frnd["trusted"] = false;
+
+            FriendsData[key] = frnd;
+        }
+
+        for (int i = 0; i < trusted_friends_list.size(); i++) {
+            QString friend_id = trusted_friends_list[i].toString();
+
+            user_id_list.append(friend_id);
+
+            if (FriendsData.contains(friend_id)) {
+                QVariantMap frnd = FriendsData[friend_id].toMap();
+
+                frnd["trusted"] = true;
+
+                FriendsData[friend_id] = frnd;
+            }
         }
 
         if (TrustedFriendsListId == "") {
             request["method"]     = "friends.getLists";
             request["context"]    = "updateTrustedFriendsList";
-            request["user_ids"]   = trusted_friends_list.join(",");
+            request["user_ids"]   = user_id_list.join(",");
             request["parameters"] = parameters;
         } else {
             parameters["list_id"]  = TrustedFriendsListId.toInt();
             parameters["name"]     = TRUSTED_FRIENDS_LIST_NAME;
-            parameters["user_ids"] = trusted_friends_list.join(",");
+            parameters["user_ids"] = user_id_list.join(",");
 
             request["method"]     = "friends.editList";
             request["context"]    = "updateTrustedFriendsList";
@@ -317,6 +335,12 @@ void VKHelper::updateTrustedFriendsList(QVariantList list)
         }
 
         EnqueueRequest(request);
+
+        QVariantList friends_list = FriendsData.values();
+
+        std::sort(friends_list.begin(), friends_list.end(), compareFriends);
+
+        emit friendsUpdated(friends_list);
     }
 }
 
