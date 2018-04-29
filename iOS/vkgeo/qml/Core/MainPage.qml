@@ -17,7 +17,8 @@ Page {
 
     footer: TabBar {
         id:            tabBar
-        contentHeight: Math.max(mapTabButton.implicitHeight, peopleTabButton.implicitHeight)
+        contentHeight: Math.max(Math.max(mapTabButton.implicitHeight, peopleTabButton.implicitHeight),
+                                settingsTabButton.implicitHeight)
 
         background: Rectangle {
             color: "lightsteelblue"
@@ -47,6 +48,20 @@ Page {
 
             contentItem: Image {
                 source:   "qrc:/resources/images/main/tab_people.png"
+                fillMode: Image.PreserveAspectFit
+            }
+        }
+
+        TabButton {
+            id:             settingsTabButton
+            implicitHeight: UtilScript.pt(48)
+
+            background: Rectangle {
+                color: tabBar.currentIndex === 2 ? "steelblue" : "lightsteelblue"
+            }
+
+            contentItem: Image {
+                source:   "qrc:/resources/images/main/tab_settings.png"
                 fillMode: Image.PreserveAspectFit
             }
         }
@@ -81,6 +96,10 @@ Page {
 
         FriendsSwipe {
             id: friendsSwipe
+        }
+
+        Item {
+
         }
     }
 
