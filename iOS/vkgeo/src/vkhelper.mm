@@ -320,10 +320,9 @@ void VKHelper::updateTrustedFriendsList(QVariantList trusted_friends_list)
         }
 
         if (TrustedFriendsListId == "") {
-            request["method"]     = "friends.getLists";
-            request["context"]    = "updateTrustedFriendsList";
-            request["user_ids"]   = user_id_list.join(",");
-            request["parameters"] = parameters;
+            request["method"]   = "friends.getLists";
+            request["context"]  = "updateTrustedFriendsList";
+            request["user_ids"] = user_id_list.join(",");
         } else {
             parameters["list_id"]  = TrustedFriendsListId.toInt();
             parameters["name"]     = TRUSTED_FRIENDS_LIST_NAME;
@@ -818,81 +817,105 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
             QJsonObject json_response = json_document.object().value("response").toObject();
 
             if (json_response.contains("count") && json_response.contains("items")) {
-                int offset        = 0;
-                int friends_count = json_response.value("count").toInt();
+                int     offset        = 0;
+                int     friends_count = json_response.value("count").toInt();
+                QString list_id       = "";
 
                 if (resp_request.contains("parameters") && resp_request["parameters"].toMap().contains("offset")) {
                     offset = (resp_request["parameters"].toMap())["offset"].toInt();
                 }
+                if (resp_request.contains("parameters") && resp_request["parameters"].toMap().contains("list_id")) {
+                    list_id = (resp_request["parameters"].toMap())["list_id"].toString();
+                }
 
                 QJsonArray json_items = json_response.value("items").toArray();
 
-                for (int i = 0; i < json_items.count(); i++) {
-                    QJsonObject json_friend = json_items.at(i).toObject();
+                if (list_id == "") {
+                    for (int i = 0; i < json_items.count(); i++) {
+                        QJsonObject json_friend = json_items.at(i).toObject();
 
-                    if (json_friend.contains("id")) {
-                        if (!json_friend.contains("deactivated")) {
-                            QVariantMap frnd;
+                        if (json_friend.contains("id")) {
+                            if (!json_friend.contains("deactivated")) {
+                                QVariantMap frnd;
 
-                            frnd["id"]         = QString::number(json_friend.value("id").toInt());
-                            frnd["dataNoteId"] = "";
-                            frnd["trusted"]    = false;
+                                frnd["id"]         = QString::number(json_friend.value("id").toInt());
+                                frnd["dataNoteId"] = "";
+                                frnd["trusted"]    = false;
 
-                            if (json_friend.contains("first_name")) {
-                                frnd["firstName"] = json_friend.value("first_name").toString();
-                            } else {
-                                frnd["firstName"] = "";
-                            }
-                            if (json_friend.contains("last_name")) {
-                                frnd["lastName"] = json_friend.value("last_name").toString();
-                            } else {
-                                frnd["lastName"] = "";
-                            }
-                            if (json_friend.contains("photo_100")) {
-                                frnd["photoUrl"] = json_friend.value("photo_100").toString();
-                            } else {
-                                frnd["photoUrl"] = DEFAULT_PHOTO_URL;
-                            }
-                            if (json_friend.contains("photo_200_orig")) {
-                                frnd["bigPhotoUrl"] = json_friend.value("photo_200_orig").toString();
-                            } else {
-                                frnd["bigPhotoUrl"] = DEFAULT_PHOTO_URL;
-                            }
-                            if (json_friend.contains("online")) {
-                                frnd["online"] = json_friend.value("online").toInt() ? true : false;
-                            } else {
-                                frnd["online"] = false;
-                            }
-                            if (json_friend.contains("status")) {
-                                frnd["status"] = json_friend.value("status").toString();
-                            } else {
-                                frnd["status"] = "";
-                            }
-                            if (json_friend.contains("last_seen")) {
-                                QJsonObject json_last_seen = json_friend.value("last_seen").toObject();
+                                if (json_friend.contains("first_name")) {
+                                    frnd["firstName"] = json_friend.value("first_name").toString();
+                                } else {
+                                    frnd["firstName"] = "";
+                                }
+                                if (json_friend.contains("last_name")) {
+                                    frnd["lastName"] = json_friend.value("last_name").toString();
+                                } else {
+                                    frnd["lastName"] = "";
+                                }
+                                if (json_friend.contains("photo_100")) {
+                                    frnd["photoUrl"] = json_friend.value("photo_100").toString();
+                                } else {
+                                    frnd["photoUrl"] = DEFAULT_PHOTO_URL;
+                                }
+                                if (json_friend.contains("photo_200_orig")) {
+                                    frnd["bigPhotoUrl"] = json_friend.value("photo_200_orig").toString();
+                                } else {
+                                    frnd["bigPhotoUrl"] = DEFAULT_PHOTO_URL;
+                                }
+                                if (json_friend.contains("online")) {
+                                    frnd["online"] = json_friend.value("online").toInt() ? true : false;
+                                } else {
+                                    frnd["online"] = false;
+                                }
+                                if (json_friend.contains("status")) {
+                                    frnd["status"] = json_friend.value("status").toString();
+                                } else {
+                                    frnd["status"] = "";
+                                }
+                                if (json_friend.contains("last_seen")) {
+                                    QJsonObject json_last_seen = json_friend.value("last_seen").toObject();
 
-                                if (json_last_seen.contains("time")) {
-                                    frnd["lastSeenTime"] = QString::number(json_last_seen["time"].toInt());
+                                    if (json_last_seen.contains("time")) {
+                                        frnd["lastSeenTime"] = QString::number(json_last_seen["time"].toInt());
+                                    } else {
+                                        frnd["lastSeenTime"] = "";
+                                    }
                                 } else {
                                     frnd["lastSeenTime"] = "";
                                 }
-                            } else {
-                                frnd["lastSeenTime"] = "";
-                            }
 
-                            FriendsData[frnd["id"].toString()] = frnd;
+                                FriendsData[frnd["id"].toString()] = frnd;
+                            }
+                        } else {
+                            qWarning() << "ProcessFriendsGetResponse() : invalid entry";
                         }
-                    } else {
-                        qWarning() << "ProcessFriendsGetResponse() : invalid entry";
+                    }
+                } else {
+                    for (int i = 0; i < json_items.count(); i++) {
+                        QString friend_id = QString::number(json_items.at(i).toInt());
+
+                        if (FriendsData.contains(friend_id)) {
+                            QVariantMap frnd = FriendsData[friend_id].toMap();
+
+                            frnd["trusted"] = true;
+
+                            FriendsData[friend_id] = frnd;
+                        }
                     }
                 }
 
                 if (offset + json_items.count() < friends_count) {
                     QVariantMap request, parameters;
 
-                    parameters["count"]  = MAX_FRIENDS_GET_COUNT;
-                    parameters["offset"] = offset + json_items.count();
-                    parameters["fields"] = "photo_100,photo_200_orig,online,last_seen,status";
+                    if (list_id == "") {
+                        parameters["count"]  = MAX_FRIENDS_GET_COUNT;
+                        parameters["offset"] = offset + json_items.count();
+                        parameters["fields"] = "photo_100,photo_200_orig,online,last_seen,status";
+                    } else {
+                        parameters["count"]   = MAX_FRIENDS_GET_COUNT;
+                        parameters["offset"]  = offset + json_items.count();
+                        parameters["list_id"] = list_id.toInt();
+                    }
 
                     request["method"]     = "friends.get";
                     request["context"]    = resp_request["context"].toString();
@@ -906,18 +929,31 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
 
                     emit friendsUpdated(friends_list);
 
-                    foreach (QString key, FriendsData.keys()) {
-                        QVariantMap request, parameters;
+                    if (list_id == "") {
+                        QVariantMap request;
 
-                        parameters["count"]   = MAX_NOTES_GET_COUNT;
-                        parameters["user_id"] = key;
-
-                        request["method"]     = "notes.get";
-                        request["context"]    = resp_request["context"].toString();
-                        request["user_id"]    = key;
-                        request["parameters"] = parameters;
+                        request["method"]  = "friends.getLists";
+                        request["context"] = resp_request["context"].toString();
 
                         EnqueueRequest(request);
+                    } else {
+                        foreach (QString key, FriendsData.keys()) {
+                            QVariantMap frnd = FriendsData[key].toMap();
+
+                            if (frnd.contains("trusted") && frnd["trusted"].toBool()) {
+                                QVariantMap request, parameters;
+
+                                parameters["count"]   = MAX_NOTES_GET_COUNT;
+                                parameters["user_id"] = key;
+
+                                request["method"]     = "notes.get";
+                                request["context"]    = resp_request["context"].toString();
+                                request["user_id"]    = key;
+                                request["parameters"] = parameters;
+
+                                EnqueueRequest(request);
+                            }
+                        }
                     }
                 }
             } else {
@@ -936,7 +972,8 @@ void VKHelper::ProcessFriendsGetError(QVariantMap err_request)
 
 void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp_request)
 {
-    if (resp_request["context"].toString() == "updateTrustedFriendsList") {
+    if (resp_request["context"].toString() == "updateFriends" ||
+        resp_request["context"].toString() == "updateTrustedFriendsList") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
 
         if (!json_document.isNull() && json_document.object().contains("response")) {
@@ -961,31 +998,50 @@ void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp
                     }
                 }
 
-                if (resp_request.contains("user_ids")) {
-                    QVariantMap request, parameters;
-
+                if (resp_request["context"].toString() == "updateFriends") {
                     if (trusted_friends_list_id != "") {
                         TrustedFriendsListId = trusted_friends_list_id;
 
-                        parameters["list_id"]  = TrustedFriendsListId.toInt();
-                        parameters["name"]     = TRUSTED_FRIENDS_LIST_NAME;
-                        parameters["user_ids"] = resp_request["user_ids"].toString();
+                        QVariantMap request, parameters;
 
-                        request["method"]     = "friends.editList";
+                        parameters["count"]   = MAX_FRIENDS_GET_COUNT;
+                        parameters["list_id"] = TrustedFriendsListId.toInt();
+
+                        request["method"]     = "friends.get";
                         request["context"]    = resp_request["context"].toString();
                         request["parameters"] = parameters;
-                    } else {
-                        parameters["name"]     = TRUSTED_FRIENDS_LIST_NAME;
-                        parameters["user_ids"] = resp_request["user_ids"].toString();
 
-                        request["method"]     = "friends.addList";
-                        request["context"]    = resp_request["context"].toString();
-                        request["parameters"] = parameters;
+                        EnqueueRequest(request);
                     }
+                } else if (resp_request["context"].toString() == "updateTrustedFriendsList") {
+                    if (resp_request.contains("user_ids")) {
+                        QVariantMap request, parameters;
 
-                    EnqueueRequest(request);
+                        if (trusted_friends_list_id != "") {
+                            TrustedFriendsListId = trusted_friends_list_id;
+
+                            parameters["list_id"]  = TrustedFriendsListId.toInt();
+                            parameters["name"]     = TRUSTED_FRIENDS_LIST_NAME;
+                            parameters["user_ids"] = resp_request["user_ids"].toString();
+
+                            request["method"]     = "friends.editList";
+                            request["context"]    = resp_request["context"].toString();
+                            request["parameters"] = parameters;
+                        } else {
+                            parameters["name"]     = TRUSTED_FRIENDS_LIST_NAME;
+                            parameters["user_ids"] = resp_request["user_ids"].toString();
+
+                            request["method"]     = "friends.addList";
+                            request["context"]    = resp_request["context"].toString();
+                            request["parameters"] = parameters;
+                        }
+
+                        EnqueueRequest(request);
+                    } else {
+                        qWarning() << "ProcessFriendsGetListsResponse() : invalid request";
+                    }
                 } else {
-                    qWarning() << "ProcessFriendsGetListsResponse() : invalid request";
+                    qWarning() << "ProcessFriendsGetListsResponse() : invalid context";
                 }
             } else {
                 qWarning() << "ProcessFriendsGetListsResponse() : invalid response";
