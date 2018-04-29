@@ -124,8 +124,8 @@ VKHelper *VKHelper::Instance = NULL;
 @end
 
 bool compareFriends(const QVariant &friend_1, const QVariant &friend_2) {
-    bool friend_1_has_mobile = friend_1.toMap().contains("hasMobile") ? (friend_1.toMap())["hasMobile"].toBool() : false;
-    bool friend_2_has_mobile = friend_2.toMap().contains("hasMobile") ? (friend_2.toMap())["hasMobile"].toBool() : false;
+    bool friend_1_online = friend_1.toMap().contains("hasMobile") ? (friend_1.toMap())["hasMobile"].toBool() : false;
+    bool friend_2_online = friend_2.toMap().contains("hasMobile") ? (friend_2.toMap())["hasMobile"].toBool() : false;
 
     QString friend_1_name = friend_1.toMap().contains("firstName") &&
                             friend_1.toMap().contains("lastName") ?
@@ -138,9 +138,9 @@ bool compareFriends(const QVariant &friend_1, const QVariant &friend_2) {
                                                 .arg((friend_2.toMap())["lastName"].toString()) :
                                 "";
 
-    if (friend_1_has_mobile == friend_2_has_mobile) {
+    if (friend_1_online == friend_2_online) {
         return friend_1_name < friend_2_name;
-    } else if (friend_1_has_mobile) {
+    } else if (friend_1_online) {
         return true;
     } else {
         return false;
@@ -244,7 +244,7 @@ void VKHelper::getFriends()
         QVariantMap request, parameters;
 
         parameters["count"]  = MAX_FRIENDS_GET_COUNT;
-        parameters["fields"] = "photo_100,has_mobile,online,last_seen,status";
+        parameters["fields"] = "photo_100,photo_200_orig,online,last_seen,status";
 
         request["method"]       = "friends.get";
         request["context"]      = "getFriends";
@@ -610,10 +610,10 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
                             } else {
                                 frnd["photoUrl"] = DEFAULT_PHOTO_URL;
                             }
-                            if (json_friend.contains("has_mobile")) {
-                                frnd["hasMobile"] = json_friend.value("has_mobile").toInt() ? true : false;
+                            if (json_friend.contains("photo_200_orig")) {
+                                frnd["bigPhotoUrl"] = json_friend.value("photo_200_orig").toString();
                             } else {
-                                frnd["hasMobile"] = false;
+                                frnd["bigPhotoUrl"] = DEFAULT_PHOTO_URL;
                             }
                             if (json_friend.contains("online")) {
                                 frnd["online"] = json_friend.value("online").toInt() ? true : false;
@@ -648,7 +648,7 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
 
                         parameters["count"]  = MAX_FRIENDS_GET_COUNT;
                         parameters["offset"] = offset + json_items.count();
-                        parameters["fields"] = "photo_100,has_mobile,online,last_seen,status";
+                        parameters["fields"] = "photo_100,photo_200_orig,online,last_seen,status";
 
                         request["method"]       = "friends.get";
                         request["context"]      = resp_request["context"];
