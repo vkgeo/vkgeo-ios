@@ -35,6 +35,8 @@ Page {
                 font.bold:                true
                 horizontalAlignment:      Text.AlignHCenter
                 wrapMode:                 Text.Wrap
+                fontSizeMode:             Text.Fit
+                minimumPointSize:         8
             }
 
             Image {

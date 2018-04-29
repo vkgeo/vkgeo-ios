@@ -7,9 +7,9 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
+#include <QtCore/QQueue>
 #include <QtCore/QMap>
 #include <QtCore/QVariantMap>
-#include <QtCore/QQueue>
 #include <QtCore/QTimer>
 
 #ifdef __OBJC__
@@ -37,13 +37,17 @@ class VKHelper : public QObject
     Q_PROPERTY(int     authState READ authState NOTIFY authStateChanged)
     Q_PROPERTY(QString photoUrl  READ photoUrl  NOTIFY photoUrlChanged)
 
+    Q_PROPERTY(int maxTrustedFriendsCount READ maxTrustedFriendsCount WRITE setMaxTrustedFriendsCount)
+
 public:
-    static const int MAX_BATCH_SIZE        = 25,
-                     MAX_NOTES_GET_COUNT   = 100,
-                     MAX_FRIENDS_GET_COUNT = 5000;
+    static const int DEFAULT_MAX_TRUSTED_FRIENDS_COUNT = 10,
+                     MAX_BATCH_SIZE                    = 25,
+                     MAX_NOTES_GET_COUNT               = 100,
+                     MAX_FRIENDS_GET_COUNT             = 5000;
 
     static const QString DEFAULT_PHOTO_URL,
-                         DATA_NOTE_TITLE;
+                         DATA_NOTE_TITLE,
+                         TRUSTED_FRIENDS_LIST_NAME;
 
     explicit VKHelper(QObject *parent = 0);
     virtual ~VKHelper();
@@ -51,11 +55,18 @@ public:
     int authState() const;
     QString photoUrl() const;
 
+    int maxTrustedFriendsCount() const;
+    void setMaxTrustedFriendsCount(const int &count);
+
     Q_INVOKABLE void initialize();
+
     Q_INVOKABLE void login();
     Q_INVOKABLE void logout();
+
     Q_INVOKABLE void reportCoordinate(qreal latitude, qreal longitude);
+
     Q_INVOKABLE void updateFriends();
+    Q_INVOKABLE QVariantList getFriends();
 
     static void setAuthState(const int &state);
 
@@ -93,8 +104,8 @@ private:
     void ProcessFriendsGetError(QVariantMap err_request);
 
     bool                Initialized;
-    int                 AuthState;
-    QString             PhotoUrl, DataNoteId;
+    int                 AuthState, MaxTrustedFriendsCount;
+    QString             PhotoUrl, DataNoteId, TrustedFriendsListId;
     QQueue<QVariantMap> RequestQueue;
     QTimer              RequestQueueTimer;
     QMap<QString, int>  RequestContextTracker;

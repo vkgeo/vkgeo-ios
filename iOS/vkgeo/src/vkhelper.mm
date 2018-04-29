@@ -6,8 +6,9 @@
 
 #include "vkhelper.h"
 
-const QString VKHelper::DEFAULT_PHOTO_URL("https://vk.com/images/camera_50.png");
-const QString VKHelper::DATA_NOTE_TITLE  ("VKGeo Data");
+const QString VKHelper::DEFAULT_PHOTO_URL        ("https://vk.com/images/camera_50.png");
+const QString VKHelper::DATA_NOTE_TITLE          ("VKGeo Data");
+const QString VKHelper::TRUSTED_FRIENDS_LIST_NAME("VKGeo Trusted Friends");
 
 static NSArray *AUTH_SCOPE = @[@"friends", @"notes"];
 
@@ -160,12 +161,14 @@ bool compareFriends(const QVariant &friend_1, const QVariant &friend_2) {
 
 VKHelper::VKHelper(QObject *parent) : QObject(parent)
 {
-    Initialized        = false;
-    AuthState          = VKAuthState::StateUnknown;
-    PhotoUrl           = DEFAULT_PHOTO_URL;
-    DataNoteId         = "";
-    Instance           = this;
-    VKDelegateInstance = NULL;
+    Initialized            = false;
+    AuthState              = VKAuthState::StateUnknown;
+    MaxTrustedFriendsCount = DEFAULT_MAX_TRUSTED_FRIENDS_COUNT;
+    PhotoUrl               = DEFAULT_PHOTO_URL;
+    DataNoteId             = "";
+    TrustedFriendsListId   = "";
+    Instance               = this;
+    VKDelegateInstance     = NULL;
 
     connect(&RequestQueueTimer, SIGNAL(timeout()), this, SLOT(requestQueueTimerTimeout()));
 
@@ -188,6 +191,16 @@ int VKHelper::authState() const
 QString VKHelper::photoUrl() const
 {
     return PhotoUrl;
+}
+
+int VKHelper::maxTrustedFriendsCount() const
+{
+    return MaxTrustedFriendsCount;
+}
+
+void VKHelper::setMaxTrustedFriendsCount(const int &count)
+{
+    MaxTrustedFriendsCount = count;
 }
 
 void VKHelper::initialize()
@@ -264,6 +277,19 @@ void VKHelper::updateFriends()
         request["parameters"] = parameters;
 
         EnqueueRequest(request);
+    }
+}
+
+QVariantList VKHelper::getFriends()
+{
+    if (Initialized) {
+        QVariantList friends_list = FriendsData.values();
+
+        std::sort(friends_list.begin(), friends_list.end(), compareFriends);
+
+        return friends_list;
+    } else {
+        return QVariantList();
     }
 }
 

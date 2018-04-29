@@ -2,48 +2,72 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtGraphicalEffects 1.0
 
-import "../../Util.js" as UtilScript
+import "../Util.js" as UtilScript
 
-Item {
-    id: friendsSwipe
+Page {
+    id: trustedFriendsPage
 
-    function updateFriends(friends_list) {
-        friendsListModel.clear();
+    header: Rectangle {
+        height: UtilScript.pt(48)
+        color:  "lightsteelblue"
 
-        for (var i = 0; i < friends_list.length; i++) {
-            friendsListModel.append(friends_list[i]);
+        Text {
+            anchors.centerIn:    parent
+            width:               parent.width - UtilScript.pt(8)
+                                              - closeButton.width * 2
+            height:              parent.height
+            text:                qsTr("Trusted Friends")
+            color:               "white"
+            font.pointSize:      16
+            font.family:         "Helvetica"
+            font.bold:           true
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment:   Text.AlignVCenter
+            wrapMode:            Text.Wrap
+            fontSizeMode:        Text.Fit
+            minimumPointSize:    8
         }
-    }
 
-    Image {
-        id:                       refreshImage
-        anchors.top:              parent.top
-        anchors.horizontalCenter: parent.horizontalCenter
-        width:                    UtilScript.pt(64)
-        height:                   UtilScript.pt(64)
-        source:                   "qrc:/resources/images/main/refresh.png"
-        fillMode:                 Image.PreserveAspectFit
-        visible:                  false
+        Rectangle {
+            id:                     closeButton
+            anchors.right:          parent.right
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.rightMargin:    UtilScript.pt(8)
+            width:                  UtilScript.pt(80)
+            height:                 UtilScript.pt(32)
+            color:                  "steelblue"
+            radius:                 UtilScript.pt(8)
 
-        PropertyAnimation {
-            target:   refreshImage
-            property: "rotation"
-            from:     0
-            to:       360
-            duration: 500
-            loops:    Animation.Infinite
-            running:  refreshImage.visible
+            Text {
+                anchors.fill:        parent
+                text:                qsTr("Close")
+                color:               "white"
+                font.pointSize:      16
+                font.family:         "Helvetica"
+                font.bold:           true
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment:   Text.AlignVCenter
+                wrapMode:            Text.Wrap
+                fontSizeMode:        Text.Fit
+                minimumPointSize:    8
+            }
+
+            MouseArea {
+                anchors.fill: parent
+
+                onClicked: {
+                    mainStackView.pop();
+                }
+            }
         }
     }
 
     ListView {
-        id:           friendsListView
         anchors.fill: parent
-        z:            1
         orientation:  ListView.Vertical
 
         model: ListModel {
-            id: friendsListModel
+            id: trustedFriendsListModel
         }
 
         delegate: Rectangle {
@@ -87,7 +111,7 @@ Item {
                                                       - parent.leftPadding
                                                       - parent.rightPadding
                                                       - opacityMask.width
-                                                      - showOnMapButton.width
+                                                      - trustedSwitch.width
                     height:              parent.height
                     text:                "%1 %2".arg(firstName).arg(lastName)
                     color:               "black"
@@ -100,14 +124,9 @@ Item {
                     minimumPointSize:    8
                 }
 
-                Image {
-                    id:                     showOnMapButton
+                Switch {
+                    id:                     trustedSwitch
                     anchors.verticalCenter: parent.verticalCenter
-                    width:                  UtilScript.pt(48)
-                    height:                 UtilScript.pt(48)
-                    source:                 "qrc:/resources/images/main/button_show_on_map.png"
-                    fillMode:               Image.PreserveAspectFit
-                    visible:                dataNoteId !== ""
                 }
             }
         }
@@ -115,38 +134,15 @@ Item {
         ScrollBar.vertical: ScrollBar {
             policy: ScrollBar.AlwaysOn
         }
-
-        property bool refreshStarted: false
-
-        onContentYChanged: {
-            if (contentY < 0 - refreshImage.height) {
-                if (!refreshStarted) {
-                    refreshStarted = true;
-
-                    refreshTimer.start();
-                }
-            } else {
-                refreshImage.visible = false;
-
-                refreshStarted = false;
-
-                refreshTimer.stop();
-            }
-        }
-
-        Timer {
-            id:       refreshTimer
-            interval: 500
-
-            onTriggered: {
-                refreshImage.visible = true;
-
-                VKHelper.updateFriends();
-            }
-        }
     }
 
     Component.onCompleted: {
-        VKHelper.friendsUpdated.connect(updateFriends);
+        trustedFriendsListModel.clear();
+
+        var friends_list = VKHelper.getFriends();
+
+        for (var i = 0; i < friends_list.length; i++) {
+            trustedFriendsListModel.append(friends_list[i]);
+        }
     }
 }
