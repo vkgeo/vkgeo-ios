@@ -98,8 +98,8 @@ Page {
             id: friendsSwipe
         }
 
-        Item {
-
+        SettingsSwipe {
+            id: settingsSwipe
         }
     }
 

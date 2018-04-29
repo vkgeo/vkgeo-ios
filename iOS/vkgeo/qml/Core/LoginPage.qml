@@ -17,23 +17,24 @@ Page {
     }
 
     Rectangle {
-        id:           backgroundRectangle
         anchors.fill: parent
         color:        "lightsteelblue"
 
         Column {
             anchors.centerIn: parent
+            width:            parent.width
             spacing:          UtilScript.pt(32)
 
             Text {
-                width:               backgroundRectangle.width - UtilScript.pt(32)
-                text:                qsTr("Sign in with your VK account")
-                color:               "white"
-                font.pointSize:      32
-                font.family:         "Helvetica"
-                font.bold:           true
-                horizontalAlignment: Text.AlignHCenter
-                wrapMode:            Text.Wrap
+                anchors.horizontalCenter: parent.horizontalCenter
+                width:                    parent.width - UtilScript.pt(32)
+                text:                     qsTr("Sign in with your VK account")
+                color:                    "white"
+                font.pointSize:           32
+                font.family:              "Helvetica"
+                font.bold:                true
+                horizontalAlignment:      Text.AlignHCenter
+                wrapMode:                 Text.Wrap
             }
 
             Image {

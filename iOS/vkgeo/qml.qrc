@@ -6,5 +6,6 @@
         <file>qml/Core/MainPage.qml</file>
         <file>qml/Core/Main/FriendsSwipe.qml</file>
         <file>qml/Core/Main/MapSwipe.qml</file>
+        <file>qml/Core/Main/SettingsSwipe.qml</file>
     </qresource>
 </RCC>
