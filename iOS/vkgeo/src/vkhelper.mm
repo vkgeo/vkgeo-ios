@@ -316,7 +316,7 @@ void VKHelper::updateTrustedFriendsList(QVariantList trusted_friends_list)
             FriendsData[key] = frnd;
         }
 
-        for (int i = 0; i < trusted_friends_list.count(); i++) {
+        for (int i = 0; i < trusted_friends_list.count() && i < MaxTrustedFriendsCount; i++) {
             QString friend_id = trusted_friends_list[i].toString();
 
             user_id_list.append(friend_id);
@@ -1015,7 +1015,7 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
                         }
                     }
                 } else {
-                    for (int i = 0; i < json_items.count(); i++) {
+                    for (int i = 0; i < json_items.count() && offset + i < MaxTrustedFriendsCount; i++) {
                         QString friend_id = QString::number(json_items.at(i).toInt());
 
                         if (FriendsDataTmp.contains(friend_id)) {
