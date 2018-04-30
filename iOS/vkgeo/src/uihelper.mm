@@ -6,17 +6,17 @@
 
 #include <QtCore/QDir>
 
-#include "iosuihelper.h"
+#include "uihelper.h"
 
-IOSUIHelper::IOSUIHelper(QObject *parent) : QObject(parent)
+UIHelper::UIHelper(QObject *parent) : QObject(parent)
 {
 }
 
-IOSUIHelper::~IOSUIHelper()
+UIHelper::~UIHelper()
 {
 }
 
-int IOSUIHelper::safeAreaTopMargin()
+int UIHelper::safeAreaTopMargin()
 {
     UIViewController * __block root_view_controller = nil;
 
@@ -36,7 +36,7 @@ int IOSUIHelper::safeAreaTopMargin()
     }
 }
 
-int IOSUIHelper::safeAreaBottomMargin()
+int UIHelper::safeAreaBottomMargin()
 {
     UIViewController * __block root_view_controller = nil;
 

@@ -98,7 +98,7 @@ Page {
     StackView.onStatusChanged: {
         if (StackView.status === StackView.Activating ||
             StackView.status === StackView.Active) {
-            safeAreaBottomMargin = IOSUIHelper.safeAreaBottomMargin();
+            safeAreaBottomMargin = UIHelper.safeAreaBottomMargin();
         }
     }
 
