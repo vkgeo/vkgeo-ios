@@ -61,7 +61,11 @@ AdMobHelper *AdMobHelper::Instance = NULL;
                 [BannerView.topAnchor     constraintEqualToAnchor:guide.topAnchor]
             ]];
 
-            AdMobHelper::setBannerViewHeight(BannerView.frame.size.height + root_view_controller.view.safeAreaInsets.top);
+            CGSize status_bar_size   = [[UIApplication sharedApplication] statusBarFrame].size;
+            int    status_bar_height = MIN(status_bar_size.width, status_bar_size.height);
+
+            AdMobHelper::setBannerViewHeight(BannerView.frame.size.height + root_view_controller.view.safeAreaInsets.top
+                                                                          - status_bar_height);
         } else {
             assert(0);
         }

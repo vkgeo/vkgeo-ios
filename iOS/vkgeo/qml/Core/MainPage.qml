@@ -12,64 +12,74 @@ Page {
 
     header: Rectangle {
         height: mainPage.bannerViewHeight
-        color:  "white"
+        color:  "transparent"
     }
 
-    footer: TabBar {
-        id:            tabBar
-        contentHeight: Math.max(Math.max(mapTabButton.implicitHeight, peopleTabButton.implicitHeight),
-                                settingsTabButton.implicitHeight)
+    footer: Rectangle {
+        height: mainPage.safeAreaBottomMargin + tabBar.height
+        color:  "lightsteelblue"
 
-        background: Rectangle {
-            color: "lightsteelblue"
-        }
-
-        TabButton {
-            id:             mapTabButton
-            implicitHeight: UtilScript.pt(48)
-
-            background: Rectangle {
-                color: tabBar.currentIndex === 0 ? "steelblue" : "lightsteelblue"
-            }
-
-            contentItem: Image {
-                source:   "qrc:/resources/images/main/tab_map.png"
-                fillMode: Image.PreserveAspectFit
-            }
-        }
-
-        TabButton {
-            id:             peopleTabButton
-            implicitHeight: UtilScript.pt(48)
+        TabBar {
+            id:            tabBar
+            anchors.top:   parent.top
+            anchors.left:  parent.left
+            anchors.right: parent.right
+            contentHeight: Math.max(Math.max(mapTabButton.implicitHeight, peopleTabButton.implicitHeight),
+                                    settingsTabButton.implicitHeight)
 
             background: Rectangle {
-                color: tabBar.currentIndex === 1 ? "steelblue" : "lightsteelblue"
+                color: "transparent"
             }
 
-            contentItem: Image {
-                source:   "qrc:/resources/images/main/tab_people.png"
-                fillMode: Image.PreserveAspectFit
+            TabButton {
+                id:             mapTabButton
+                implicitHeight: UtilScript.pt(48)
+
+                background: Rectangle {
+                    color: tabBar.currentIndex === 0 ? "steelblue" : "lightsteelblue"
+                }
+
+                contentItem: Image {
+                    source:   "qrc:/resources/images/main/tab_map.png"
+                    fillMode: Image.PreserveAspectFit
+                }
             }
-        }
 
-        TabButton {
-            id:             settingsTabButton
-            implicitHeight: UtilScript.pt(48)
+            TabButton {
+                id:             peopleTabButton
+                implicitHeight: UtilScript.pt(48)
 
-            background: Rectangle {
-                color: tabBar.currentIndex === 2 ? "steelblue" : "lightsteelblue"
+                background: Rectangle {
+                    color: tabBar.currentIndex === 1 ? "steelblue" : "lightsteelblue"
+                }
+
+                contentItem: Image {
+                    source:   "qrc:/resources/images/main/tab_people.png"
+                    fillMode: Image.PreserveAspectFit
+                }
             }
 
-            contentItem: Image {
-                source:   "qrc:/resources/images/main/tab_settings.png"
-                fillMode: Image.PreserveAspectFit
+            TabButton {
+                id:             settingsTabButton
+                implicitHeight: UtilScript.pt(48)
+
+                background: Rectangle {
+                    color: tabBar.currentIndex === 2 ? "steelblue" : "lightsteelblue"
+                }
+
+                contentItem: Image {
+                    source:   "qrc:/resources/images/main/tab_settings.png"
+                    fillMode: Image.PreserveAspectFit
+                }
             }
         }
     }
 
-    property bool appInForeground: Qt.application.active
-    property int bannerViewHeight: AdMobHelper.bannerViewHeight
-    property int vkAuthState:      VKHelper.authState
+    property bool appInForeground:     Qt.application.active
+
+    property int bannerViewHeight:     AdMobHelper.bannerViewHeight
+    property int safeAreaBottomMargin: 0
+    property int vkAuthState:          VKHelper.authState
 
     onAppInForegroundChanged: {
         if (appInForeground) {
@@ -82,6 +92,13 @@ Page {
     onVkAuthStateChanged: {
         if (vkAuthState === VKAuthState.StateAuthorized) {
             VKHelper.updateFriends();
+        }
+    }
+
+    StackView.onStatusChanged: {
+        if (StackView.status === StackView.Activating ||
+            StackView.status === StackView.Active) {
+            safeAreaBottomMargin = IOSUIHelper.safeAreaBottomMargin();
         }
     }
 

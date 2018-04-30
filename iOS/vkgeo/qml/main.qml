@@ -7,9 +7,8 @@ import VKHelper 1.0
 import "Core"
 
 Window {
-    id:         mainWindow
-    visibility: Window.FullScreen
-    visible:    true
+    id:      mainWindow
+    visible: true
 
     property int vkAuthState: VKHelper.authState
     property var loginPage:   null

@@ -8,106 +8,131 @@ Page {
     id: trustedFriendsPage
 
     header: Rectangle {
-        height: UtilScript.pt(48)
+        height: trustedFriendsPage.safeAreaTopMargin + headerControlsRectangle.height
         color:  "lightsteelblue"
 
         Rectangle {
-            id:                     cancelButton
-            anchors.left:           parent.left
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.leftMargin:     UtilScript.pt(8)
-            width:                  UtilScript.pt(80)
-            height:                 UtilScript.pt(32)
-            color:                  "steelblue"
-            radius:                 UtilScript.pt(8)
+            id:             headerControlsRectangle
+            anchors.bottom: parent.bottom
+            anchors.left:   parent.left
+            anchors.right:  parent.right
+            height:         UtilScript.pt(48)
+            color:          "transparent"
 
-            Text {
-                anchors.fill:        parent
-                text:                qsTr("Cancel")
-                color:               "white"
-                font.pointSize:      16
-                font.family:         "Helvetica"
-                font.bold:           true
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment:   Text.AlignVCenter
-                wrapMode:            Text.Wrap
-                fontSizeMode:        Text.Fit
-                minimumPointSize:    8
-            }
+            Rectangle {
+                id:                     cancelButton
+                anchors.left:           parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.leftMargin:     UtilScript.pt(8)
+                width:                  UtilScript.pt(80)
+                height:                 UtilScript.pt(32)
+                color:                  "steelblue"
+                radius:                 UtilScript.pt(8)
 
-            MouseArea {
-                anchors.fill: parent
-
-                onClicked: {
-                    mainStackView.pop();
+                Text {
+                    anchors.fill:        parent
+                    text:                qsTr("Cancel")
+                    color:               "white"
+                    font.pointSize:      16
+                    font.family:         "Helvetica"
+                    font.bold:           true
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment:   Text.AlignVCenter
+                    wrapMode:            Text.Wrap
+                    fontSizeMode:        Text.Fit
+                    minimumPointSize:    8
                 }
-            }
-        }
 
-        Text {
-            anchors.centerIn:    parent
-            width:               parent.width - UtilScript.pt(8)
-                                              - cancelButton.width
-                                              - cancelButton.leftMargin
-                                              - saveButton.width
-                                              - saveButton.rightMargin
-            height:              parent.height
-            text:                qsTr("Trusted Friends")
-            color:               "white"
-            font.pointSize:      16
-            font.family:         "Helvetica"
-            font.bold:           true
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment:   Text.AlignVCenter
-            wrapMode:            Text.Wrap
-            fontSizeMode:        Text.Fit
-            minimumPointSize:    8
-        }
+                MouseArea {
+                    anchors.fill: parent
 
-        Rectangle {
-            id:                     saveButton
-            anchors.right:          parent.right
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.rightMargin:    UtilScript.pt(8)
-            width:                  UtilScript.pt(80)
-            height:                 UtilScript.pt(32)
-            color:                  "steelblue"
-            radius:                 UtilScript.pt(8)
-
-            Text {
-                anchors.fill:        parent
-                text:                qsTr("Save")
-                color:               "white"
-                font.pointSize:      16
-                font.family:         "Helvetica"
-                font.bold:           true
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment:   Text.AlignVCenter
-                wrapMode:            Text.Wrap
-                fontSizeMode:        Text.Fit
-                minimumPointSize:    8
-            }
-
-            MouseArea {
-                anchors.fill: parent
-
-                onClicked: {
-                    var trusted_friends_list = [];
-
-                    for (var i = 0; i < trustedFriendsListModel.count; i++) {
-                        var frnd = trustedFriendsListModel.get(i);
-
-                        if (typeof frnd.id      !== "undefined" &&
-                            typeof frnd.trusted !== "undefined" && frnd.trusted) {
-                            trusted_friends_list.push(frnd.id);
-                        }
+                    onClicked: {
+                        mainStackView.pop();
                     }
-
-                    VKHelper.updateTrustedFriendsList(trusted_friends_list);
-
-                    mainStackView.pop();
                 }
             }
+
+            Text {
+                anchors.centerIn:    parent
+                width:               parent.width - UtilScript.pt(8)
+                                                  - cancelButton.width
+                                                  - cancelButton.leftMargin
+                                                  - saveButton.width
+                                                  - saveButton.rightMargin
+                height:              parent.height
+                text:                qsTr("Trusted Friends")
+                color:               "white"
+                font.pointSize:      16
+                font.family:         "Helvetica"
+                font.bold:           true
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment:   Text.AlignVCenter
+                wrapMode:            Text.Wrap
+                fontSizeMode:        Text.Fit
+                minimumPointSize:    8
+            }
+
+            Rectangle {
+                id:                     saveButton
+                anchors.right:          parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.rightMargin:    UtilScript.pt(8)
+                width:                  UtilScript.pt(80)
+                height:                 UtilScript.pt(32)
+                color:                  "steelblue"
+                radius:                 UtilScript.pt(8)
+
+                Text {
+                    anchors.fill:        parent
+                    text:                qsTr("Save")
+                    color:               "white"
+                    font.pointSize:      16
+                    font.family:         "Helvetica"
+                    font.bold:           true
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment:   Text.AlignVCenter
+                    wrapMode:            Text.Wrap
+                    fontSizeMode:        Text.Fit
+                    minimumPointSize:    8
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        var trusted_friends_list = [];
+
+                        for (var i = 0; i < trustedFriendsListModel.count; i++) {
+                            var frnd = trustedFriendsListModel.get(i);
+
+                            if (typeof frnd.id      !== "undefined" &&
+                                typeof frnd.trusted !== "undefined" && frnd.trusted) {
+                                trusted_friends_list.push(frnd.id);
+                            }
+                        }
+
+                        VKHelper.updateTrustedFriendsList(trusted_friends_list);
+
+                        mainStackView.pop();
+                    }
+                }
+            }
+        }
+    }
+
+    footer: Rectangle {
+        height: trustedFriendsPage.safeAreaBottomMargin
+        color:  "lightsteelblue"
+    }
+
+    property int safeAreaTopMargin:    0
+    property int safeAreaBottomMargin: 0
+
+    StackView.onStatusChanged: {
+        if (StackView.status === StackView.Activating ||
+            StackView.status === StackView.Active) {
+            safeAreaTopMargin    = IOSUIHelper.safeAreaTopMargin();
+            safeAreaBottomMargin = IOSUIHelper.safeAreaBottomMargin();
         }
     }
 
