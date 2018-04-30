@@ -242,23 +242,29 @@ void VKHelper::reportCoordinate(qreal latitude, qreal longitude)
 
         QString user_data_string = QString::fromUtf8(QJsonDocument::fromVariant(user_data).toJson(QJsonDocument::Compact));
 
-        if (DataNoteId == "") {
-            parameters["count"] = MAX_NOTES_GET_COUNT;
-
-            request["method"]     = "notes.get";
-            request["context"]    = "reportCoordinate";
-            request["user_data"]  = user_data_string;
-            request["parameters"] = parameters;
+        if (TrustedFriendsListId == "") {
+            request["method"]    = "friends.getLists";
+            request["context"]   = "reportCoordinate";
+            request["user_data"] = user_data_string;
         } else {
-            parameters["note_id"]         = DataNoteId.toInt();
-            parameters["title"]           = DATA_NOTE_TITLE;
-            parameters["text"]            = user_data_string;
-            parameters["privacy_view"]    = "friends";
-            parameters["privacy_comment"] = "nobody";
+            if (DataNoteId == "") {
+                parameters["count"] = MAX_NOTES_GET_COUNT;
 
-            request["method"]     = "notes.edit";
-            request["context"]    = "reportCoordinate";
-            request["parameters"] = parameters;
+                request["method"]     = "notes.get";
+                request["context"]    = "reportCoordinate";
+                request["user_data"]  = user_data_string;
+                request["parameters"] = parameters;
+            } else {
+                parameters["note_id"]         = DataNoteId.toInt();
+                parameters["title"]           = DATA_NOTE_TITLE;
+                parameters["text"]            = user_data_string;
+                parameters["privacy_view"]    = QString("list%1").arg(TrustedFriendsListId);
+                parameters["privacy_comment"] = "nobody";
+
+                request["method"]     = "notes.edit";
+                request["context"]    = "reportCoordinate";
+                request["parameters"] = parameters;
+            }
         }
 
         EnqueueRequest(request);
@@ -682,8 +688,13 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
                         parameters["note_id"]         = DataNoteId.toInt();
                         parameters["title"]           = DATA_NOTE_TITLE;
                         parameters["text"]            = resp_request["user_data"].toString();
-                        parameters["privacy_view"]    = "friends";
                         parameters["privacy_comment"] = "nobody";
+
+                        if (TrustedFriendsListId == "") {
+                            parameters["privacy_view"] = "nobody";
+                        } else {
+                            parameters["privacy_view"] = QString("list%1").arg(TrustedFriendsListId);
+                        }
 
                         request["method"]     = "notes.edit";
                         request["context"]    = resp_request["context"].toString();
@@ -699,8 +710,13 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
                     } else {
                         parameters["title"]           = DATA_NOTE_TITLE;
                         parameters["text"]            = resp_request["user_data"].toString();
-                        parameters["privacy_view"]    = "friends";
                         parameters["privacy_comment"] = "nobody";
+
+                        if (TrustedFriendsListId == "") {
+                            parameters["privacy_view"] = "nobody";
+                        } else {
+                            parameters["privacy_view"] = QString("list%1").arg(TrustedFriendsListId);
+                        }
 
                         request["method"]     = "notes.add";
                         request["context"]    = resp_request["context"].toString();
@@ -1097,7 +1113,73 @@ void VKHelper::ProcessFriendsGetError(QVariantMap err_request)
 
 void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp_request)
 {
-    if (resp_request["context"].toString() == "updateFriends") {
+    if (resp_request["context"].toString() == "reportCoordinate") {
+        QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
+
+        if (!json_document.isNull() && json_document.object().contains("response")) {
+            QJsonObject json_response = json_document.object().value("response").toObject();
+
+            if (json_response.contains("count") && json_response.contains("items")) {
+                QString trusted_friends_list_id;
+
+                QJsonArray json_items = json_response.value("items").toArray();
+
+                for (int i = 0; i < json_items.count(); i++) {
+                    QJsonObject json_list = json_items.at(i).toObject();
+
+                    if (json_list.contains("id") && json_list.contains("name")) {
+                        if (json_list.value("name").toString() == TRUSTED_FRIENDS_LIST_NAME) {
+                            trusted_friends_list_id = QString::number(json_list.value("id").toInt());
+
+                            if (trusted_friends_list_id != "") {
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (resp_request.contains("user_data")) {
+                    if (trusted_friends_list_id != "") {
+                        TrustedFriendsListId = trusted_friends_list_id;
+                    }
+
+                    QVariantMap request, parameters;
+
+                    if (DataNoteId == "") {
+                        parameters["count"] = MAX_NOTES_GET_COUNT;
+
+                        request["method"]     = "notes.get";
+                        request["context"]    = "reportCoordinate";
+                        request["user_data"]  = resp_request["user_data"].toString();
+                        request["parameters"] = parameters;
+                    } else {
+                        parameters["note_id"]         = DataNoteId.toInt();
+                        parameters["title"]           = DATA_NOTE_TITLE;
+                        parameters["text"]            = resp_request["user_data"].toString();
+                        parameters["privacy_comment"] = "nobody";
+
+                        if (TrustedFriendsListId == "") {
+                            parameters["privacy_view"] = "nobody";
+                        } else {
+                            parameters["privacy_view"] = QString("list%1").arg(TrustedFriendsListId);
+                        }
+
+                        request["method"]     = "notes.edit";
+                        request["context"]    = "reportCoordinate";
+                        request["parameters"] = parameters;
+                    }
+
+                    EnqueueRequest(request);
+                } else {
+                    qWarning() << "ProcessFriendsGetListsResponse() : invalid request";
+                }
+            } else {
+                qWarning() << "ProcessFriendsGetListsResponse() : invalid response";
+            }
+        } else {
+            qWarning() << "ProcessFriendsGetListsResponse() : invalid json";
+        }
+    } if (resp_request["context"].toString() == "updateFriends") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
 
         if (!json_document.isNull() && json_document.object().contains("response")) {
