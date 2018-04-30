@@ -186,6 +186,11 @@ int VKHelper::authState() const
     return AuthState;
 }
 
+int VKHelper::friendsCount() const
+{
+    return FriendsData.count();
+}
+
 QString VKHelper::photoUrl() const
 {
     return PhotoUrl;
@@ -305,7 +310,7 @@ void VKHelper::updateTrustedFriendsList(QVariantList trusted_friends_list)
             FriendsData[key] = frnd;
         }
 
-        for (int i = 0; i < trusted_friends_list.size(); i++) {
+        for (int i = 0; i < trusted_friends_list.count(); i++) {
             QString friend_id = trusted_friends_list[i].toString();
 
             user_id_list.append(friend_id);
@@ -455,7 +460,7 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
         if (request.contains("parameters")) {
             QVariantMap parameters = request["parameters"].toMap();
 
-            vk_parameters = [NSMutableDictionary dictionaryWithCapacity:parameters.size()];
+            vk_parameters = [NSMutableDictionary dictionaryWithCapacity:parameters.count()];
 
             foreach (QString key, parameters.keys()) {
                 vk_parameters[key.toNSString()] = parameters[key].toString().toNSString();
@@ -767,6 +772,8 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
         if (!ContextHaveActiveRequests(resp_request["context"].toString())) {
             FriendsData = FriendsDataTmp;
 
+            emit friendsCountChanged(FriendsData.count());
+
             QVariantList friends_list = FriendsData.values();
 
             std::sort(friends_list.begin(), friends_list.end(), compareFriends);
@@ -781,6 +788,8 @@ void VKHelper::ProcessNotesGetError(QVariantMap err_request)
     if (err_request["context"].toString() == "updateFriends") {
         if (!ContextHaveActiveRequests(err_request["context"].toString())) {
             FriendsData = FriendsDataTmp;
+
+            emit friendsCountChanged(FriendsData.count());
 
             QVariantList friends_list = FriendsData.values();
 
@@ -974,6 +983,8 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
         if (!ContextHaveActiveRequests(resp_request["context"].toString())) {
             FriendsData = FriendsDataTmp;
 
+            emit friendsCountChanged(FriendsData.count());
+
             QVariantList friends_list = FriendsData.values();
 
             std::sort(friends_list.begin(), friends_list.end(), compareFriends);
@@ -988,6 +999,8 @@ void VKHelper::ProcessFriendsGetError(QVariantMap err_request)
     if (err_request["context"].toString() == "updateFriends") {
         if (!ContextHaveActiveRequests(err_request["context"].toString())) {
             FriendsData = FriendsDataTmp;
+
+            emit friendsCountChanged(FriendsData.count());
 
             QVariantList friends_list = FriendsData.values();
 
@@ -1082,6 +1095,8 @@ void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp
             if (!ContextHaveActiveRequests(resp_request["context"].toString())) {
                 FriendsData = FriendsDataTmp;
 
+                emit friendsCountChanged(FriendsData.count());
+
                 QVariantList friends_list = FriendsData.values();
 
                 std::sort(friends_list.begin(), friends_list.end(), compareFriends);
@@ -1097,6 +1112,8 @@ void VKHelper::ProcessFriendsGetListsError(QVariantMap err_request)
     if (err_request["context"].toString() == "updateFriends") {
         if (!ContextHaveActiveRequests(err_request["context"].toString())) {
             FriendsData = FriendsDataTmp;
+
+            emit friendsCountChanged(FriendsData.count());
 
             QVariantList friends_list = FriendsData.values();
 

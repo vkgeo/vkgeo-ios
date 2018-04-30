@@ -13,8 +13,9 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             width:                    parent.width - UtilScript.pt(32)
             height:                   UtilScript.pt(64)
-            color:                    "steelblue"
+            color:                    enabled ? "steelblue" : "darkgray"
             radius:                   UtilScript.pt(8)
+            enabled:                  VKHelper.friendsCount !== 0
 
             Text {
                 anchors.fill:        parent

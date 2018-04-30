@@ -34,8 +34,9 @@ class VKHelper : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(int     authState READ authState NOTIFY authStateChanged)
-    Q_PROPERTY(QString photoUrl  READ photoUrl  NOTIFY photoUrlChanged)
+    Q_PROPERTY(int     authState    READ authState    NOTIFY authStateChanged)
+    Q_PROPERTY(int     friendsCount READ friendsCount NOTIFY friendsCountChanged)
+    Q_PROPERTY(QString photoUrl     READ photoUrl     NOTIFY photoUrlChanged)
 
     Q_PROPERTY(int maxTrustedFriendsCount READ maxTrustedFriendsCount WRITE setMaxTrustedFriendsCount)
 
@@ -53,6 +54,7 @@ public:
     virtual ~VKHelper();
 
     int authState() const;
+    int friendsCount() const;
     QString photoUrl() const;
 
     int maxTrustedFriendsCount() const;
@@ -74,6 +76,7 @@ public:
 
 signals:
     void authStateChanged(int authState);
+    void friendsCountChanged(int friendsCount);
     void photoUrlChanged(QString photoUrl);
     void friendsUpdated(QVariantList friendsList);
 
