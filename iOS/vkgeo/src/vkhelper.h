@@ -120,7 +120,7 @@ private:
     QQueue<QVariantMap> RequestQueue;
     QTimer              RequestQueueTimer;
     QMap<QString, int>  RequestContextTracker;
-    QVariantMap         FriendsData;
+    QVariantMap         FriendsData, FriendsDataTmp;
     static VKHelper    *Instance;
 #ifdef __OBJC__
     VKDelegate         *VKDelegateInstance;

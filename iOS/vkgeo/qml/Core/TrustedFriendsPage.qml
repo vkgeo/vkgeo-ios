@@ -11,10 +11,44 @@ Page {
         height: UtilScript.pt(48)
         color:  "lightsteelblue"
 
+        Rectangle {
+            id:                     closeButton
+            anchors.left:           parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.rightMargin:    UtilScript.pt(8)
+            width:                  UtilScript.pt(80)
+            height:                 UtilScript.pt(32)
+            color:                  "steelblue"
+            radius:                 UtilScript.pt(8)
+
+            Text {
+                anchors.fill:        parent
+                text:                qsTr("Close")
+                color:               "white"
+                font.pointSize:      16
+                font.family:         "Helvetica"
+                font.bold:           true
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment:   Text.AlignVCenter
+                wrapMode:            Text.Wrap
+                fontSizeMode:        Text.Fit
+                minimumPointSize:    8
+            }
+
+            MouseArea {
+                anchors.fill: parent
+
+                onClicked: {
+                    mainStackView.pop();
+                }
+            }
+        }
+
         Text {
             anchors.centerIn:    parent
             width:               parent.width - UtilScript.pt(8)
-                                              - closeButton.width * 2
+                                              - closeButton.width
+                                              - saveButton.width
             height:              parent.height
             text:                qsTr("Trusted Friends")
             color:               "white"
@@ -29,7 +63,7 @@ Page {
         }
 
         Rectangle {
-            id:                     closeButton
+            id:                     saveButton
             anchors.right:          parent.right
             anchors.verticalCenter: parent.verticalCenter
             anchors.rightMargin:    UtilScript.pt(8)
@@ -40,7 +74,7 @@ Page {
 
             Text {
                 anchors.fill:        parent
-                text:                qsTr("Close")
+                text:                qsTr("Save")
                 color:               "white"
                 font.pointSize:      16
                 font.family:         "Helvetica"
