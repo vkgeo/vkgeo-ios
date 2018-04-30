@@ -293,7 +293,16 @@ void VKHelper::updateFriends()
     }
 }
 
-QVariantList VKHelper::getFriends()
+QVariantMap VKHelper::getFriends()
+{
+    if (Initialized) {
+        return FriendsData;
+    } else {
+        return QVariantMap();
+    }
+}
+
+QVariantList VKHelper::getFriendsList()
 {
     if (Initialized) {
         QVariantList friends_list = FriendsData.values();
@@ -362,11 +371,7 @@ void VKHelper::updateTrustedFriendsList(QVariantList trusted_friends_list)
 
         EnqueueRequest(request);
 
-        QVariantList friends_list = FriendsData.values();
-
-        std::sort(friends_list.begin(), friends_list.end(), compareFriends);
-
-        emit friendsUpdated(friends_list);
+        emit friendsUpdated();
     }
 }
 
@@ -831,12 +836,7 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
             FriendsData = FriendsDataTmp;
 
             emit friendsCountChanged(FriendsData.count());
-
-            QVariantList friends_list = FriendsData.values();
-
-            std::sort(friends_list.begin(), friends_list.end(), compareFriends);
-
-            emit friendsUpdated(friends_list);
+            emit friendsUpdated();
         }
     } else if (resp_request["context"].toString() == "updateTrustedFriendsList") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
@@ -882,11 +882,7 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
 
                         FriendsData[user_id] = frnd;
 
-                        QVariantList friends_list = FriendsData.values();
-
-                        std::sort(friends_list.begin(), friends_list.end(), compareFriends);
-
-                        emit friendsUpdated(friends_list);
+                        emit friendsUpdated();
                     } else if (offset + json_items.count() < notes_count) {
                         QVariantMap request, parameters;
 
@@ -973,12 +969,7 @@ void VKHelper::ProcessNotesGetError(QVariantMap err_request)
             FriendsData = FriendsDataTmp;
 
             emit friendsCountChanged(FriendsData.count());
-
-            QVariantList friends_list = FriendsData.values();
-
-            std::sort(friends_list.begin(), friends_list.end(), compareFriends);
-
-            emit friendsUpdated(friends_list);
+            emit friendsUpdated();
         }
     }
 }
@@ -1166,12 +1157,7 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
             FriendsData = FriendsDataTmp;
 
             emit friendsCountChanged(FriendsData.count());
-
-            QVariantList friends_list = FriendsData.values();
-
-            std::sort(friends_list.begin(), friends_list.end(), compareFriends);
-
-            emit friendsUpdated(friends_list);
+            emit friendsUpdated();
         }
     }
 }
@@ -1183,12 +1169,7 @@ void VKHelper::ProcessFriendsGetError(QVariantMap err_request)
             FriendsData = FriendsDataTmp;
 
             emit friendsCountChanged(FriendsData.count());
-
-            QVariantList friends_list = FriendsData.values();
-
-            std::sort(friends_list.begin(), friends_list.end(), compareFriends);
-
-            emit friendsUpdated(friends_list);
+            emit friendsUpdated();
         }
     }
 }
@@ -1311,12 +1292,7 @@ void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp
             FriendsData = FriendsDataTmp;
 
             emit friendsCountChanged(FriendsData.count());
-
-            QVariantList friends_list = FriendsData.values();
-
-            std::sort(friends_list.begin(), friends_list.end(), compareFriends);
-
-            emit friendsUpdated(friends_list);
+            emit friendsUpdated();
         }
     } else if (resp_request["context"].toString() == "updateTrustedFriendsList") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
@@ -1385,12 +1361,7 @@ void VKHelper::ProcessFriendsGetListsError(QVariantMap err_request)
             FriendsData = FriendsDataTmp;
 
             emit friendsCountChanged(FriendsData.count());
-
-            QVariantList friends_list = FriendsData.values();
-
-            std::sort(friends_list.begin(), friends_list.end(), compareFriends);
-
-            emit friendsUpdated(friends_list);
+            emit friendsUpdated();
         }
     }
 }

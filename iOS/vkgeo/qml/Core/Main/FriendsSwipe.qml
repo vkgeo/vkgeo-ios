@@ -7,8 +7,10 @@ import "../../Util.js" as UtilScript
 Item {
     id: friendsSwipe
 
-    function updateFriends(friends_list) {
+    function updateFriends() {
         friendsListModel.clear();
+
+        var friends_list = VKHelper.getFriendsList();
 
         for (var i = 0; i < friends_list.length; i++) {
             friendsListModel.append(friends_list[i]);

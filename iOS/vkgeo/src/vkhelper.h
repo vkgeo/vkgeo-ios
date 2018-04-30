@@ -8,6 +8,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QQueue>
+#include <QtCore/QVariantList>
 #include <QtCore/QMap>
 #include <QtCore/QVariantMap>
 #include <QtCore/QTimer>
@@ -68,7 +69,8 @@ public:
     Q_INVOKABLE void reportCoordinate(qreal latitude, qreal longitude);
 
     Q_INVOKABLE void updateFriends();
-    Q_INVOKABLE QVariantList getFriends();
+    Q_INVOKABLE QVariantMap getFriends();
+    Q_INVOKABLE QVariantList getFriendsList();
 
     Q_INVOKABLE void updateTrustedFriendsList(QVariantList trusted_friends_list);
 
@@ -80,7 +82,7 @@ signals:
     void authStateChanged(int authState);
     void friendsCountChanged(int friendsCount);
     void photoUrlChanged(QString photoUrl);
-    void friendsUpdated(QVariantList friendsList);
+    void friendsUpdated();
     void trustedFriendCoordUpdated(QString id, qint64 updateTime, qreal latitude, qreal longitude);
 
 private slots:

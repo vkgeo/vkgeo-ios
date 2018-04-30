@@ -108,7 +108,7 @@ Page {
         }
     }
 
-    function updateTrustedFriendsCoords(friends_list) {
+    function updateTrustedFriendsCoords() {
         VKHelper.updateTrustedFriendsCoords();
     }
 
@@ -158,7 +158,7 @@ Page {
         triggeredOnStart: true
 
         onTriggered: {
-            mainPage.updateTrustedFriendsCoords([]);
+            mainPage.updateTrustedFriendsCoords();
         }
     }
 

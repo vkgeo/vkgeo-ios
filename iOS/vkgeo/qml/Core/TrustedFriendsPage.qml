@@ -243,7 +243,7 @@ Page {
         Component.onCompleted: {
             trustedFriendsListModel.clear();
 
-            var friends_list = VKHelper.getFriends();
+            var friends_list = VKHelper.getFriendsList();
 
             for (var i = 0; i < friends_list.length; i++) {
                 trustedFriendsListModel.append(friends_list[i]);
