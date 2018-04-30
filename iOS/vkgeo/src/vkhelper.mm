@@ -1,7 +1,9 @@
+#include <QtCore/QByteArray>
 #include <QtCore/QDateTime>
 #include <QtCore/QJsonObject>
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
+#include <QtCore/QRegExp>
 #include <QtCore/QDebug>
 
 #include "vkhelper.h"
@@ -240,7 +242,9 @@ void VKHelper::reportCoordinate(qreal latitude, qreal longitude)
         user_data["latitude"]    = latitude;
         user_data["longitude"]   = longitude;
 
-        QString user_data_string = QString::fromUtf8(QJsonDocument::fromVariant(user_data).toJson(QJsonDocument::Compact));
+        QString user_data_string = QString("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(user_data)
+                                                                             .toJson(QJsonDocument::Compact)
+                                                                             .toBase64()));
 
         if (TrustedFriendsListId == "") {
             request["method"]    = "friends.getLists";
@@ -306,7 +310,6 @@ void VKHelper::updateTrustedFriendsList(QVariantList trusted_friends_list)
 {
     if (Initialized && !ContextHaveActiveRequests("updateTrustedFriendsList")) {
         QStringList user_id_list;
-        QVariantMap request, parameters;
 
         foreach (QString key, FriendsData.keys()) {
             QVariantMap frnd = FriendsData[key].toMap();
@@ -341,6 +344,8 @@ void VKHelper::updateTrustedFriendsList(QVariantList trusted_friends_list)
             }
         }
 
+        QVariantMap request, parameters;
+
         if (TrustedFriendsListId == "") {
             request["method"]   = "friends.getLists";
             request["context"]  = "updateTrustedFriendsList";
@@ -362,6 +367,29 @@ void VKHelper::updateTrustedFriendsList(QVariantList trusted_friends_list)
         std::sort(friends_list.begin(), friends_list.end(), compareFriends);
 
         emit friendsUpdated(friends_list);
+    }
+}
+
+void VKHelper::updateTrustedFriendsCoords()
+{
+    if (Initialized) {
+        foreach (QString key, FriendsData.keys()) {
+            QVariantMap frnd = FriendsData[key].toMap();
+
+            if (frnd.contains("trusted")    && frnd["trusted"].toBool() &&
+                frnd.contains("dataNoteId") && frnd["dataNoteId"].toString() != "") {
+                QVariantMap request, parameters;
+
+                parameters["note_ids"] = frnd["dataNoteId"].toString();
+                parameters["user_id"]  = key;
+
+                request["method"]     = "notes.get";
+                request["context"]    = "updateTrustedFriendsCoords";
+                request["parameters"] = parameters;
+
+                EnqueueRequest(request);
+            }
+        }
     }
 }
 
@@ -881,6 +909,60 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
         } else {
             qWarning() << "ProcessNotesGetResponse() : invalid json";
         }
+    } else if (resp_request["context"].toString() == "updateTrustedFriendsCoords") {
+        QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
+
+        if (!json_document.isNull() && json_document.object().contains("response")) {
+            QJsonObject json_response = json_document.object().value("response").toObject();
+
+            if (json_response.contains("count") && json_response.contains("items")) {
+                QString user_id = "";
+
+                if (resp_request.contains("parameters") && resp_request["parameters"].toMap().contains("user_id")) {
+                    user_id = (resp_request["parameters"].toMap())["user_id"].toString();
+                }
+
+                QJsonArray json_items = json_response.value("items").toArray();
+
+                for (int i = 0; i < json_items.count(); i++) {
+                    QJsonObject json_note = json_items.at(i).toObject();
+
+                    if (json_note.contains("title") && json_note.contains("text")) {
+                        if (json_note.value("title").toString() == DATA_NOTE_TITLE) {
+                            if (user_id != "") {
+                                QString note_text = json_note.value("text").toString();
+                                QRegExp base64_regexp("\\{\\{\\{([^\\}]+)\\}\\}\\}");
+
+                                if (base64_regexp.indexIn(note_text) != -1) {
+                                    QString note_base64 = base64_regexp.cap(1);
+
+                                    QVariantMap user_data = QJsonDocument::fromJson(QByteArray::fromBase64(note_base64.toUtf8())).toVariant().toMap();
+
+                                    if (user_data.contains("update_time") && user_data.contains("latitude") &&
+                                                                             user_data.contains("longitude")) {
+                                        emit trustedFriendCoordUpdated(user_id, user_data["update_time"].toLongLong(),
+                                                                                user_data["latitude"].toReal(),
+                                                                                user_data["longitude"].toReal());
+                                    } else {
+                                        qWarning() << "ProcessNotesGetResponse() : invalid user data";
+                                    }
+                                } else {
+                                    qWarning() << "ProcessNotesGetResponse() : invalid user data";
+                                }
+                            } else {
+                                qWarning() << "ProcessNotesGetResponse() : invalid request";
+                            }
+
+                            break;
+                        }
+                    }
+                }
+            } else {
+                qWarning() << "ProcessNotesGetResponse() : invalid response";
+            }
+        } else {
+            qWarning() << "ProcessNotesGetResponse() : invalid json";
+        }
     }
 }
 
@@ -963,8 +1045,8 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
                                 QVariantMap frnd;
 
                                 frnd["id"]         = QString::number(json_friend.value("id").toInt());
-                                frnd["dataNoteId"] = "";
                                 frnd["trusted"]    = false;
+                                frnd["dataNoteId"] = "";
 
                                 if (json_friend.contains("first_name")) {
                                     frnd["firstName"] = json_friend.value("first_name").toString();

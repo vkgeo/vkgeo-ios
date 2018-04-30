@@ -84,13 +84,19 @@ Page {
     onAppInForegroundChanged: {
         if (appInForeground) {
             positionSource.active = true;
+            updateTimer.running   = true;
         } else {
             positionSource.active = false;
+            updateTimer.running   = false;
+        }
+
+        if (appInForeground && vkAuthState === VKAuthState.StateAuthorized) {
+            VKHelper.updateFriends();
         }
     }
 
     onVkAuthStateChanged: {
-        if (vkAuthState === VKAuthState.StateAuthorized) {
+        if (appInForeground && vkAuthState === VKAuthState.StateAuthorized) {
             VKHelper.updateFriends();
         }
     }
@@ -100,6 +106,10 @@ Page {
             StackView.status === StackView.Active) {
             safeAreaBottomMargin = UIHelper.safeAreaBottomMargin();
         }
+    }
+
+    function updateTrustedFriendsCoords(friends_list) {
+        VKHelper.updateTrustedFriendsCoords();
     }
 
     SwipeView {
@@ -139,5 +149,20 @@ Page {
                                           position.coordinate.longitude);
             }
         }
+    }
+
+    Timer {
+        id:               updateTimer
+        interval:         15000
+        repeat:           true
+        triggeredOnStart: true
+
+        onTriggered: {
+            mainPage.updateTrustedFriendsCoords([]);
+        }
+    }
+
+    Component.onCompleted: {
+        VKHelper.friendsUpdated.connect(updateTrustedFriendsCoords);
     }
 }

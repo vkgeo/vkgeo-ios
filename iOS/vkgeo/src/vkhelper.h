@@ -72,6 +72,8 @@ public:
 
     Q_INVOKABLE void updateTrustedFriendsList(QVariantList trusted_friends_list);
 
+    Q_INVOKABLE void updateTrustedFriendsCoords();
+
     static void setAuthState(const int &state);
 
 signals:
@@ -79,6 +81,7 @@ signals:
     void friendsCountChanged(int friendsCount);
     void photoUrlChanged(QString photoUrl);
     void friendsUpdated(QVariantList friendsList);
+    void trustedFriendCoordUpdated(QString id, qint64 updateTime, qreal latitude, qreal longitude);
 
 private slots:
     void requestQueueTimerTimeout();
