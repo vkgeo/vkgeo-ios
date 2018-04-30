@@ -321,6 +321,17 @@ void VKHelper::updateTrustedFriendsList(QVariantList trusted_friends_list)
                 frnd["trusted"] = true;
 
                 FriendsData[friend_id] = frnd;
+
+                QVariantMap request, parameters;
+
+                parameters["count"]   = MAX_NOTES_GET_COUNT;
+                parameters["user_id"] = friend_id;
+
+                request["method"]     = "notes.get";
+                request["context"]    = "updateTrustedFriendsList";
+                request["parameters"] = parameters;
+
+                EnqueueRequest(request);
             }
         }
 
@@ -715,11 +726,15 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
             if (json_response.contains("count") && json_response.contains("items")) {
                 QString data_note_id;
 
-                int offset      = 0;
-                int notes_count = json_response.value("count").toInt();
+                int     offset      = 0;
+                int     notes_count = json_response.value("count").toInt();
+                QString user_id     = "";
 
                 if (resp_request.contains("parameters") && resp_request["parameters"].toMap().contains("offset")) {
                     offset = (resp_request["parameters"].toMap())["offset"].toInt();
+                }
+                if (resp_request.contains("parameters") && resp_request["parameters"].toMap().contains("user_id")) {
+                    user_id = (resp_request["parameters"].toMap())["user_id"].toString();
                 }
 
                 QJsonArray json_items = json_response.value("items").toArray();
@@ -738,23 +753,22 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
                     }
                 }
 
-                if (resp_request.contains("user_id")) {
+                if (user_id != "") {
                     if (data_note_id != "") {
-                        QVariantMap frnd = FriendsDataTmp[resp_request["user_id"].toString()].toMap();
+                        QVariantMap frnd = FriendsDataTmp[user_id].toMap();
 
                         frnd["dataNoteId"] = data_note_id;
 
-                        FriendsDataTmp[resp_request["user_id"].toString()] = frnd;
+                        FriendsDataTmp[user_id] = frnd;
                     } else if (offset + json_items.count() < notes_count) {
                         QVariantMap request, parameters;
 
                         parameters["count"]   = MAX_NOTES_GET_COUNT;
                         parameters["offset"]  = offset + json_items.count();
-                        parameters["user_id"] = resp_request["user_id"].toString();
+                        parameters["user_id"] = user_id;
 
                         request["method"]     = "notes.get";
                         request["context"]    = resp_request["context"].toString();
-                        request["user_id"]    = resp_request["user_id"].toString();
                         request["parameters"] = parameters;
 
                         EnqueueRequest(request);
@@ -779,6 +793,77 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
             std::sort(friends_list.begin(), friends_list.end(), compareFriends);
 
             emit friendsUpdated(friends_list);
+        }
+    } else if (resp_request["context"].toString() == "updateTrustedFriendsList") {
+        QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
+
+        if (!json_document.isNull() && json_document.object().contains("response")) {
+            QJsonObject json_response = json_document.object().value("response").toObject();
+
+            if (json_response.contains("count") && json_response.contains("items")) {
+                QString data_note_id;
+
+                int     offset      = 0;
+                int     notes_count = json_response.value("count").toInt();
+                QString user_id     = "";
+
+                if (resp_request.contains("parameters") && resp_request["parameters"].toMap().contains("offset")) {
+                    offset = (resp_request["parameters"].toMap())["offset"].toInt();
+                }
+                if (resp_request.contains("parameters") && resp_request["parameters"].toMap().contains("user_id")) {
+                    user_id = (resp_request["parameters"].toMap())["user_id"].toString();
+                }
+
+                QJsonArray json_items = json_response.value("items").toArray();
+
+                for (int i = 0; i < json_items.count(); i++) {
+                    QJsonObject json_note = json_items.at(i).toObject();
+
+                    if (json_note.contains("id") && json_note.contains("title")) {
+                        if (json_note.value("title").toString() == DATA_NOTE_TITLE) {
+                            data_note_id = QString::number(json_note.value("id").toInt());
+
+                            if (data_note_id != "") {
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (user_id != "") {
+                    if (data_note_id != "") {
+                        QVariantMap frnd = FriendsData[user_id].toMap();
+
+                        frnd["dataNoteId"] = data_note_id;
+
+                        FriendsData[user_id] = frnd;
+
+                        QVariantList friends_list = FriendsData.values();
+
+                        std::sort(friends_list.begin(), friends_list.end(), compareFriends);
+
+                        emit friendsUpdated(friends_list);
+                    } else if (offset + json_items.count() < notes_count) {
+                        QVariantMap request, parameters;
+
+                        parameters["count"]   = MAX_NOTES_GET_COUNT;
+                        parameters["offset"]  = offset + json_items.count();
+                        parameters["user_id"] = user_id;
+
+                        request["method"]     = "notes.get";
+                        request["context"]    = resp_request["context"].toString();
+                        request["parameters"] = parameters;
+
+                        EnqueueRequest(request);
+                    }
+                } else {
+                    qWarning() << "ProcessNotesGetResponse() : invalid request";
+                }
+            } else {
+                qWarning() << "ProcessNotesGetResponse() : invalid response";
+            }
+        } else {
+            qWarning() << "ProcessNotesGetResponse() : invalid json";
         }
     }
 }
@@ -965,7 +1050,6 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
 
                                 request["method"]     = "notes.get";
                                 request["context"]    = resp_request["context"].toString();
-                                request["user_id"]    = key;
                                 request["parameters"] = parameters;
 
                                 EnqueueRequest(request);
@@ -1013,8 +1097,7 @@ void VKHelper::ProcessFriendsGetError(QVariantMap err_request)
 
 void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp_request)
 {
-    if (resp_request["context"].toString() == "updateFriends" ||
-        resp_request["context"].toString() == "updateTrustedFriendsList") {
+    if (resp_request["context"].toString() == "updateFriends") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
 
         if (!json_document.isNull() && json_document.object().contains("response")) {
@@ -1039,50 +1122,19 @@ void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp
                     }
                 }
 
-                if (resp_request["context"].toString() == "updateFriends") {
-                    if (trusted_friends_list_id != "") {
-                        TrustedFriendsListId = trusted_friends_list_id;
+                if (trusted_friends_list_id != "") {
+                    TrustedFriendsListId = trusted_friends_list_id;
 
-                        QVariantMap request, parameters;
+                    QVariantMap request, parameters;
 
-                        parameters["count"]   = MAX_FRIENDS_GET_COUNT;
-                        parameters["list_id"] = TrustedFriendsListId.toInt();
+                    parameters["count"]   = MAX_FRIENDS_GET_COUNT;
+                    parameters["list_id"] = TrustedFriendsListId.toInt();
 
-                        request["method"]     = "friends.get";
-                        request["context"]    = resp_request["context"].toString();
-                        request["parameters"] = parameters;
+                    request["method"]     = "friends.get";
+                    request["context"]    = resp_request["context"].toString();
+                    request["parameters"] = parameters;
 
-                        EnqueueRequest(request);
-                    }
-                } else if (resp_request["context"].toString() == "updateTrustedFriendsList") {
-                    if (resp_request.contains("user_ids")) {
-                        QVariantMap request, parameters;
-
-                        if (trusted_friends_list_id != "") {
-                            TrustedFriendsListId = trusted_friends_list_id;
-
-                            parameters["list_id"]  = TrustedFriendsListId.toInt();
-                            parameters["name"]     = TRUSTED_FRIENDS_LIST_NAME;
-                            parameters["user_ids"] = resp_request["user_ids"].toString();
-
-                            request["method"]     = "friends.editList";
-                            request["context"]    = resp_request["context"].toString();
-                            request["parameters"] = parameters;
-                        } else {
-                            parameters["name"]     = TRUSTED_FRIENDS_LIST_NAME;
-                            parameters["user_ids"] = resp_request["user_ids"].toString();
-
-                            request["method"]     = "friends.addList";
-                            request["context"]    = resp_request["context"].toString();
-                            request["parameters"] = parameters;
-                        }
-
-                        EnqueueRequest(request);
-                    } else {
-                        qWarning() << "ProcessFriendsGetListsResponse() : invalid request";
-                    }
-                } else {
-                    qWarning() << "ProcessFriendsGetListsResponse() : invalid context";
+                    EnqueueRequest(request);
                 }
             } else {
                 qWarning() << "ProcessFriendsGetListsResponse() : invalid response";
@@ -1091,18 +1143,73 @@ void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp
             qWarning() << "ProcessFriendsGetListsResponse() : invalid json";
         }
 
-        if (resp_request["context"].toString() == "updateFriends") {
-            if (!ContextHaveActiveRequests(resp_request["context"].toString())) {
-                FriendsData = FriendsDataTmp;
+        if (!ContextHaveActiveRequests(resp_request["context"].toString())) {
+            FriendsData = FriendsDataTmp;
 
-                emit friendsCountChanged(FriendsData.count());
+            emit friendsCountChanged(FriendsData.count());
 
-                QVariantList friends_list = FriendsData.values();
+            QVariantList friends_list = FriendsData.values();
 
-                std::sort(friends_list.begin(), friends_list.end(), compareFriends);
+            std::sort(friends_list.begin(), friends_list.end(), compareFriends);
 
-                emit friendsUpdated(friends_list);
+            emit friendsUpdated(friends_list);
+        }
+    } else if (resp_request["context"].toString() == "updateTrustedFriendsList") {
+        QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
+
+        if (!json_document.isNull() && json_document.object().contains("response")) {
+            QJsonObject json_response = json_document.object().value("response").toObject();
+
+            if (json_response.contains("count") && json_response.contains("items")) {
+                QString trusted_friends_list_id;
+
+                QJsonArray json_items = json_response.value("items").toArray();
+
+                for (int i = 0; i < json_items.count(); i++) {
+                    QJsonObject json_list = json_items.at(i).toObject();
+
+                    if (json_list.contains("id") && json_list.contains("name")) {
+                        if (json_list.value("name").toString() == TRUSTED_FRIENDS_LIST_NAME) {
+                            trusted_friends_list_id = QString::number(json_list.value("id").toInt());
+
+                            if (trusted_friends_list_id != "") {
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (resp_request.contains("user_ids")) {
+                    QVariantMap request, parameters;
+
+                    if (trusted_friends_list_id != "") {
+                        TrustedFriendsListId = trusted_friends_list_id;
+
+                        parameters["list_id"]  = TrustedFriendsListId.toInt();
+                        parameters["name"]     = TRUSTED_FRIENDS_LIST_NAME;
+                        parameters["user_ids"] = resp_request["user_ids"].toString();
+
+                        request["method"]     = "friends.editList";
+                        request["context"]    = resp_request["context"].toString();
+                        request["parameters"] = parameters;
+                    } else {
+                        parameters["name"]     = TRUSTED_FRIENDS_LIST_NAME;
+                        parameters["user_ids"] = resp_request["user_ids"].toString();
+
+                        request["method"]     = "friends.addList";
+                        request["context"]    = resp_request["context"].toString();
+                        request["parameters"] = parameters;
+                    }
+
+                    EnqueueRequest(request);
+                } else {
+                    qWarning() << "ProcessFriendsGetListsResponse() : invalid request";
+                }
+            } else {
+                qWarning() << "ProcessFriendsGetListsResponse() : invalid response";
             }
+        } else {
+            qWarning() << "ProcessFriendsGetListsResponse() : invalid json";
         }
     }
 }
