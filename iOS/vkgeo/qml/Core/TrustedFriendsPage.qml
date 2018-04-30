@@ -12,10 +12,10 @@ Page {
         color:  "lightsteelblue"
 
         Rectangle {
-            id:                     closeButton
+            id:                     cancelButton
             anchors.left:           parent.left
             anchors.verticalCenter: parent.verticalCenter
-            anchors.rightMargin:    UtilScript.pt(8)
+            anchors.leftMargin:     UtilScript.pt(8)
             width:                  UtilScript.pt(80)
             height:                 UtilScript.pt(32)
             color:                  "steelblue"
@@ -23,7 +23,7 @@ Page {
 
             Text {
                 anchors.fill:        parent
-                text:                qsTr("Close")
+                text:                qsTr("Cancel")
                 color:               "white"
                 font.pointSize:      16
                 font.family:         "Helvetica"
@@ -47,8 +47,10 @@ Page {
         Text {
             anchors.centerIn:    parent
             width:               parent.width - UtilScript.pt(8)
-                                              - closeButton.width
+                                              - cancelButton.width
+                                              - cancelButton.leftMargin
                                               - saveButton.width
+                                              - saveButton.rightMargin
             height:              parent.height
             text:                qsTr("Trusted Friends")
             color:               "white"
