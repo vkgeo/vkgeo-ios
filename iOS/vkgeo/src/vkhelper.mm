@@ -319,6 +319,14 @@ void VKHelper::updateTrustedFriendsList(QVariantList trusted_friends_list)
             QString friend_id = trusted_friends_list[i].toString();
 
             user_id_list.append(friend_id);
+
+            if (FriendsData.contains(friend_id)) {
+                QVariantMap frnd = FriendsData[friend_id].toMap();
+
+                frnd["trusted"] = true;
+
+                FriendsData[friend_id] = frnd;
+            }
         }
 
         QVariantMap request, parameters;

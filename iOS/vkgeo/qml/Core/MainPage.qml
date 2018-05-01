@@ -141,7 +141,7 @@ Page {
         updateInterval:              1000
         preferredPositioningMethods: PositionSource.AllPositioningMethods
 
-        property int reportInterval:  15000
+        property int reportInterval:  30000
         property real lastReportTime: 0.0
 
         onPositionChanged: {
@@ -159,7 +159,7 @@ Page {
 
     Timer {
         id:               updateTimer
-        interval:         15000
+        interval:         30000
         repeat:           true
         triggeredOnStart: true
 
