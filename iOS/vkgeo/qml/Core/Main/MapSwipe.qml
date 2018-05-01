@@ -12,6 +12,10 @@ Item {
         if (map.myMapItem !== null) {
             map.myMapItem.coordinate = coordinate;
             map.myMapItem.updateTime = (new Date()).getTime() / 1000;
+
+            if (!map.wasTouched && map.trackedMapItem === null) {
+                map.centerOnMyMapItemOnce();
+            }
         }
     }
 
@@ -74,6 +78,10 @@ Item {
                 break;
             }
         }
+
+        if (!map.wasTouched && map.trackedMapItem === null) {
+            map.showAllMapItems();
+        }
     }
 
     function locateItemOnMap(id) {
@@ -92,68 +100,101 @@ Item {
         id:           map
         anchors.fill: parent
 
-        property bool trackingActive:     false
+        property bool wasTouched:           false
+        property bool wasCenterOnMyMapItem: false
+        property bool autoAction:           false
 
-        property real trackingBearing:    0.0
-        property real trackingTilt:       0.0
-        property real trackingZoomLevel:  18.0
+        property real centerBearing:        0.0
+        property real centerTilt:           0.0
+        property real centerZoomLevel:      18.0
 
-        property var myMapItem:           null
-        property var trackedMapItem:      null
+        property var myMapItem:             null
+        property var trackedMapItem:        null
 
         plugin: Plugin {
             name: "osm"
         }
 
         onBearingChanged: {
-            if (!trackingActive) {
+            if (!autoAction) {
+                wasTouched = true;
+
                 trackMapItem(null);
             }
         }
 
         onCenterChanged: {
-            if (!trackingActive) {
+            if (!autoAction) {
+                wasTouched = true;
+
                 trackMapItem(null);
             }
         }
 
         onTiltChanged: {
-            if (!trackingActive) {
+            if (!autoAction) {
+                wasTouched = true;
+
                 trackMapItem(null);
             }
         }
 
         onZoomLevelChanged: {
-            if (!trackingActive) {
+            if (!autoAction) {
+                wasTouched = true;
+
                 trackMapItem(null);
             }
         }
 
         function trackMapItem(map_item) {
             if (trackedMapItem !== null) {
-                trackedMapItem.coordinateChanged.disconnect(centerOnTrackedItem);
+                trackedMapItem.coordinateChanged.disconnect(centerOnTrackedMapItem);
             }
 
             trackedMapItem = map_item;
 
             if (trackedMapItem !== null) {
-                trackedMapItem.coordinateChanged.connect(centerOnTrackedItem);
+                trackedMapItem.coordinateChanged.connect(centerOnTrackedMapItem);
             }
 
-            centerOnTrackedItem();
+            centerOnTrackedMapItem();
         }
 
-        function centerOnTrackedItem() {
+        function centerOnTrackedMapItem() {
             if (trackedMapItem !== null) {
-                trackingActive = true;
+                autoAction = true;
 
                 center    = trackedMapItem.coordinate;
-                bearing   = trackingBearing;
-                tilt      = trackingTilt;
-                zoomLevel = trackingZoomLevel;
+                bearing   = centerBearing;
+                tilt      = centerTilt;
+                zoomLevel = centerZoomLevel;
 
-                trackingActive = false;
+                autoAction = false;
             }
+        }
+
+        function centerOnMyMapItemOnce() {
+            if (!wasCenterOnMyMapItem && myMapItem !== null) {
+                autoAction = true;
+
+                center    = myMapItem.coordinate;
+                bearing   = centerBearing;
+                tilt      = centerTilt;
+                zoomLevel = centerZoomLevel;
+
+                wasCenterOnMyMapItem = true;
+
+                autoAction = false;
+            }
+        }
+
+        function showAllMapItems() {
+            autoAction = true;
+
+            fitViewportToMapItems();
+
+            autoAction = false;
         }
     }
 
@@ -168,7 +209,7 @@ Item {
         source:               enabled ? "qrc:/resources/images/main/button_track.png" :
                                         "qrc:/resources/images/main/button_track_disabled.png"
         fillMode:             Image.PreserveAspectFit
-        enabled:              map.myMapItem != null && map.myMapItem.valid
+        enabled:              map.myMapItem !== null && map.myMapItem.valid
 
         MouseArea {
             anchors.fill: parent
@@ -189,7 +230,6 @@ Item {
             map.myMapItem.photoUrl = Qt.binding(function() { return VKHelper.photoUrl; });
 
             map.addMapItem(map.myMapItem);
-            map.trackMapItem(map.myMapItem);
         } else {
             console.log(component.errorString());
         }
