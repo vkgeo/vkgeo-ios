@@ -141,16 +141,10 @@ Page {
         updateInterval:              1000
         preferredPositioningMethods: PositionSource.AllPositioningMethods
 
-        property int reportInterval:  30000
-        property real lastReportTime: 0.0
-
         onPositionChanged: {
             mapSwipe.updateMyCoordinate(position.coordinate);
 
-            if ((new Date()).getTime() > lastReportTime + reportInterval &&
-                VKHelper.authState === VKAuthState.StateAuthorized) {
-                lastReportTime = (new Date()).getTime();
-
+            if (VKHelper.authState === VKAuthState.StateAuthorized) {
                 VKHelper.reportCoordinate(position.coordinate.latitude,
                                           position.coordinate.longitude);
             }
@@ -159,12 +153,14 @@ Page {
 
     Timer {
         id:               updateTimer
-        interval:         30000
+        interval:         1000
         repeat:           true
         triggeredOnStart: true
 
         onTriggered: {
-            mainPage.updateTrustedFriendsCoords();
+            if (VKHelper.authState === VKAuthState.StateAuthorized) {
+                mainPage.updateTrustedFriendsCoords();
+            }
         }
     }
 

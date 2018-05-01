@@ -42,11 +42,12 @@ class VKHelper : public QObject
     Q_PROPERTY(int maxTrustedFriendsCount READ maxTrustedFriendsCount WRITE setMaxTrustedFriendsCount)
 
 public:
-    static const int DEFAULT_MAX_TRUSTED_FRIENDS_COUNT = 10,
-                     REPORT_COORDINATE_INTERVAL        = 30,
-                     MAX_BATCH_SIZE                    = 25,
-                     MAX_NOTES_GET_COUNT               = 100,
-                     MAX_FRIENDS_GET_COUNT             = 5000;
+    static const int DEFAULT_MAX_TRUSTED_FRIENDS_COUNT      = 10,
+                     REPORT_COORDINATE_INTERVAL             = 300,
+                     UPDATE_TRUSTED_FRIENDS_COORDS_INTERVAL = 300,
+                     MAX_BATCH_SIZE                         = 25,
+                     MAX_NOTES_GET_COUNT                    = 100,
+                     MAX_FRIENDS_GET_COUNT                  = 5000;
 
     static const QString DEFAULT_PHOTO_URL,
                          DATA_NOTE_TITLE,
@@ -125,7 +126,7 @@ private:
 
     bool                Initialized;
     int                 AuthState, MaxTrustedFriendsCount;
-    qint64              LastReportCoordinateTime;
+    qint64              LastReportCoordinateTime, LastUpdateTrustedFriendsCoordsTime;
     QString             PhotoUrl, TrustedFriendsListId;
     QQueue<QVariantMap> RequestQueue;
     QTimer              RequestQueueTimer;

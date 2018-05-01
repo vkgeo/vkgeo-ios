@@ -126,7 +126,8 @@ VKHelper *VKHelper::Instance = NULL;
 
 @end
 
-bool compareFriends(const QVariant &friend_1, const QVariant &friend_2) {
+bool compareFriends(const QVariant &friend_1, const QVariant &friend_2)
+{
     bool friend_1_trusted = friend_1.toMap().contains("trusted") ? (friend_1.toMap())["trusted"].toBool() : false;
     bool friend_2_trusted = friend_2.toMap().contains("trusted") ? (friend_2.toMap())["trusted"].toBool() : false;
 
@@ -161,14 +162,15 @@ bool compareFriends(const QVariant &friend_1, const QVariant &friend_2) {
 
 VKHelper::VKHelper(QObject *parent) : QObject(parent)
 {
-    Initialized              = false;
-    AuthState                = VKAuthState::StateUnknown;
-    MaxTrustedFriendsCount   = DEFAULT_MAX_TRUSTED_FRIENDS_COUNT;
-    LastReportCoordinateTime = 0;
-    PhotoUrl                 = DEFAULT_PHOTO_URL;
-    TrustedFriendsListId     = "";
-    Instance                 = this;
-    VKDelegateInstance       = NULL;
+    Initialized                        = false;
+    AuthState                          = VKAuthState::StateUnknown;
+    MaxTrustedFriendsCount             = DEFAULT_MAX_TRUSTED_FRIENDS_COUNT;
+    LastReportCoordinateTime           = 0;
+    LastUpdateTrustedFriendsCoordsTime = 0;
+    PhotoUrl                           = DEFAULT_PHOTO_URL;
+    TrustedFriendsListId               = "";
+    Instance                           = this;
+    VKDelegateInstance                 = NULL;
 }
 
 VKHelper::~VKHelper()
@@ -357,7 +359,10 @@ void VKHelper::updateTrustedFriendsList(QVariantList trusted_friends_list)
 
 void VKHelper::updateTrustedFriendsCoords()
 {
-    if (Initialized) {
+    if (Initialized &&
+        QDateTime::currentSecsSinceEpoch() > LastUpdateTrustedFriendsCoordsTime + UPDATE_TRUSTED_FRIENDS_COORDS_INTERVAL) {
+        LastUpdateTrustedFriendsCoordsTime = QDateTime::currentSecsSinceEpoch();
+
         foreach (QString key, FriendsData.keys()) {
             QVariantMap frnd = FriendsData[key].toMap();
 

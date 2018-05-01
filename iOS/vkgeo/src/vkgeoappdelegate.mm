@@ -6,6 +6,7 @@
 
 #include <QtCore/QtGlobal>
 #include <QtCore/QString>
+#include <QtCore/QDebug>
 
 #include "vkhelpershared.h"
 
@@ -32,13 +33,13 @@ static CLLocationManager *LocationManager;
 
     LocationManager = [[CLLocationManager alloc] init];
 
-    LocationManager.allowsBackgroundLocationUpdates = YES;
-    LocationManager.delegate = self;
+    LocationManager.allowsBackgroundLocationUpdates    = YES;
+    LocationManager.pausesLocationUpdatesAutomatically = NO;
+    LocationManager.desiredAccuracy                    = kCLLocationAccuracyHundredMeters;
+    LocationManager.delegate                           = self;
 
     if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
-        if ([CLLocationManager significantLocationChangeMonitoringAvailable]) {
-            [LocationManager startMonitoringSignificantLocationChanges];
-        }
+        [LocationManager startUpdatingLocation];
     }
 
     return YES;
@@ -66,16 +67,21 @@ static CLLocationManager *LocationManager;
     }
 }
 
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
+{
+    Q_UNUSED(manager)
+
+    qWarning() << QString::fromNSString([error localizedDescription]);
+}
+
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 {
     Q_UNUSED(manager)
 
     if (status == kCLAuthorizationStatusAuthorizedAlways) {
-        if ([CLLocationManager significantLocationChangeMonitoringAvailable]) {
-            [LocationManager startMonitoringSignificantLocationChanges];
-        }
+        [LocationManager startUpdatingLocation];
     } else {
-        [LocationManager stopMonitoringSignificantLocationChanges];
+        [LocationManager stopUpdatingLocation];
     }
 }
 
