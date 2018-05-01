@@ -108,9 +108,6 @@ private:
     void ProcessNotesAddResponse(QString response, QVariantMap resp_request);
     void ProcessNotesAddError(QVariantMap err_request);
 
-    void ProcessNotesEditResponse(QString response, QVariantMap resp_request);
-    void ProcessNotesEditError(QVariantMap err_request);
-
     void ProcessNotesDeleteResponse(QString response, QVariantMap resp_request);
     void ProcessNotesDeleteError(QVariantMap err_request);
 

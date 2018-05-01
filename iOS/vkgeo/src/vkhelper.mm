@@ -542,27 +542,6 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
             TrackerAddRequest(request);
 
             return vk_request;
-        } else if (request["method"].toString() == "notes.edit") {
-            VKRequest *vk_request = [VKRequest requestWithMethod:request["method"].toString().toNSString() parameters:vk_parameters];
-
-            vk_request.completeBlock = ^(VKResponse *response) {
-                TrackerDelRequest(request);
-
-                ProcessNotesEditResponse(QString::fromNSString(response.responseString), request);
-            };
-            vk_request.errorBlock = ^(NSError *error) {
-                Q_UNUSED(error)
-
-                qWarning() << QString("ProcessRequest() : %1 request failed").arg(QString::fromNSString(vk_request.methodName));
-
-                TrackerDelRequest(request);
-
-                ProcessNotesEditError(request);
-            };
-
-            TrackerAddRequest(request);
-
-            return vk_request;
         } else if (request["method"].toString() == "notes.delete") {
             VKRequest *vk_request = [VKRequest requestWithMethod:request["method"].toString().toNSString() parameters:vk_parameters];
 
@@ -867,17 +846,6 @@ void VKHelper::ProcessNotesAddResponse(QString response, QVariantMap resp_reques
 }
 
 void VKHelper::ProcessNotesAddError(QVariantMap err_request)
-{
-    Q_UNUSED(err_request)
-}
-
-void VKHelper::ProcessNotesEditResponse(QString response, QVariantMap resp_request)
-{
-    Q_UNUSED(response)
-    Q_UNUSED(resp_request)
-}
-
-void VKHelper::ProcessNotesEditError(QVariantMap err_request)
 {
     Q_UNUSED(err_request)
 }
