@@ -44,9 +44,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Please enable access to your location if you want to use this application</string>
+	<string>You should allow access to your location if you want to let your trusted friends see it</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Please enable access to your location if you want to use this application</string>
+	<string>You should allow access to your location if you want to let your trusted friends see it</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>
