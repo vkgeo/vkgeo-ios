@@ -44,7 +44,7 @@ class VKHelper : public QObject
 public:
     static const int DEFAULT_MAX_TRUSTED_FRIENDS_COUNT      = 10,
                      REPORT_COORDINATE_INTERVAL             = 300,
-                     UPDATE_TRUSTED_FRIENDS_COORDS_INTERVAL = 300,
+                     UPDATE_TRUSTED_FRIENDS_COORDS_INTERVAL = 60,
                      MAX_BATCH_SIZE                         = 25,
                      MAX_NOTES_GET_COUNT                    = 100,
                      MAX_FRIENDS_GET_COUNT                  = 5000;
@@ -76,7 +76,7 @@ public:
 
     Q_INVOKABLE void updateTrustedFriendsList(QVariantList trusted_friends_list);
 
-    Q_INVOKABLE void updateTrustedFriendsCoords();
+    Q_INVOKABLE void updateTrustedFriendsCoords(bool expedited);
 
     static void setAuthState(const int &state);
 

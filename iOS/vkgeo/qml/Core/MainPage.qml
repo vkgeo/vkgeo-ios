@@ -109,7 +109,7 @@ Page {
     }
 
     function updateTrustedFriendsCoords() {
-        VKHelper.updateTrustedFriendsCoords();
+        VKHelper.updateTrustedFriendsCoords(true);
     }
 
     SwipeView {
@@ -152,14 +152,13 @@ Page {
     }
 
     Timer {
-        id:               updateTimer
-        interval:         1000
-        repeat:           true
-        triggeredOnStart: true
+        id:       updateTimer
+        interval: 1000
+        repeat:   true
 
         onTriggered: {
             if (VKHelper.authState === VKAuthState.StateAuthorized) {
-                mainPage.updateTrustedFriendsCoords();
+                VKHelper.updateTrustedFriendsCoords(false);
             }
         }
     }

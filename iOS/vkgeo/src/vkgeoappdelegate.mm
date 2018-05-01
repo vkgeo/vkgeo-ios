@@ -40,6 +40,10 @@ static CLLocationManager *LocationManager;
 
     if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
         [LocationManager startUpdatingLocation];
+
+        if ([CLLocationManager significantLocationChangeMonitoringAvailable]) {
+            [LocationManager startMonitoringSignificantLocationChanges];
+        }
     }
 
     return YES;
@@ -80,8 +84,13 @@ static CLLocationManager *LocationManager;
 
     if (status == kCLAuthorizationStatusAuthorizedAlways) {
         [LocationManager startUpdatingLocation];
+
+        if ([CLLocationManager significantLocationChangeMonitoringAvailable]) {
+            [LocationManager startMonitoringSignificantLocationChanges];
+        }
     } else {
         [LocationManager stopUpdatingLocation];
+        [LocationManager stopMonitoringSignificantLocationChanges];
     }
 }
 

@@ -237,34 +237,35 @@ void VKHelper::logout()
 
 void VKHelper::reportCoordinate(qreal latitude, qreal longitude)
 {
-    if (!ContextHaveActiveRequests("reportCoordinate") &&
-        QDateTime::currentSecsSinceEpoch() > LastReportCoordinateTime + REPORT_COORDINATE_INTERVAL) {
-        LastReportCoordinateTime = QDateTime::currentSecsSinceEpoch();
+    if (!ContextHaveActiveRequests("reportCoordinate")) {
+        if (QDateTime::currentSecsSinceEpoch() > LastReportCoordinateTime + REPORT_COORDINATE_INTERVAL) {
+            LastReportCoordinateTime = QDateTime::currentSecsSinceEpoch();
 
-        QVariantMap request, user_data, parameters;
+            QVariantMap request, user_data, parameters;
 
-        user_data["update_time"] = LastReportCoordinateTime;
-        user_data["latitude"]    = latitude;
-        user_data["longitude"]   = longitude;
+            user_data["update_time"] = LastReportCoordinateTime;
+            user_data["latitude"]    = latitude;
+            user_data["longitude"]   = longitude;
 
-        QString user_data_string = QString("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(user_data)
-                                                                             .toJson(QJsonDocument::Compact)
-                                                                             .toBase64()));
+            QString user_data_string = QString("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(user_data)
+                                                                                 .toJson(QJsonDocument::Compact)
+                                                                                 .toBase64()));
 
-        if (TrustedFriendsListId == "") {
-            request["method"]    = "friends.getLists";
-            request["context"]   = "reportCoordinate";
-            request["user_data"] = user_data_string;
-        } else {
-            parameters["count"] = MAX_NOTES_GET_COUNT;
+            if (TrustedFriendsListId == "") {
+                request["method"]    = "friends.getLists";
+                request["context"]   = "reportCoordinate";
+                request["user_data"] = user_data_string;
+            } else {
+                parameters["count"] = MAX_NOTES_GET_COUNT;
 
-            request["method"]     = "notes.get";
-            request["context"]    = "reportCoordinate";
-            request["user_data"]  = user_data_string;
-            request["parameters"] = parameters;
+                request["method"]     = "notes.get";
+                request["context"]    = "reportCoordinate";
+                request["user_data"]  = user_data_string;
+                request["parameters"] = parameters;
+            }
+
+            EnqueueRequest(request);
         }
-
-        EnqueueRequest(request);
     }
 }
 
@@ -357,26 +358,27 @@ void VKHelper::updateTrustedFriendsList(QVariantList trusted_friends_list)
     }
 }
 
-void VKHelper::updateTrustedFriendsCoords()
+void VKHelper::updateTrustedFriendsCoords(bool expedited)
 {
-    if (Initialized &&
-        QDateTime::currentSecsSinceEpoch() > LastUpdateTrustedFriendsCoordsTime + UPDATE_TRUSTED_FRIENDS_COORDS_INTERVAL) {
-        LastUpdateTrustedFriendsCoordsTime = QDateTime::currentSecsSinceEpoch();
+    if (Initialized) {
+        if (expedited || QDateTime::currentSecsSinceEpoch() > LastUpdateTrustedFriendsCoordsTime + UPDATE_TRUSTED_FRIENDS_COORDS_INTERVAL) {
+            LastUpdateTrustedFriendsCoordsTime = QDateTime::currentSecsSinceEpoch();
 
-        foreach (QString key, FriendsData.keys()) {
-            QVariantMap frnd = FriendsData[key].toMap();
+            foreach (QString key, FriendsData.keys()) {
+                QVariantMap frnd = FriendsData[key].toMap();
 
-            if (frnd.contains("trusted") && frnd["trusted"].toBool()) {
-                QVariantMap request, parameters;
+                if (frnd.contains("trusted") && frnd["trusted"].toBool()) {
+                    QVariantMap request, parameters;
 
-                parameters["count"]   = MAX_NOTES_GET_COUNT;
-                parameters["user_id"] = key;
+                    parameters["count"]   = MAX_NOTES_GET_COUNT;
+                    parameters["user_id"] = key;
 
-                request["method"]     = "notes.get";
-                request["context"]    = "updateTrustedFriendsCoords";
-                request["parameters"] = parameters;
+                    request["method"]     = "notes.get";
+                    request["context"]    = "updateTrustedFriendsCoords";
+                    request["parameters"] = parameters;
 
-                EnqueueRequest(request);
+                    EnqueueRequest(request);
+                }
             }
         }
     }
