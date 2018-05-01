@@ -1,8 +1,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIWindow.h>
 #import <UIKit/UIApplication.h>
-#import <UIKit/UIActivityViewController.h>
-#import <UIKit/UIPopoverPresentationController.h>
+#import <UIKit/UIViewController.h>
 
 #include <QtCore/QDir>
 

@@ -14,7 +14,8 @@ OBJECTIVE_SOURCES += \
 HEADERS += \
     src/admobhelper.h \
     src/uihelper.h \
-    src/vkhelper.h
+    src/vkhelper.h \
+    src/vkhelpershared.h
 
 RESOURCES += \
     qml.qrc \
