@@ -760,6 +760,8 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
             QJsonObject json_response = json_document.object().value("response").toObject();
 
             if (json_response.contains("count") && json_response.contains("items")) {
+                bool data_note_found = false;
+
                 int     offset      = 0;
                 int     notes_count = json_response.value("count").toInt();
                 QString user_id     = "";
@@ -778,6 +780,8 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
 
                     if (json_note.contains("title") && json_note.contains("text")) {
                         if (json_note.value("title").toString() == DATA_NOTE_TITLE) {
+                            data_note_found = true;
+
                             if (user_id != "") {
                                 QString note_text = json_note.value("text").toString();
                                 QRegExp base64_regexp("\\{\\{\\{([^\\}]+)\\}\\}\\}");
@@ -807,23 +811,25 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
                     }
                 }
 
-                if (user_id != "") {
-                    if (offset + json_items.count() < notes_count) {
-                        QVariantMap request, parameters;
+                if (!data_note_found) {
+                    if (user_id != "") {
+                        if (offset + json_items.count() < notes_count) {
+                            QVariantMap request, parameters;
 
-                        parameters["count"]   = MAX_NOTES_GET_COUNT;
-                        parameters["offset"]  = offset + json_items.count();
-                        parameters["user_id"] = user_id;
+                            parameters["count"]   = MAX_NOTES_GET_COUNT;
+                            parameters["offset"]  = offset + json_items.count();
+                            parameters["user_id"] = user_id;
 
-                        request["method"]     = "notes.get";
-                        request["context"]    = resp_request["context"].toString();
-                        request["user_data"]  = resp_request["user_data"].toString();
-                        request["parameters"] = parameters;
+                            request["method"]     = "notes.get";
+                            request["context"]    = resp_request["context"].toString();
+                            request["user_data"]  = resp_request["user_data"].toString();
+                            request["parameters"] = parameters;
 
-                        EnqueueRequest(request);
+                            EnqueueRequest(request);
+                        }
+                    } else {
+                        qWarning() << "ProcessNotesGetResponse() : invalid request";
                     }
-                } else {
-                    qWarning() << "ProcessNotesGetResponse() : invalid request";
                 }
             } else {
                 qWarning() << "ProcessNotesGetResponse() : invalid response";
