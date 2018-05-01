@@ -8,7 +8,7 @@ import "../../Util.js" as UtilScript
 Item {
     id: mapSwipe
 
-    function updateMyCoordinate(coordinate) {
+    function updateMyLocation(coordinate) {
         if (map.myMapItem !== null) {
             map.myMapItem.coordinate = coordinate;
             map.myMapItem.updateTime = (new Date()).getTime() / 1000;
@@ -63,7 +63,7 @@ Item {
         }
     }
 
-    function updateMapItemCoordinate(id, update_time, latitude, longitude) {
+    function updateMapItemLocation(id, update_time, latitude, longitude) {
         for (var i = 0; i < map.mapItems.length; i++) {
             var map_item = map.mapItems[i];
 
@@ -195,6 +195,6 @@ Item {
         }
 
         VKHelper.friendsUpdated.connect(updateMapItems);
-        VKHelper.trustedFriendCoordUpdated.connect(updateMapItemCoordinate);
+        VKHelper.trustedFriendLocationUpdated.connect(updateMapItemLocation);
     }
 }

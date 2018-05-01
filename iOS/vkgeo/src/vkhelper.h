@@ -42,12 +42,12 @@ class VKHelper : public QObject
     Q_PROPERTY(int maxTrustedFriendsCount READ maxTrustedFriendsCount WRITE setMaxTrustedFriendsCount)
 
 public:
-    static const int DEFAULT_MAX_TRUSTED_FRIENDS_COUNT      = 10,
-                     REPORT_COORDINATE_INTERVAL             = 300,
-                     UPDATE_TRUSTED_FRIENDS_COORDS_INTERVAL = 60,
-                     MAX_BATCH_SIZE                         = 25,
-                     MAX_NOTES_GET_COUNT                    = 100,
-                     MAX_FRIENDS_GET_COUNT                  = 5000;
+    static const int DEFAULT_MAX_TRUSTED_FRIENDS_COUNT         = 10,
+                     REPORT_LOCATION_INTERVAL                  = 300,
+                     UPDATE_TRUSTED_FRIENDS_LOCATIONS_INTERVAL = 60,
+                     MAX_BATCH_SIZE                            = 25,
+                     MAX_NOTES_GET_COUNT                       = 100,
+                     MAX_FRIENDS_GET_COUNT                     = 5000;
 
     static const QString DEFAULT_PHOTO_URL,
                          DATA_NOTE_TITLE,
@@ -68,7 +68,7 @@ public:
     Q_INVOKABLE void login();
     Q_INVOKABLE void logout();
 
-    Q_INVOKABLE void reportCoordinate(qreal latitude, qreal longitude);
+    Q_INVOKABLE void reportLocation(qreal latitude, qreal longitude);
 
     Q_INVOKABLE void updateFriends();
     Q_INVOKABLE QVariantMap getFriends();
@@ -76,7 +76,7 @@ public:
 
     Q_INVOKABLE void updateTrustedFriendsList(QVariantList trusted_friends_list);
 
-    Q_INVOKABLE void updateTrustedFriendsCoords(bool expedited);
+    Q_INVOKABLE void updateTrustedFriendsLocations(bool expedited);
 
     static void setAuthState(const int &state);
 
@@ -85,7 +85,7 @@ signals:
     void friendsCountChanged(int friendsCount);
     void photoUrlChanged(QString photoUrl);
     void friendsUpdated();
-    void trustedFriendCoordUpdated(QString id, qint64 updateTime, qreal latitude, qreal longitude);
+    void trustedFriendLocationUpdated(QString id, qint64 updateTime, qreal latitude, qreal longitude);
 
 private slots:
     void requestQueueTimerTimeout();
@@ -126,7 +126,7 @@ private:
 
     bool                Initialized;
     int                 AuthState, MaxTrustedFriendsCount;
-    qint64              LastReportCoordinateTime, LastUpdateTrustedFriendsCoordsTime;
+    qint64              LastReportLocationTime, LastUpdateTrustedFriendsLocationsTime;
     QString             PhotoUrl, TrustedFriendsListId;
     QQueue<QVariantMap> RequestQueue;
     QTimer              RequestQueueTimer;

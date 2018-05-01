@@ -108,8 +108,8 @@ Page {
         }
     }
 
-    function updateTrustedFriendsCoords() {
-        VKHelper.updateTrustedFriendsCoords(true);
+    function updateTrustedFriendsLocations() {
+        VKHelper.updateTrustedFriendsLocations(true);
     }
 
     SwipeView {
@@ -142,11 +142,11 @@ Page {
         preferredPositioningMethods: PositionSource.AllPositioningMethods
 
         onPositionChanged: {
-            mapSwipe.updateMyCoordinate(position.coordinate);
+            mapSwipe.updateMyLocation(position.coordinate);
 
             if (VKHelper.authState === VKAuthState.StateAuthorized) {
-                VKHelper.reportCoordinate(position.coordinate.latitude,
-                                          position.coordinate.longitude);
+                VKHelper.reportLocation(position.coordinate.latitude,
+                                        position.coordinate.longitude);
             }
         }
     }
@@ -158,12 +158,12 @@ Page {
 
         onTriggered: {
             if (VKHelper.authState === VKAuthState.StateAuthorized) {
-                VKHelper.updateTrustedFriendsCoords(false);
+                VKHelper.updateTrustedFriendsLocations(false);
             }
         }
     }
 
     Component.onCompleted: {
-        VKHelper.friendsUpdated.connect(updateTrustedFriendsCoords);
+        VKHelper.friendsUpdated.connect(updateTrustedFriendsLocations);
     }
 }

@@ -162,15 +162,15 @@ bool compareFriends(const QVariant &friend_1, const QVariant &friend_2)
 
 VKHelper::VKHelper(QObject *parent) : QObject(parent)
 {
-    Initialized                        = false;
-    AuthState                          = VKAuthState::StateUnknown;
-    MaxTrustedFriendsCount             = DEFAULT_MAX_TRUSTED_FRIENDS_COUNT;
-    LastReportCoordinateTime           = 0;
-    LastUpdateTrustedFriendsCoordsTime = 0;
-    PhotoUrl                           = DEFAULT_PHOTO_URL;
-    TrustedFriendsListId               = "";
-    Instance                           = this;
-    VKDelegateInstance                 = NULL;
+    Initialized                           = false;
+    AuthState                             = VKAuthState::StateUnknown;
+    MaxTrustedFriendsCount                = DEFAULT_MAX_TRUSTED_FRIENDS_COUNT;
+    LastReportLocationTime                = 0;
+    LastUpdateTrustedFriendsLocationsTime = 0;
+    PhotoUrl                              = DEFAULT_PHOTO_URL;
+    TrustedFriendsListId                  = "";
+    Instance                              = this;
+    VKDelegateInstance                    = NULL;
 }
 
 VKHelper::~VKHelper()
@@ -235,15 +235,15 @@ void VKHelper::logout()
     }
 }
 
-void VKHelper::reportCoordinate(qreal latitude, qreal longitude)
+void VKHelper::reportLocation(qreal latitude, qreal longitude)
 {
-    if (!ContextHaveActiveRequests("reportCoordinate")) {
-        if (QDateTime::currentSecsSinceEpoch() > LastReportCoordinateTime + REPORT_COORDINATE_INTERVAL) {
-            LastReportCoordinateTime = QDateTime::currentSecsSinceEpoch();
+    if (!ContextHaveActiveRequests("reportLocation")) {
+        if (QDateTime::currentSecsSinceEpoch() > LastReportLocationTime + REPORT_LOCATION_INTERVAL) {
+            LastReportLocationTime = QDateTime::currentSecsSinceEpoch();
 
             QVariantMap request, user_data, parameters;
 
-            user_data["update_time"] = LastReportCoordinateTime;
+            user_data["update_time"] = LastReportLocationTime;
             user_data["latitude"]    = latitude;
             user_data["longitude"]   = longitude;
 
@@ -253,13 +253,13 @@ void VKHelper::reportCoordinate(qreal latitude, qreal longitude)
 
             if (TrustedFriendsListId == "") {
                 request["method"]    = "friends.getLists";
-                request["context"]   = "reportCoordinate";
+                request["context"]   = "reportLocation";
                 request["user_data"] = user_data_string;
             } else {
                 parameters["count"] = MAX_NOTES_GET_COUNT;
 
                 request["method"]     = "notes.get";
-                request["context"]    = "reportCoordinate";
+                request["context"]    = "reportLocation";
                 request["user_data"]  = user_data_string;
                 request["parameters"] = parameters;
             }
@@ -358,11 +358,11 @@ void VKHelper::updateTrustedFriendsList(QVariantList trusted_friends_list)
     }
 }
 
-void VKHelper::updateTrustedFriendsCoords(bool expedited)
+void VKHelper::updateTrustedFriendsLocations(bool expedited)
 {
     if (Initialized) {
-        if (expedited || QDateTime::currentSecsSinceEpoch() > LastUpdateTrustedFriendsCoordsTime + UPDATE_TRUSTED_FRIENDS_COORDS_INTERVAL) {
-            LastUpdateTrustedFriendsCoordsTime = QDateTime::currentSecsSinceEpoch();
+        if (expedited || QDateTime::currentSecsSinceEpoch() > LastUpdateTrustedFriendsLocationsTime + UPDATE_TRUSTED_FRIENDS_LOCATIONS_INTERVAL) {
+            LastUpdateTrustedFriendsLocationsTime = QDateTime::currentSecsSinceEpoch();
 
             foreach (QString key, FriendsData.keys()) {
                 QVariantMap frnd = FriendsData[key].toMap();
@@ -374,7 +374,7 @@ void VKHelper::updateTrustedFriendsCoords(bool expedited)
                     parameters["user_id"] = key;
 
                     request["method"]     = "notes.get";
-                    request["context"]    = "updateTrustedFriendsCoords";
+                    request["context"]    = "updateTrustedFriendsLocations";
                     request["parameters"] = parameters;
 
                     EnqueueRequest(request);
@@ -668,7 +668,7 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
 
 void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_request)
 {
-    if (resp_request["context"].toString() == "reportCoordinate") {
+    if (resp_request["context"].toString() == "reportLocation") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
 
         if (!json_document.isNull() && json_document.object().contains("response")) {
@@ -760,7 +760,7 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
         } else {
             qWarning() << "ProcessNotesGetResponse() : invalid json";
         }
-    } else if (resp_request["context"].toString() == "updateTrustedFriendsCoords") {
+    } else if (resp_request["context"].toString() == "updateTrustedFriendsLocations") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
 
         if (!json_document.isNull() && json_document.object().contains("response")) {
@@ -800,9 +800,9 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
 
                                     if (user_data.contains("update_time") && user_data.contains("latitude") &&
                                                                              user_data.contains("longitude")) {
-                                        emit trustedFriendCoordUpdated(user_id, user_data["update_time"].toLongLong(),
-                                                                                user_data["latitude"].toReal(),
-                                                                                user_data["longitude"].toReal());
+                                        emit trustedFriendLocationUpdated(user_id, user_data["update_time"].toLongLong(),
+                                                                                   user_data["latitude"].toReal(),
+                                                                                   user_data["longitude"].toReal());
                                     } else {
                                         qWarning() << "ProcessNotesGetResponse() : invalid user data";
                                     }
@@ -1025,7 +1025,7 @@ void VKHelper::ProcessFriendsGetError(QVariantMap err_request)
 
 void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp_request)
 {
-    if (resp_request["context"].toString() == "reportCoordinate") {
+    if (resp_request["context"].toString() == "reportLocation") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
 
         if (!json_document.isNull() && json_document.object().contains("response")) {

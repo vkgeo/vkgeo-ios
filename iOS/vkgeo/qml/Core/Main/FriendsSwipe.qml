@@ -19,6 +19,11 @@ Item {
         }
     }
 
+    function trustedFriendLocationAvailable(id, update_time, latitude, longitude) {
+        friendsListView.trustedFriendsAuxData["id"] = { "update_time": update_time, "latitude": latitude,
+                                                                                    "longitude": longitude };
+    }
+
     Image {
         id:                       refreshImage
         anchors.top:              parent.top
@@ -112,15 +117,19 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                     width:                  UtilScript.pt(48)
                     height:                 UtilScript.pt(48)
-                    source:                 "qrc:/resources/images/main/button_show_on_map.png"
+                    source:                 trusted ? "qrc:/resources/images/main/button_show_on_map.png" :
+                                                      "qrc:/resources/images/main/button_invite_untrusted.png"
                     fillMode:               Image.PreserveAspectFit
-                    visible:                trusted
 
                     MouseArea {
                         anchors.fill: parent
 
                         onClicked: {
-                            friendDelegate.listView.locateFriendOnMap(id);
+                            if (trusted) {
+                                friendDelegate.listView.locateFriendOnMap(id);
+                            } else {
+                                // Invite
+                            }
                         }
                     }
                 }
@@ -131,7 +140,8 @@ Item {
             policy: ScrollBar.AlwaysOn
         }
 
-        property bool refreshStarted: false
+        property bool refreshStarted:        false
+        property var  trustedFriendsAuxData: ({})
 
         onContentYChanged: {
             if (contentY < 0 - refreshImage.height) {
@@ -167,5 +177,6 @@ Item {
 
     Component.onCompleted: {
         VKHelper.friendsUpdated.connect(updateFriends);
+        VKHelper.trustedFriendLocationUpdated.connect(trustedFriendLocationAvailable);
     }
 }

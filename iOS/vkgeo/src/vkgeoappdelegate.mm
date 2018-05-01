@@ -66,7 +66,7 @@ static CLLocationManager *LocationManager;
         CLLocation *location = locations.lastObject;
 
         if (VKHelperShared != NULL) {
-            VKHelperShared->reportCoordinate(location.coordinate.latitude, location.coordinate.longitude);
+            VKHelperShared->reportLocation(location.coordinate.latitude, location.coordinate.longitude);
         }
     }
 }
