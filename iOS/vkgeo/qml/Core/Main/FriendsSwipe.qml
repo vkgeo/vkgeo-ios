@@ -16,12 +16,22 @@ Item {
 
         for (var i = 0; i < friends_list.length; i++) {
             friendsListModel.append(friends_list[i]);
+
+            friendsListModel.set(i, { "locationAvailable": false, "updateTime": 0, "latitude": 0, "longitude": 0 });
         }
     }
 
     function trustedFriendLocationAvailable(id, update_time, latitude, longitude) {
-        friendsListView.trustedFriendsAuxData["id"] = { "update_time": update_time, "latitude": latitude,
-                                                                                    "longitude": longitude };
+        for (var i = 0; i < friendsListModel.count; i++) {
+            var frnd = friendsListModel.get(i);
+
+            if (id === frnd.id) {
+                friendsListModel.set(i, { "locationAvailable": true, "updateTime": update_time,
+                                          "latitude": latitude, "longitude": longitude });
+
+                break;
+            }
+        }
     }
 
     Image {
@@ -117,15 +127,26 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                     width:                  UtilScript.pt(48)
                     height:                 UtilScript.pt(48)
-                    source:                 trusted ? "qrc:/resources/images/main/button_show_on_map.png" :
-                                                      "qrc:/resources/images/main/button_invite_untrusted.png"
+                    source:                 buttonToShow(trusted, locationAvailable)
                     fillMode:               Image.PreserveAspectFit
+
+                    function buttonToShow(trusted, location_available) {
+                        if (trusted) {
+                            if (location_available) {
+                                return "qrc:/resources/images/main/button_show_on_map.png";
+                            } else {
+                                return "qrc:/resources/images/main/button_invite_trusted.png";
+                            }
+                        } else {
+                            return "qrc:/resources/images/main/button_invite_untrusted.png";
+                        }
+                    }
 
                     MouseArea {
                         anchors.fill: parent
 
                         onClicked: {
-                            if (trusted) {
+                            if (trusted && locationAvailable) {
                                 friendDelegate.listView.locateFriendOnMap(id);
                             } else {
                                 // Invite
@@ -140,8 +161,7 @@ Item {
             policy: ScrollBar.AlwaysOn
         }
 
-        property bool refreshStarted:        false
-        property var  trustedFriendsAuxData: ({})
+        property bool refreshStarted: false
 
         onContentYChanged: {
             if (contentY < 0 - refreshImage.height) {
