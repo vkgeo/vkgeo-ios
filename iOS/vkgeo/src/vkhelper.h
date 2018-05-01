@@ -110,6 +110,9 @@ private:
     void ProcessNotesEditResponse(QString response, QVariantMap resp_request);
     void ProcessNotesEditError(QVariantMap err_request);
 
+    void ProcessNotesDeleteResponse(QString response, QVariantMap resp_request);
+    void ProcessNotesDeleteError(QVariantMap err_request);
+
     void ProcessFriendsGetResponse(QString response, QVariantMap resp_request);
     void ProcessFriendsGetError(QVariantMap err_request);
 
@@ -124,7 +127,7 @@ private:
 
     bool                Initialized;
     int                 AuthState, MaxTrustedFriendsCount;
-    QString             PhotoUrl, DataNoteId, TrustedFriendsListId;
+    QString             PhotoUrl, TrustedFriendsListId;
     QQueue<QVariantMap> RequestQueue;
     QTimer              RequestQueueTimer;
     QMap<QString, int>  RequestContextTracker;
