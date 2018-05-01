@@ -32,6 +32,7 @@ static CLLocationManager *LocationManager;
 
     LocationManager = [[CLLocationManager alloc] init];
 
+    LocationManager.allowsBackgroundLocationUpdates = YES;
     LocationManager.delegate = self;
 
     if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
