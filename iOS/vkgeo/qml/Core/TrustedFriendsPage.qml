@@ -105,8 +105,7 @@ Page {
                         for (var i = 0; i < trustedFriendsListModel.count; i++) {
                             var frnd = trustedFriendsListModel.get(i);
 
-                            if (typeof frnd.id      !== "undefined" &&
-                                typeof frnd.trusted !== "undefined" && frnd.trusted) {
+                            if (frnd.trusted) {
                                 trusted_friends_list.push(frnd.id);
                             }
                         }
@@ -248,7 +247,7 @@ Page {
             for (var i = 0; i < friends_list.length; i++) {
                 trustedFriendsListModel.append(friends_list[i]);
 
-                if (typeof friends_list[i].trusted !== "undefined" && friends_list[i].trusted) {
+                if (friends_list[i].trusted) {
                     trustedFriendsCount++;
                 }
             }

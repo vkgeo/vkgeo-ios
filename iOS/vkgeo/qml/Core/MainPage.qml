@@ -123,6 +123,12 @@ Page {
 
         FriendsSwipe {
             id: friendsSwipe
+
+            onLocateFriendOnMap: {
+                mapSwipe.locateItemOnMap(id);
+
+                tabBar.setCurrentIndex(0);
+            }
         }
 
         SettingsSwipe {

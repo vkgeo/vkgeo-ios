@@ -9,82 +9,150 @@ Item {
     id: mapSwipe
 
     function updateMyCoordinate(coordinate) {
-        myMapItem.coordinate = coordinate;
+        if (map.myMapItem !== null) {
+            map.myMapItem.coordinate = coordinate;
+            map.myMapItem.updateTime = (new Date()).getTime() / 1000;
+        }
+    }
+
+    function updateMapItems() {
+        var tracked_map_item_id = null;
+
+        if (map.trackedMapItem !== null) {
+            tracked_map_item_id = map.trackedMapItem.id;
+        }
+
+        map.trackMapItem(null);
+
+        for (var i = map.mapItems.length - 1; i >= 0; i--) {
+            var map_item = map.mapItems[i];
+
+            map.removeMapItem(map_item);
+
+            if (map_item !== map.myMapItem) {
+                map_item.destroy();
+            }
+        }
+
+        var friends_list = VKHelper.getFriendsList();
+
+        var component = Qt.createComponent("VKMapItem.qml");
+
+        if (component.status === Component.Ready) {
+            for (var j = 0; j < friends_list.length; j++) {
+                var frnd = friends_list[j];
+
+                if (frnd.trusted) {
+                    var new_map_item = component.createObject(map, { "id": frnd.id, "photoUrl": frnd.photoUrl });
+
+                    map.addMapItem(new_map_item);
+
+                    if (new_map_item.id === tracked_map_item_id) {
+                        map.trackMapItem(new_map_item);
+                    }
+                }
+            }
+        } else {
+            console.log(component.errorString());
+        }
+
+        map.addMapItem(map.myMapItem);
+
+        if (tracked_map_item_id === "") {
+            map.trackMapItem(map.myMapItem);
+        }
+    }
+
+    function updateMapItemCoordinate(id, update_time, latitude, longitude) {
+        for (var i = 0; i < map.mapItems.length; i++) {
+            var map_item = map.mapItems[i];
+
+            if (id === map_item.id) {
+                map_item.coordinate = QtPositioning.coordinate(latitude, longitude);
+                map_item.updateTime = update_time;
+
+                break;
+            }
+        }
+    }
+
+    function locateItemOnMap(id) {
+        for (var i = 0; i < map.mapItems.length; i++) {
+            var map_item = map.mapItems[i];
+
+            if (id === map_item.id) {
+                map.trackMapItem(map_item);
+
+                break;
+            }
+        }
     }
 
     Map {
         id:           map
         anchors.fill: parent
 
-        property bool trackingMyLocation: true
+        property bool trackingActive:     false
+
         property real trackingBearing:    0.0
         property real trackingTilt:       0.0
         property real trackingZoomLevel:  18.0
+
+        property var myMapItem:           null
+        property var trackedMapItem:      null
 
         plugin: Plugin {
             name: "osm"
         }
 
         onBearingChanged: {
-            trackingMyLocation = false;
+            if (!trackingActive) {
+                trackMapItem(null);
+            }
         }
 
         onCenterChanged: {
-            trackingMyLocation = false;
+            if (!trackingActive) {
+                trackMapItem(null);
+            }
         }
 
         onTiltChanged: {
-            trackingMyLocation = false;
+            if (!trackingActive) {
+                trackMapItem(null);
+            }
         }
 
         onZoomLevelChanged: {
-            trackingMyLocation = false;
+            if (!trackingActive) {
+                trackMapItem(null);
+            }
         }
 
-        function centerOnMyItem() {
-            center    = myMapItem.coordinate;
-            bearing   = trackingBearing;
-            tilt      = trackingTilt;
-            zoomLevel = trackingZoomLevel;
-        }
-
-        MapQuickItem {
-            id:          myMapItem
-            anchorPoint: Qt.point(sourceItem.width / 2, sourceItem.height / 2)
-
-            property bool valid: false
-
-            sourceItem: OpacityMask {
-                id:      opacityMask
-                width:   UtilScript.pt(48)
-                height:  UtilScript.pt(48)
-                visible: myMapItem.valid
-
-                source: Image {
-                    width:    opacityMask.width
-                    height:   opacityMask.height
-                    source:   VKHelper.photoUrl
-                    fillMode: Image.Stretch
-                    visible:  false
-                }
-
-                maskSource: Image {
-                    width:    opacityMask.width
-                    height:   opacityMask.height
-                    source:   "qrc:/resources/images/main/avatar_mask.png"
-                    fillMode: Image.PreserveAspectFit
-                    visible:  false
-                }
+        function trackMapItem(map_item) {
+            if (trackedMapItem !== null) {
+                trackedMapItem.coordinateChanged.disconnect(centerOnTrackedItem);
             }
 
-            onCoordinateChanged: {
-                valid = true;
+            trackedMapItem = map_item;
 
-                if (map.trackingMyLocation) {
-                    map.centerOnMyItem();
+            if (trackedMapItem !== null) {
+                trackedMapItem.coordinateChanged.connect(centerOnTrackedItem);
+            }
 
-                    map.trackingMyLocation = true;
-                }
+            centerOnTrackedItem();
+        }
+
+        function centerOnTrackedItem() {
+            if (trackedMapItem !== null) {
+                trackingActive = true;
+
+                center    = trackedMapItem.coordinate;
+                bearing   = trackingBearing;
+                tilt      = trackingTilt;
+                zoomLevel = trackingZoomLevel;
+
+                trackingActive = false;
             }
         }
     }
@@ -100,16 +168,33 @@ Item {
         source:               enabled ? "qrc:/resources/images/main/button_track.png" :
                                         "qrc:/resources/images/main/button_track_disabled.png"
         fillMode:             Image.PreserveAspectFit
-        enabled:              myMapItem.valid
+        enabled:              map.myMapItem != null && map.myMapItem.valid
 
         MouseArea {
             anchors.fill: parent
 
             onClicked: {
-                map.centerOnMyItem();
-
-                map.trackingMyLocation = true;
+                map.trackMapItem(map.myMapItem);
             }
         }
+    }
+
+    Component.onCompleted: {
+        var component = Qt.createComponent("VKMapItem.qml");
+
+        if (component.status === Component.Ready) {
+            map.myMapItem = component.createObject(map);
+
+            map.myMapItem.id       = "";
+            map.myMapItem.photoUrl = Qt.binding(function() { return VKHelper.photoUrl; });
+
+            map.addMapItem(map.myMapItem);
+            map.trackMapItem(map.myMapItem);
+        } else {
+            console.log(component.errorString());
+        }
+
+        VKHelper.friendsUpdated.connect(updateMapItems);
+        VKHelper.trustedFriendCoordUpdated.connect(updateMapItemCoordinate);
     }
 }

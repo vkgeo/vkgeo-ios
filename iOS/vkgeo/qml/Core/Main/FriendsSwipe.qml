@@ -7,6 +7,8 @@ import "../../Util.js" as UtilScript
 Item {
     id: friendsSwipe
 
+    signal locateFriendOnMap(string id)
+
     function updateFriends() {
         friendsListModel.clear();
 
@@ -49,11 +51,14 @@ Item {
         }
 
         delegate: Rectangle {
-            width:        ListView.view.width
+            id:           friendDelegate
+            width:        listView.width
             height:       UtilScript.pt(80)
             clip:         true
             border.width: UtilScript.pt(1)
             border.color: "lightsteelblue"
+
+            property var listView: ListView.view
 
             Row {
                 anchors.fill: parent
@@ -109,7 +114,15 @@ Item {
                     height:                 UtilScript.pt(48)
                     source:                 "qrc:/resources/images/main/button_show_on_map.png"
                     fillMode:               Image.PreserveAspectFit
-                    visible:                dataNoteId !== ""
+                    visible:                trusted
+
+                    MouseArea {
+                        anchors.fill: parent
+
+                        onClicked: {
+                            friendDelegate.listView.locateFriendOnMap(id);
+                        }
+                    }
                 }
             }
         }
@@ -134,6 +147,10 @@ Item {
 
                 refreshTimer.stop();
             }
+        }
+
+        function locateFriendOnMap(id) {
+            friendsSwipe.locateFriendOnMap(id);
         }
 
         Timer {

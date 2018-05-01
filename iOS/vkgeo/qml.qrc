@@ -8,5 +8,6 @@
         <file>qml/Core/Main/FriendsSwipe.qml</file>
         <file>qml/Core/Main/MapSwipe.qml</file>
         <file>qml/Core/Main/SettingsSwipe.qml</file>
+        <file>qml/Core/Main/VKMapItem.qml</file>
     </qresource>
 </RCC>
