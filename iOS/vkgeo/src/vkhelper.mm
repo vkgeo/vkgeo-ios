@@ -169,11 +169,6 @@ VKHelper::VKHelper(QObject *parent) : QObject(parent)
     TrustedFriendsListId   = "";
     Instance               = this;
     VKDelegateInstance     = NULL;
-
-    connect(&RequestQueueTimer, SIGNAL(timeout()), this, SLOT(requestQueueTimerTimeout()));
-
-    RequestQueueTimer.setInterval(1000);
-    RequestQueueTimer.start();
 }
 
 VKHelper::~VKHelper()
@@ -213,6 +208,11 @@ void VKHelper::initialize()
     if (!Initialized) {
         VKDelegateInstance = [[VKDelegate alloc] init];
 
+        connect(&RequestQueueTimer, SIGNAL(timeout()), this, SLOT(requestQueueTimerTimeout()));
+
+        RequestQueueTimer.setInterval(1000);
+        RequestQueueTimer.start();
+
         Initialized = true;
     }
 }
@@ -235,7 +235,7 @@ void VKHelper::logout()
 
 void VKHelper::reportCoordinate(qreal latitude, qreal longitude)
 {
-    if (Initialized && !ContextHaveActiveRequests("reportCoordinate")) {
+    if (!ContextHaveActiveRequests("reportCoordinate")) {
         QVariantMap request, user_data, parameters;
 
         user_data["update_time"] = QDateTime::currentSecsSinceEpoch();
@@ -497,8 +497,10 @@ void VKHelper::EnqueueRequest(QVariantMap request)
 
     TrackerAddRequest(request);
 
-    if (!RequestQueueTimer.isActive()) {
-        RequestQueueTimer.start();
+    if (Initialized) {
+        if (!RequestQueueTimer.isActive()) {
+            RequestQueueTimer.start();
+        }
     }
 }
 

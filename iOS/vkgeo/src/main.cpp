@@ -15,8 +15,6 @@ int main(int argc, char *argv[])
     QTranslator     translator;
     QGuiApplication app(argc, argv);
 
-    VKHelperShared = new VKHelper(&app);
-
     if (translator.load(QString(":/tr/vkgeo_%1").arg(QLocale::system().name()))) {
         app.installTranslator(&translator);
     }
@@ -27,7 +25,12 @@ int main(int argc, char *argv[])
 
     engine.rootContext()->setContextProperty(QStringLiteral("AdMobHelper"), new AdMobHelper(&app));
     engine.rootContext()->setContextProperty(QStringLiteral("UIHelper"), new UIHelper(&app));
-    engine.rootContext()->setContextProperty(QStringLiteral("VKHelper"), VKHelperShared);
+
+    if (VKHelperShared != NULL) {
+        VKHelperShared->setParent(&app);
+
+        engine.rootContext()->setContextProperty(QStringLiteral("VKHelper"), VKHelperShared);
+    }
 
     engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
 

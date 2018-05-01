@@ -28,6 +28,8 @@ static CLLocationManager *LocationManager;
 
     [VKSdk initializeWithAppId:VK_APP_ID.toNSString()];
 
+    VKHelperShared = new VKHelper();
+
     LocationManager = [[CLLocationManager alloc] init];
 
     LocationManager.delegate = self;
