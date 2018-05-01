@@ -161,13 +161,14 @@ bool compareFriends(const QVariant &friend_1, const QVariant &friend_2) {
 
 VKHelper::VKHelper(QObject *parent) : QObject(parent)
 {
-    Initialized            = false;
-    AuthState              = VKAuthState::StateUnknown;
-    MaxTrustedFriendsCount = DEFAULT_MAX_TRUSTED_FRIENDS_COUNT;
-    PhotoUrl               = DEFAULT_PHOTO_URL;
-    TrustedFriendsListId   = "";
-    Instance               = this;
-    VKDelegateInstance     = NULL;
+    Initialized              = false;
+    AuthState                = VKAuthState::StateUnknown;
+    MaxTrustedFriendsCount   = DEFAULT_MAX_TRUSTED_FRIENDS_COUNT;
+    LastReportCoordinateTime = 0;
+    PhotoUrl                 = DEFAULT_PHOTO_URL;
+    TrustedFriendsListId     = "";
+    Instance                 = this;
+    VKDelegateInstance       = NULL;
 }
 
 VKHelper::~VKHelper()
@@ -234,10 +235,13 @@ void VKHelper::logout()
 
 void VKHelper::reportCoordinate(qreal latitude, qreal longitude)
 {
-    if (!ContextHaveActiveRequests("reportCoordinate")) {
+    if (!ContextHaveActiveRequests("reportCoordinate") &&
+        QDateTime::currentSecsSinceEpoch() > LastReportCoordinateTime + REPORT_COORDINATE_INTERVAL) {
+        LastReportCoordinateTime = QDateTime::currentSecsSinceEpoch();
+
         QVariantMap request, user_data, parameters;
 
-        user_data["update_time"] = QDateTime::currentSecsSinceEpoch();
+        user_data["update_time"] = LastReportCoordinateTime;
         user_data["latitude"]    = latitude;
         user_data["longitude"]   = longitude;
 

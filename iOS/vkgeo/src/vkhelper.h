@@ -43,6 +43,7 @@ class VKHelper : public QObject
 
 public:
     static const int DEFAULT_MAX_TRUSTED_FRIENDS_COUNT = 10,
+                     REPORT_COORDINATE_INTERVAL        = 30,
                      MAX_BATCH_SIZE                    = 25,
                      MAX_NOTES_GET_COUNT               = 100,
                      MAX_FRIENDS_GET_COUNT             = 5000;
@@ -127,6 +128,7 @@ private:
 
     bool                Initialized;
     int                 AuthState, MaxTrustedFriendsCount;
+    qint64              LastReportCoordinateTime;
     QString             PhotoUrl, TrustedFriendsListId;
     QQueue<QVariantMap> RequestQueue;
     QTimer              RequestQueueTimer;
