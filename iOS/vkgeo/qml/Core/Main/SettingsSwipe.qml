@@ -56,7 +56,7 @@ Item {
 
             Text {
                 anchors.fill:        parent
-                text:                qsTr("VK Logout")
+                text:                qsTr("Log out of VK")
                 color:               "white"
                 font.pointSize:      16
                 font.family:         "Helvetica"
