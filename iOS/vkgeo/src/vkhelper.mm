@@ -407,7 +407,7 @@ void VKHelper::setAuthState(const int &state)
         }
 
         emit Instance->photoUrlChanged(Instance->PhotoUrl);
-    } else {
+    } else if (Instance->AuthState == VKAuthState::StateNotAuthorized) {
         Instance->cleanup();
     }
 }
