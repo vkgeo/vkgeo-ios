@@ -89,14 +89,10 @@ Page {
             positionSource.active = false;
             updateTimer.running   = false;
         }
-
-        if (appInForeground && vkAuthState === VKAuthState.StateAuthorized) {
-            VKHelper.updateFriends();
-        }
     }
 
     onVkAuthStateChanged: {
-        if (appInForeground && vkAuthState === VKAuthState.StateAuthorized) {
+        if (vkAuthState === VKAuthState.StateAuthorized) {
             VKHelper.updateFriends();
         }
     }
