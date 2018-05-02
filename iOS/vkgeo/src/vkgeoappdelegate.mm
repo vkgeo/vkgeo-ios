@@ -41,11 +41,14 @@ static CLLocationManager *LocationManager = nil;
     LocationManager.distanceFilter                     = LOCATION_DISTANCE_FILTER;
     LocationManager.delegate                           = self;
 
-    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
+    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse ||
+        [CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
         [LocationManager startUpdatingLocation];
 
-        if ([CLLocationManager significantLocationChangeMonitoringAvailable]) {
-            [LocationManager startMonitoringSignificantLocationChanges];
+        if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
+            if ([CLLocationManager significantLocationChangeMonitoringAvailable]) {
+                [LocationManager startMonitoringSignificantLocationChanges];
+            }
         }
     }
 
@@ -85,11 +88,16 @@ static CLLocationManager *LocationManager = nil;
 {
     Q_UNUSED(manager)
 
-    if (status == kCLAuthorizationStatusAuthorizedAlways) {
+    if (status == kCLAuthorizationStatusAuthorizedWhenInUse ||
+        status == kCLAuthorizationStatusAuthorizedAlways) {
         [LocationManager startUpdatingLocation];
 
-        if ([CLLocationManager significantLocationChangeMonitoringAvailable]) {
-            [LocationManager startMonitoringSignificantLocationChanges];
+        if (status == kCLAuthorizationStatusAuthorizedAlways) {
+            if ([CLLocationManager significantLocationChangeMonitoringAvailable]) {
+                [LocationManager startMonitoringSignificantLocationChanges];
+            }
+        } else {
+            [LocationManager stopMonitoringSignificantLocationChanges];
         }
     } else {
         [LocationManager stopUpdatingLocation];
