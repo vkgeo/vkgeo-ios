@@ -1,5 +1,6 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QDateTime>
+#include <QtCore/QStringList>
 #include <QtCore/QJsonObject>
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
@@ -210,10 +211,15 @@ void VKHelper::initialize()
     if (!Initialized) {
         VKDelegateInstance = [[VKDelegate alloc] init];
 
-        connect(&RequestQueueTimer, SIGNAL(timeout()), this, SLOT(requestQueueTimerTimeout()));
+        connect(&RequestQueueTimer, SIGNAL(timeout()), this, SLOT(RequestQueueTimerTimeout()));
 
-        RequestQueueTimer.setInterval(1000);
+        RequestQueueTimer.setInterval(REQUEST_QUEUE_TIMER_INTERVAL);
         RequestQueueTimer.start();
+
+        connect(&ReportLocationTimer, SIGNAL(timeout()), this, SLOT(ReportLocationTimerTimeout()));
+
+        ReportLocationTimer.setInterval(REPORT_LOCATION_TIMER_INTERVAL);
+        ReportLocationTimer.start();
 
         Initialized = true;
     }
@@ -265,40 +271,9 @@ void VKHelper::logout()
 
 void VKHelper::reportLocation(qreal latitude, qreal longitude)
 {
-    if (!ContextHaveActiveRequests("reportLocation")) {
-        if (QDateTime::currentSecsSinceEpoch() > LastReportLocationTime + REPORT_LOCATION_INTERVAL) {
-            if (AuthState == VKAuthState::StateAuthorized) {
-                LastReportLocationTime = QDateTime::currentSecsSinceEpoch();
-            } else {
-                LastReportLocationTime = 0;
-            }
-
-            QVariantMap request, user_data, parameters;
-
-            user_data["update_time"] = LastReportLocationTime;
-            user_data["latitude"]    = latitude;
-            user_data["longitude"]   = longitude;
-
-            QString user_data_string = QString("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(user_data)
-                                                                                 .toJson(QJsonDocument::Compact)
-                                                                                 .toBase64()));
-
-            if (TrustedFriendsListId == "") {
-                request["method"]    = "friends.getLists";
-                request["context"]   = "reportLocation";
-                request["user_data"] = user_data_string;
-            } else {
-                parameters["count"] = MAX_NOTES_GET_COUNT;
-
-                request["method"]     = "notes.get";
-                request["context"]    = "reportLocation";
-                request["user_data"]  = user_data_string;
-                request["parameters"] = parameters;
-            }
-
-            EnqueueRequest(request);
-        }
-    }
+    LastLocationInfo["update_time"] = QDateTime::currentSecsSinceEpoch();
+    LastLocationInfo["latitude"]    = latitude;
+    LastLocationInfo["longitude"]   = longitude;
 }
 
 void VKHelper::updateFriends()
@@ -437,7 +412,7 @@ void VKHelper::setAuthState(const int &state)
     }
 }
 
-void VKHelper::requestQueueTimerTimeout()
+void VKHelper::RequestQueueTimerTimeout()
 {
     if (!RequestQueue.isEmpty()) {
         NSMutableArray *vk_request_array = [NSMutableArray arrayWithCapacity:MAX_BATCH_SIZE];
@@ -478,6 +453,47 @@ void VKHelper::requestQueueTimerTimeout()
                     [vk_batch_request autorelease];
                 }
             }];
+        }
+    }
+}
+
+void VKHelper::ReportLocationTimerTimeout()
+{
+    if (!ContextHaveActiveRequests("reportLocation")) {
+        if (LastLocationInfo.contains("update_time") && LastLocationInfo.contains("latitude") &&
+                                                        LastLocationInfo.contains("longitude")) {
+            if (AuthState == VKAuthState::StateAuthorized) {
+                if (QDateTime::currentSecsSinceEpoch() > LastReportLocationTime + REPORT_LOCATION_INTERVAL) {
+                    LastReportLocationTime = QDateTime::currentSecsSinceEpoch();
+
+                    QVariantMap request, user_data, parameters;
+
+                    user_data["update_time"] = LastLocationInfo["update_time"].toLongLong();
+                    user_data["latitude"]    = LastLocationInfo["latitude"].toReal();
+                    user_data["longitude"]   = LastLocationInfo["longitude"].toReal();
+
+                    QString user_data_string = QString("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(user_data)
+                                                                                         .toJson(QJsonDocument::Compact)
+                                                                                         .toBase64()));
+
+                    if (TrustedFriendsListId == "") {
+                        request["method"]    = "friends.getLists";
+                        request["context"]   = "reportLocation";
+                        request["user_data"] = user_data_string;
+                    } else {
+                        parameters["count"] = MAX_NOTES_GET_COUNT;
+
+                        request["method"]     = "notes.get";
+                        request["context"]    = "reportLocation";
+                        request["user_data"]  = user_data_string;
+                        request["parameters"] = parameters;
+                    }
+
+                    EnqueueRequest(request);
+
+                    LastLocationInfo = QVariantMap();
+                }
+            }
         }
     }
 }
@@ -530,12 +546,6 @@ void VKHelper::EnqueueRequest(QVariantMap request)
     RequestQueue.enqueue(request);
 
     ContextTrackerAddRequest(request);
-
-    if (Initialized) {
-        if (!RequestQueueTimer.isActive()) {
-            RequestQueueTimer.start();
-        }
-    }
 }
 
 VKRequest *VKHelper::ProcessRequest(QVariantMap request)

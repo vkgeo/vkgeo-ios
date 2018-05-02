@@ -43,6 +43,8 @@ class VKHelper : public QObject
 
 public:
     static const int DEFAULT_MAX_TRUSTED_FRIENDS_COUNT         = 10,
+                     REQUEST_QUEUE_TIMER_INTERVAL              = 1000,
+                     REPORT_LOCATION_TIMER_INTERVAL            = 1000,
                      REPORT_LOCATION_INTERVAL                  = 300,
                      UPDATE_TRUSTED_FRIENDS_LOCATIONS_INTERVAL = 60,
                      MAX_BATCH_SIZE                            = 25,
@@ -89,7 +91,8 @@ signals:
     void trustedFriendLocationUpdated(QString id, qint64 updateTime, qreal latitude, qreal longitude);
 
 private slots:
-    void requestQueueTimerTimeout();
+    void RequestQueueTimerTimeout();
+    void ReportLocationTimerTimeout();
 
 private:
     void ContextTrackerAddRequest(QVariantMap request);
@@ -130,7 +133,7 @@ private:
     qint64                       LastReportLocationTime, LastUpdateTrustedFriendsLocationsTime;
     QString                      PhotoUrl, TrustedFriendsListId;
     QQueue<QVariantMap>          RequestQueue;
-    QTimer                       RequestQueueTimer;
+    QTimer                       RequestQueueTimer, ReportLocationTimer;
     QMap<QString, int>           ContextTracker;
 #ifdef __OBJC__
     QMap<VKRequest *, bool>      VKRequestTracker;
@@ -142,7 +145,7 @@ private:
 #else
     QMap<void *, bool>           VKBatchRequestTracker;
 #endif
-    QVariantMap                  FriendsData, FriendsDataTmp;
+    QVariantMap                  LastLocationInfo, FriendsData, FriendsDataTmp;
     static VKHelper             *Instance;
 #ifdef __OBJC__
     VKDelegate                  *VKDelegateInstance;

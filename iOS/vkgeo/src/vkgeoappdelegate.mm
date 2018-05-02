@@ -20,7 +20,9 @@ static const QString VK_APP_ID("6459902");
 
 @implementation QIOSApplicationDelegate (VKGeoAppDelegate)
 
-static CLLocationManager *LocationManager;
+static const CLLocationDistance LOCATION_DISTANCE_FILTER = 100.0;
+
+static CLLocationManager *LocationManager = nil;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -35,7 +37,8 @@ static CLLocationManager *LocationManager;
 
     LocationManager.allowsBackgroundLocationUpdates    = YES;
     LocationManager.pausesLocationUpdatesAutomatically = NO;
-    LocationManager.desiredAccuracy                    = kCLLocationAccuracyHundredMeters;
+    LocationManager.desiredAccuracy                    = kCLLocationAccuracyNearestTenMeters;
+    LocationManager.distanceFilter                     = LOCATION_DISTANCE_FILTER;
     LocationManager.delegate                           = self;
 
     if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
