@@ -64,6 +64,7 @@ public:
     void setMaxTrustedFriendsCount(const int &count);
 
     Q_INVOKABLE void initialize();
+    Q_INVOKABLE void cleanup();
 
     Q_INVOKABLE void login();
     Q_INVOKABLE void logout();
@@ -91,8 +92,8 @@ private slots:
     void requestQueueTimerTimeout();
 
 private:
-    void TrackerAddRequest(QVariantMap request);
-    void TrackerDelRequest(QVariantMap request);
+    void ContextTrackerAddRequest(QVariantMap request);
+    void ContextTrackerDelRequest(QVariantMap request);
 
     bool ContextHaveActiveRequests(QString context);
 
@@ -124,19 +125,29 @@ private:
     void ProcessFriendsEditListResponse(QString response, QVariantMap resp_request);
     void ProcessFriendsEditListError(QVariantMap err_request);
 
-    bool                Initialized;
-    int                 AuthState, MaxTrustedFriendsCount;
-    qint64              LastReportLocationTime, LastUpdateTrustedFriendsLocationsTime;
-    QString             PhotoUrl, TrustedFriendsListId;
-    QQueue<QVariantMap> RequestQueue;
-    QTimer              RequestQueueTimer;
-    QMap<QString, int>  RequestContextTracker;
-    QVariantMap         FriendsData, FriendsDataTmp;
-    static VKHelper    *Instance;
+    bool                         Initialized;
+    int                          AuthState, MaxTrustedFriendsCount;
+    qint64                       LastReportLocationTime, LastUpdateTrustedFriendsLocationsTime;
+    QString                      PhotoUrl, TrustedFriendsListId;
+    QQueue<QVariantMap>          RequestQueue;
+    QTimer                       RequestQueueTimer;
+    QMap<QString, int>           ContextTracker;
 #ifdef __OBJC__
-    VKDelegate         *VKDelegateInstance;
+    QMap<VKRequest *, bool>      VKRequestTracker;
 #else
-    void               *VKDelegateInstance;
+    QMap<void *, bool>           VKRequestTracker;
+#endif
+#ifdef __OBJC__
+    QMap<VKBatchRequest *, bool> VKBatchRequestTracker;
+#else
+    QMap<void *, bool>           VKBatchRequestTracker;
+#endif
+    QVariantMap                  FriendsData, FriendsDataTmp;
+    static VKHelper             *Instance;
+#ifdef __OBJC__
+    VKDelegate                  *VKDelegateInstance;
+#else
+    void                        *VKDelegateInstance;
 #endif
 };
 

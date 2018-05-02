@@ -219,6 +219,34 @@ void VKHelper::initialize()
     }
 }
 
+void VKHelper::cleanup()
+{
+    if (Initialized) {
+        LastReportLocationTime                = 0;
+        LastUpdateTrustedFriendsLocationsTime = 0;
+        PhotoUrl                              = DEFAULT_PHOTO_URL;
+        TrustedFriendsListId                  = "";
+
+        emit photoUrlChanged(PhotoUrl);
+
+        while (!RequestQueue.isEmpty()) {
+            QVariantMap request = RequestQueue.dequeue();
+
+            ContextTrackerDelRequest(request);
+        }
+
+        foreach (VKBatchRequest *vk_batch_request, VKBatchRequestTracker.keys()) {
+            [vk_batch_request cancel];
+        }
+
+        FriendsData.clear();
+        FriendsDataTmp.clear();
+
+        emit friendsCountChanged(FriendsData.count());
+        emit friendsUpdated();
+    }
+}
+
 void VKHelper::login()
 {
     if (Initialized) {
@@ -239,7 +267,11 @@ void VKHelper::reportLocation(qreal latitude, qreal longitude)
 {
     if (!ContextHaveActiveRequests("reportLocation")) {
         if (QDateTime::currentSecsSinceEpoch() > LastReportLocationTime + REPORT_LOCATION_INTERVAL) {
-            LastReportLocationTime = QDateTime::currentSecsSinceEpoch();
+            if (AuthState == VKAuthState::StateAuthorized) {
+                LastReportLocationTime = QDateTime::currentSecsSinceEpoch();
+            } else {
+                LastReportLocationTime = 0;
+            }
 
             QVariantMap request, user_data, parameters;
 
@@ -398,11 +430,11 @@ void VKHelper::setAuthState(const int &state)
         } else {
             Instance->PhotoUrl = DEFAULT_PHOTO_URL;
         }
-    } else {
-        Instance->PhotoUrl = DEFAULT_PHOTO_URL;
-    }
 
-    emit Instance->photoUrlChanged(Instance->PhotoUrl);
+        emit Instance->photoUrlChanged(Instance->PhotoUrl);
+    } else {
+        Instance->cleanup();
+    }
 }
 
 void VKHelper::requestQueueTimerTimeout()
@@ -413,64 +445,80 @@ void VKHelper::requestQueueTimerTimeout()
         for (int i = 0; i < MAX_BATCH_SIZE && !RequestQueue.isEmpty(); i++) {
             QVariantMap request = RequestQueue.dequeue();
 
-            TrackerDelRequest(request);
+            ContextTrackerDelRequest(request);
 
-            VKRequest *vk_request = ProcessRequest(request);
+            if (AuthState == VKAuthState::StateAuthorized) {
+                VKRequest *vk_request = ProcessRequest(request);
 
-            if (vk_request != nil) {
-                [vk_request_array addObject:vk_request];
+                if (vk_request != nil) {
+                    [vk_request_array addObject:vk_request];
+                }
             }
         }
 
         if (vk_request_array.count > 0) {
-            VKBatchRequest *vk_batch_request = [[[VKBatchRequest alloc] initWithRequestsArray:vk_request_array] autorelease];
+            VKBatchRequest *vk_batch_request = [[VKBatchRequest alloc] initWithRequestsArray:vk_request_array];
+
+            VKBatchRequestTracker[vk_batch_request] = true;
 
             [vk_batch_request executeWithResultBlock:^(NSArray *responses) {
                 Q_UNUSED(responses)
+
+                if (VKBatchRequestTracker.contains(vk_batch_request)) {
+                    VKBatchRequestTracker.remove(vk_batch_request);
+
+                    [vk_batch_request autorelease];
+                }
             } errorBlock:^(NSError *error) {
                 Q_UNUSED(error)
+
+                if (VKBatchRequestTracker.contains(vk_batch_request)) {
+                    VKBatchRequestTracker.remove(vk_batch_request);
+
+                    [vk_batch_request autorelease];
+                }
             }];
         }
     }
 }
 
-void VKHelper::TrackerAddRequest(QVariantMap request)
+void VKHelper::ContextTrackerAddRequest(QVariantMap request)
 {
     if (request.contains("context")) {
         QString context = request["context"].toString();
 
-        if (RequestContextTracker.contains(context)) {
-            RequestContextTracker[context]++;
+        if (ContextTracker.contains(context)) {
+            ContextTracker[context]++;
         } else {
-            RequestContextTracker[context] = 1;
+            ContextTracker[context] = 1;
         }
     } else {
-        qWarning() << "TrackerAddRequest() : request have no context";
+        qWarning() << "ContextTrackerAddRequest() : request have no context";
     }
 }
 
-void VKHelper::TrackerDelRequest(QVariantMap request)
+void VKHelper::ContextTrackerDelRequest(QVariantMap request)
 {
     if (request.contains("context")) {
         QString context = request["context"].toString();
 
-        if (RequestContextTracker.contains(context)) {
-            if (RequestContextTracker[context] > 0) {
-                RequestContextTracker[context]--;
+        if (ContextTracker.contains(context)) {
+            if (ContextTracker[context] > 0) {
+                ContextTracker[context]--;
             } else {
-                qWarning() << QString("TrackerDelRequest() : negative tracker value for context: %1").arg(context);
+                qWarning() << QString("ContextTrackerDelRequest() : negative tracker value for context: %1").arg(context);
             }
         } else {
-            qWarning() << QString("TrackerDelRequest() : no tracker value for context: %1").arg(context);
+            qWarning() << QString("ContextTrackerDelRequest() : no tracker value for context: %1").arg(context);
         }
     } else {
-        qWarning() << "TrackerDelRequest() : request have no context";
+        qWarning() << "ContextTrackerDelRequest() : request have no context";
     }
 }
 
 bool VKHelper::ContextHaveActiveRequests(QString context)
 {
-    if (RequestContextTracker.contains(context) && RequestContextTracker[context] > 0) {
+    if (ContextTracker.contains(context) && ContextTracker[context] > 0) {
         return true;
     } else {
         return false;
@@ -481,7 +529,7 @@ void VKHelper::EnqueueRequest(QVariantMap request)
 {
     RequestQueue.enqueue(request);
 
-    TrackerAddRequest(request);
+    ContextTrackerAddRequest(request);
 
     if (Initialized) {
         if (!RequestQueueTimer.isActive()) {
@@ -511,147 +559,217 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
             VKRequest *vk_request = [VKRequest requestWithMethod:request["method"].toString().toNSString() parameters:vk_parameters];
 
             vk_request.completeBlock = ^(VKResponse *response) {
-                TrackerDelRequest(request);
+                if (VKRequestTracker.contains(vk_request)) {
+                    VKRequestTracker.remove(vk_request);
 
-                ProcessNotesGetResponse(QString::fromNSString(response.responseString), request);
+                    ContextTrackerDelRequest(request);
+
+                    ProcessNotesGetResponse(QString::fromNSString(response.responseString), request);
+                }
             };
             vk_request.errorBlock = ^(NSError *error) {
                 Q_UNUSED(error)
 
                 qWarning() << QString("ProcessRequest() : %1 request failed").arg(QString::fromNSString(vk_request.methodName));
 
-                TrackerDelRequest(request);
+                if (VKRequestTracker.contains(vk_request)) {
+                    VKRequestTracker.remove(vk_request);
 
-                ProcessNotesGetError(request);
+                    ContextTrackerDelRequest(request);
+
+                    ProcessNotesGetError(request);
+                }
             };
 
-            TrackerAddRequest(request);
+            VKRequestTracker[vk_request] = true;
+
+            ContextTrackerAddRequest(request);
 
             return vk_request;
         } else if (request["method"].toString() == "notes.add") {
             VKRequest *vk_request = [VKRequest requestWithMethod:request["method"].toString().toNSString() parameters:vk_parameters];
 
             vk_request.completeBlock = ^(VKResponse *response) {
-                TrackerDelRequest(request);
+                if (VKRequestTracker.contains(vk_request)) {
+                    VKRequestTracker.remove(vk_request);
 
-                ProcessNotesAddResponse(QString::fromNSString(response.responseString), request);
+                    ContextTrackerDelRequest(request);
+
+                    ProcessNotesAddResponse(QString::fromNSString(response.responseString), request);
+                }
             };
             vk_request.errorBlock = ^(NSError *error) {
                 Q_UNUSED(error)
 
                 qWarning() << QString("ProcessRequest() : %1 request failed").arg(QString::fromNSString(vk_request.methodName));
 
-                TrackerDelRequest(request);
+                if (VKRequestTracker.contains(vk_request)) {
+                    VKRequestTracker.remove(vk_request);
 
-                ProcessNotesAddError(request);
+                    ContextTrackerDelRequest(request);
+
+                    ProcessNotesAddError(request);
+                }
             };
 
-            TrackerAddRequest(request);
+            VKRequestTracker[vk_request] = true;
+
+            ContextTrackerAddRequest(request);
 
             return vk_request;
         } else if (request["method"].toString() == "notes.delete") {
             VKRequest *vk_request = [VKRequest requestWithMethod:request["method"].toString().toNSString() parameters:vk_parameters];
 
             vk_request.completeBlock = ^(VKResponse *response) {
-                TrackerDelRequest(request);
+                if (VKRequestTracker.contains(vk_request)) {
+                    VKRequestTracker.remove(vk_request);
 
-                ProcessNotesDeleteResponse(QString::fromNSString(response.responseString), request);
+                    ContextTrackerDelRequest(request);
+
+                    ProcessNotesDeleteResponse(QString::fromNSString(response.responseString), request);
+                }
             };
             vk_request.errorBlock = ^(NSError *error) {
                 Q_UNUSED(error)
 
                 qWarning() << QString("ProcessRequest() : %1 request failed").arg(QString::fromNSString(vk_request.methodName));
 
-                TrackerDelRequest(request);
+                if (VKRequestTracker.contains(vk_request)) {
+                    VKRequestTracker.remove(vk_request);
 
-                ProcessNotesDeleteError(request);
+                    ContextTrackerDelRequest(request);
+
+                    ProcessNotesDeleteError(request);
+                }
             };
 
-            TrackerAddRequest(request);
+            VKRequestTracker[vk_request] = true;
+
+            ContextTrackerAddRequest(request);
 
             return vk_request;
         } else if (request["method"].toString() == "friends.get") {
             VKRequest *vk_request = [VKRequest requestWithMethod:request["method"].toString().toNSString() parameters:vk_parameters];
 
             vk_request.completeBlock = ^(VKResponse *response) {
-                TrackerDelRequest(request);
+                if (VKRequestTracker.contains(vk_request)) {
+                    VKRequestTracker.remove(vk_request);
 
-                ProcessFriendsGetResponse(QString::fromNSString(response.responseString), request);
+                    ContextTrackerDelRequest(request);
+
+                    ProcessFriendsGetResponse(QString::fromNSString(response.responseString), request);
+                }
             };
             vk_request.errorBlock = ^(NSError *error) {
                 Q_UNUSED(error)
 
                 qWarning() << QString("ProcessRequest() : %1 request failed").arg(QString::fromNSString(vk_request.methodName));
 
-                TrackerDelRequest(request);
+                if (VKRequestTracker.contains(vk_request)) {
+                    VKRequestTracker.remove(vk_request);
 
-                ProcessFriendsGetError(request);
+                    ContextTrackerDelRequest(request);
+
+                    ProcessFriendsGetError(request);
+                }
             };
 
-            TrackerAddRequest(request);
+            VKRequestTracker[vk_request] = true;
+
+            ContextTrackerAddRequest(request);
 
             return vk_request;
         } else if (request["method"].toString() == "friends.getLists") {
             VKRequest *vk_request = [VKRequest requestWithMethod:request["method"].toString().toNSString() parameters:vk_parameters];
 
             vk_request.completeBlock = ^(VKResponse *response) {
-                TrackerDelRequest(request);
+                if (VKRequestTracker.contains(vk_request)) {
+                    VKRequestTracker.remove(vk_request);
 
-                ProcessFriendsGetListsResponse(QString::fromNSString(response.responseString), request);
+                    ContextTrackerDelRequest(request);
+
+                    ProcessFriendsGetListsResponse(QString::fromNSString(response.responseString), request);
+                }
             };
             vk_request.errorBlock = ^(NSError *error) {
                 Q_UNUSED(error)
 
                 qWarning() << QString("ProcessRequest() : %1 request failed").arg(QString::fromNSString(vk_request.methodName));
 
-                TrackerDelRequest(request);
+                if (VKRequestTracker.contains(vk_request)) {
+                    VKRequestTracker.remove(vk_request);
 
-                ProcessFriendsGetListsError(request);
+                    ContextTrackerDelRequest(request);
+
+                    ProcessFriendsGetListsError(request);
+                }
             };
 
-            TrackerAddRequest(request);
+            VKRequestTracker[vk_request] = true;
+
+            ContextTrackerAddRequest(request);
 
             return vk_request;
         } else if (request["method"].toString() == "friends.addList") {
             VKRequest *vk_request = [VKRequest requestWithMethod:request["method"].toString().toNSString() parameters:vk_parameters];
 
             vk_request.completeBlock = ^(VKResponse *response) {
-                TrackerDelRequest(request);
+                if (VKRequestTracker.contains(vk_request)) {
+                    VKRequestTracker.remove(vk_request);
 
-                ProcessFriendsAddListResponse(QString::fromNSString(response.responseString), request);
+                    ContextTrackerDelRequest(request);
+
+                    ProcessFriendsAddListResponse(QString::fromNSString(response.responseString), request);
+                }
             };
             vk_request.errorBlock = ^(NSError *error) {
                 Q_UNUSED(error)
 
                 qWarning() << QString("ProcessRequest() : %1 request failed").arg(QString::fromNSString(vk_request.methodName));
 
-                TrackerDelRequest(request);
+                if (VKRequestTracker.contains(vk_request)) {
+                    VKRequestTracker.remove(vk_request);
 
-                ProcessFriendsAddListError(request);
+                    ContextTrackerDelRequest(request);
+
+                    ProcessFriendsAddListError(request);
+                }
             };
 
-            TrackerAddRequest(request);
+            VKRequestTracker[vk_request] = true;
+
+            ContextTrackerAddRequest(request);
 
             return vk_request;
         } else if (request["method"].toString() == "friends.editList") {
             VKRequest *vk_request = [VKRequest requestWithMethod:request["method"].toString().toNSString() parameters:vk_parameters];
 
             vk_request.completeBlock = ^(VKResponse *response) {
-                TrackerDelRequest(request);
+                if (VKRequestTracker.contains(vk_request)) {
+                    VKRequestTracker.remove(vk_request);
 
-                ProcessFriendsEditListResponse(QString::fromNSString(response.responseString), request);
+                    ContextTrackerDelRequest(request);
+
+                    ProcessFriendsEditListResponse(QString::fromNSString(response.responseString), request);
+                }
             };
             vk_request.errorBlock = ^(NSError *error) {
                 Q_UNUSED(error)
 
                 qWarning() << QString("ProcessRequest() : %1 request failed").arg(QString::fromNSString(vk_request.methodName));
 
-                TrackerDelRequest(request);
+                if (VKRequestTracker.contains(vk_request)) {
+                    VKRequestTracker.remove(vk_request);
 
-                ProcessFriendsEditListError(request);
+                    ContextTrackerDelRequest(request);
+
+                    ProcessFriendsEditListError(request);
+                }
             };
 
-            TrackerAddRequest(request);
+            VKRequestTracker[vk_request] = true;
+
+            ContextTrackerAddRequest(request);
 
             return vk_request;
         } else {

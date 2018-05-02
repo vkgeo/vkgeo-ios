@@ -144,10 +144,8 @@ Page {
         onPositionChanged: {
             mapSwipe.updateMyLocation(position.coordinate);
 
-            if (VKHelper.authState === VKAuthState.StateAuthorized) {
-                VKHelper.reportLocation(position.coordinate.latitude,
-                                        position.coordinate.longitude);
-            }
+            VKHelper.reportLocation(position.coordinate.latitude,
+                                    position.coordinate.longitude);
         }
     }
 
@@ -157,9 +155,7 @@ Page {
         repeat:   true
 
         onTriggered: {
-            if (VKHelper.authState === VKAuthState.StateAuthorized) {
-                VKHelper.updateTrustedFriendsLocations(false);
-            }
+            VKHelper.updateTrustedFriendsLocations(false);
         }
     }
 
