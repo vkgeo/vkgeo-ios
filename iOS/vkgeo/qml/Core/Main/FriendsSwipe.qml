@@ -77,8 +77,8 @@ Item {
 
             Row {
                 anchors.fill: parent
-                leftPadding:  UtilScript.pt(8)
-                rightPadding: UtilScript.pt(8)
+                leftPadding:  UtilScript.pt(16)
+                rightPadding: UtilScript.pt(16)
                 spacing:      UtilScript.pt(8)
 
                 OpacityMask {
