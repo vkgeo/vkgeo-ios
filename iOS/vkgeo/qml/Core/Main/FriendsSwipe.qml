@@ -8,7 +8,7 @@ import "../../Util.js" as UtilScript
 Item {
     id: friendsSwipe
 
-    signal locateFriendOnMap(string id)
+    signal locateFriendOnMap(string user_id)
 
     function updateFriends() {
         friendsListModel.clear();
@@ -22,11 +22,11 @@ Item {
         }
     }
 
-    function trustedFriendLocationAvailable(id, update_time, latitude, longitude) {
+    function trustedFriendLocationAvailable(user_id, update_time, latitude, longitude) {
         for (var i = 0; i < friendsListModel.count; i++) {
             var frnd = friendsListModel.get(i);
 
-            if (id === frnd.id) {
+            if (user_id === frnd.userId) {
                 friendsListModel.set(i, { "locationAvailable": true, "updateTime": update_time,
                                           "latitude": latitude, "longitude": longitude });
 
@@ -130,7 +130,7 @@ Item {
                             if (component.status === Component.Ready) {
                                 var profile_page = mainStackView.push(component);
 
-                                profile_page.id          = id;
+                                profile_page.userId      = userId;
                                 profile_page.online      = online;
                                 profile_page.firstName   = firstName;
                                 profile_page.lastName    = lastName;
@@ -182,7 +182,7 @@ Item {
 
                         onClicked: {
                             if (trusted && locationAvailable) {
-                                friendDelegate.listView.locateFriendOnMap(id);
+                                friendDelegate.listView.locateFriendOnMap(userId);
                             } else {
                                 // Invite
                             }
@@ -214,8 +214,8 @@ Item {
             }
         }
 
-        function locateFriendOnMap(id) {
-            friendsSwipe.locateFriendOnMap(id);
+        function locateFriendOnMap(user_id) {
+            friendsSwipe.locateFriendOnMap(user_id);
         }
 
         Timer {

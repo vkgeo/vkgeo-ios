@@ -98,7 +98,7 @@ Page {
                             var frnd = trustedFriendsListModel.get(i);
 
                             if (frnd.trusted) {
-                                trusted_friends_list.push(frnd.id);
+                                trusted_friends_list.push(frnd.userId);
                             }
                         }
 

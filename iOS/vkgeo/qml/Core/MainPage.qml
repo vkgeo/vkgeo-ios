@@ -121,7 +121,7 @@ Page {
             id: friendsSwipe
 
             onLocateFriendOnMap: {
-                mapSwipe.locateItemOnMap(id);
+                mapSwipe.locateItemOnMap(user_id);
 
                 tabBar.setCurrentIndex(0);
             }

@@ -86,7 +86,7 @@ Page {
     property int safeAreaTopMargin:    0
     property int safeAreaBottomMargin: 0
 
-    property string id:                ""
+    property string userId:            ""
     property string firstName:         ""
     property string lastName:          ""
     property string bigPhotoUrl:       ""
@@ -100,91 +100,72 @@ Page {
         }
     }
 
-    ColumnLayout {
-        anchors.fill: parent
-        spacing:      UtilScript.pt(32)
+    Flickable {
+        id:                   profileFlickable
+        anchors.fill:         parent
+        anchors.topMargin:    UtilScript.pt(16)
+        anchors.bottomMargin: UtilScript.pt(16)
+        contentWidth:         profileLayout.width
+        contentHeight:        profileLayout.height
+        clip:                 true
 
-        Rectangle {
-            width:            UtilScript.pt(128)
-            height:           UtilScript.pt(128)
-            color:            "transparent"
-            Layout.topMargin: UtilScript.pt(16)
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+        ScrollBar.vertical: ScrollBar {
+            policy: ScrollBar.AsNeeded
+        }
 
-            OpacityMask {
-                id:           opacityMask
-                anchors.fill: parent
+        ColumnLayout {
+            id:      profileLayout
+            width:   profileFlickable.width
+            spacing: UtilScript.pt(32)
 
-                source: Image {
-                    width:    opacityMask.width
-                    height:   opacityMask.height
-                    source:   friendProfilePage.bigPhotoUrl
-                    fillMode: Image.Stretch
-                    visible:  false
+            Rectangle {
+                width:            UtilScript.pt(128)
+                height:           UtilScript.pt(128)
+                color:            "transparent"
+                Layout.topMargin: UtilScript.pt(16)
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                OpacityMask {
+                    id:           opacityMask
+                    anchors.fill: parent
+
+                    source: Image {
+                        width:    opacityMask.width
+                        height:   opacityMask.height
+                        source:   friendProfilePage.bigPhotoUrl
+                        fillMode: Image.Stretch
+                        visible:  false
+                    }
+
+                    maskSource: Image {
+                        width:    opacityMask.width
+                        height:   opacityMask.height
+                        source:   "qrc:/resources/images/main/avatar_mask.png"
+                        fillMode: Image.PreserveAspectFit
+                        visible:  false
+                    }
                 }
 
-                maskSource: Image {
-                    width:    opacityMask.width
-                    height:   opacityMask.height
-                    source:   "qrc:/resources/images/main/avatar_mask.png"
+                Image {
+                    x:        opacityMask.width  / 2 + opacityMask.width  / 2 * Math.sin(angle) - width  / 2
+                    y:        opacityMask.height / 2 + opacityMask.height / 2 * Math.cos(angle) - height / 2
+                    z:        1
+                    width:    UtilScript.pt(16)
+                    height:   UtilScript.pt(16)
+                    source:   "qrc:/resources/images/main/avatar_online_label.png"
                     fillMode: Image.PreserveAspectFit
-                    visible:  false
+                    visible:  friendProfilePage.online
+
+                    property real angle: Math.PI / 4
                 }
             }
-
-            Image {
-                x:        opacityMask.width  / 2 + opacityMask.width  / 2 * Math.sin(angle) - width  / 2
-                y:        opacityMask.height / 2 + opacityMask.height / 2 * Math.cos(angle) - height / 2
-                z:        1
-                width:    UtilScript.pt(16)
-                height:   UtilScript.pt(16)
-                source:   "qrc:/resources/images/main/avatar_online_label.png"
-                fillMode: Image.PreserveAspectFit
-                visible:  friendProfilePage.online
-
-                property real angle: Math.PI / 4
-            }
-        }
-
-        Text {
-            text:                "%1 %2".arg(friendProfilePage.firstName).arg(friendProfilePage.lastName)
-            color:               "black"
-            font.pointSize:      24
-            font.family:         "Helvetica"
-            font.bold:           true
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment:   Text.AlignVCenter
-            wrapMode:            Text.Wrap
-            fontSizeMode:        Text.Fit
-            minimumPointSize:    8
-            Layout.fillWidth:    true
-        }
-
-        Text {
-            text:                friendProfilePage.status
-            color:               "black"
-            font.pointSize:      16
-            font.family:         "Helvetica"
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment:   Text.AlignVCenter
-            wrapMode:            Text.Wrap
-            fontSizeMode:        Text.Fit
-            minimumPointSize:    8
-            Layout.fillWidth:    true
-        }
-
-        Rectangle {
-            width:            UtilScript.pt(280)
-            height:           UtilScript.pt(64)
-            color:            "steelblue"
-            radius:           UtilScript.pt(8)
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
             Text {
-                anchors.fill:        parent
-                text:                qsTr("Open full profile")
-                color:               "white"
-                font.pointSize:      16
+                leftPadding:         UtilScript.pt(16)
+                rightPadding:        UtilScript.pt(16)
+                text:                "%1 %2".arg(friendProfilePage.firstName).arg(friendProfilePage.lastName)
+                color:               "black"
+                font.pointSize:      24
                 font.family:         "Helvetica"
                 font.bold:           true
                 horizontalAlignment: Text.AlignHCenter
@@ -192,23 +173,55 @@ Page {
                 wrapMode:            Text.Wrap
                 fontSizeMode:        Text.Fit
                 minimumPointSize:    8
+                Layout.fillWidth:    true
             }
 
-            MouseArea {
-                anchors.fill: parent
+            Text {
+                leftPadding:         UtilScript.pt(16)
+                rightPadding:        UtilScript.pt(16)
+                text:                friendProfilePage.status
+                color:               "black"
+                font.pointSize:      16
+                font.family:         "Helvetica"
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment:   Text.AlignVCenter
+                wrapMode:            Text.Wrap
+                fontSizeMode:        Text.Fit
+                minimumPointSize:    8
+                Layout.fillWidth:    true
+            }
 
-                onClicked: {
-                    if (!Qt.openUrlExternally("vk://vk.com/id%1".arg(friendProfilePage.id))) {
-                        Qt.openUrlExternally("https://m.vk.com/id%1".arg(friendProfilePage.id));
+            Rectangle {
+                width:            UtilScript.pt(280)
+                height:           UtilScript.pt(64)
+                color:            "steelblue"
+                radius:           UtilScript.pt(8)
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                Text {
+                    anchors.fill:        parent
+                    text:                qsTr("Open full profile")
+                    color:               "white"
+                    font.pointSize:      16
+                    font.family:         "Helvetica"
+                    font.bold:           true
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment:   Text.AlignVCenter
+                    wrapMode:            Text.Wrap
+                    fontSizeMode:        Text.Fit
+                    minimumPointSize:    8
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        if (!Qt.openUrlExternally("vk://vk.com/id%1".arg(friendProfilePage.userId))) {
+                            Qt.openUrlExternally("https://m.vk.com/id%1".arg(friendProfilePage.userId));
+                        }
                     }
                 }
             }
-        }
-
-        Rectangle {
-            color:             "transparent"
-            Layout.fillWidth:  true
-            Layout.fillHeight: true
         }
     }
 }

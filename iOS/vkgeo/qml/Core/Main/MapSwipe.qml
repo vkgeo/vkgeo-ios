@@ -23,7 +23,7 @@ Item {
         var tracked_map_item_id = null;
 
         if (map.trackedMapItem !== null) {
-            tracked_map_item_id = map.trackedMapItem.id;
+            tracked_map_item_id = map.trackedMapItem.userId;
         }
 
         map.trackMapItem(null);
@@ -47,11 +47,11 @@ Item {
                 var frnd = friends_list[j];
 
                 if (frnd.trusted) {
-                    var new_map_item = component.createObject(map, { "id": frnd.id, "photoUrl": frnd.photoUrl });
+                    var new_map_item = component.createObject(map, { "userId": frnd.userId, "photoUrl": frnd.photoUrl });
 
                     map.addMapItem(new_map_item);
 
-                    if (new_map_item.id === tracked_map_item_id) {
+                    if (new_map_item.userId === tracked_map_item_id) {
                         map.trackMapItem(new_map_item);
                     }
                 }
@@ -73,11 +73,11 @@ Item {
         }
     }
 
-    function updateMapItemLocation(id, update_time, latitude, longitude) {
+    function updateMapItemLocation(user_id, update_time, latitude, longitude) {
         for (var i = 0; i < map.mapItems.length; i++) {
             var map_item = map.mapItems[i];
 
-            if (id === map_item.id) {
+            if (user_id === map_item.userId) {
                 map_item.coordinate = QtPositioning.coordinate(latitude, longitude);
                 map_item.updateTime = update_time;
 
@@ -90,11 +90,11 @@ Item {
         }
     }
 
-    function locateItemOnMap(id) {
+    function locateItemOnMap(user_id) {
         for (var i = 0; i < map.mapItems.length; i++) {
             var map_item = map.mapItems[i];
 
-            if (id === map_item.id) {
+            if (user_id === map_item.userId) {
                 map.trackMapItem(map_item);
 
                 break;
@@ -219,6 +219,7 @@ Item {
             anchors.fill: parent
 
             onClicked: {
+                map.trackMapItem(null);
                 map.showAllMapItems();
             }
         }
@@ -252,7 +253,7 @@ Item {
         if (component.status === Component.Ready) {
             map.myMapItem = component.createObject(map);
 
-            map.myMapItem.id       = "";
+            map.myMapItem.userId   = "";
             map.myMapItem.photoUrl = Qt.binding(function() { return VKHelper.photoUrl; });
 
             map.addMapItem(map.myMapItem);

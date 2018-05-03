@@ -18,7 +18,7 @@ MapQuickItem {
 
     property real updateTime:      0.0
 
-    property string id:            ""
+    property string userId:        ""
     property string photoUrl:      ""
 
     sourceItem: Rectangle {

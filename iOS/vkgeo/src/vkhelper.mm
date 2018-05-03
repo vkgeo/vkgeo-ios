@@ -1032,7 +1032,7 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
                             if (!json_friend.contains("deactivated")) {
                                 QVariantMap frnd;
 
-                                frnd["id"]      = QString::number(json_friend.value("id").toInt());
+                                frnd["userId"]  = QString::number(json_friend.value("id").toInt());
                                 frnd["trusted"] = false;
 
                                 if (json_friend.contains("first_name")) {
@@ -1077,7 +1077,7 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
                                     frnd["lastSeenTime"] = "";
                                 }
 
-                                FriendsDataTmp[frnd["id"].toString()] = frnd;
+                                FriendsDataTmp[frnd["userId"].toString()] = frnd;
                             }
                         } else {
                             qWarning() << "ProcessFriendsGetResponse() : invalid entry";
