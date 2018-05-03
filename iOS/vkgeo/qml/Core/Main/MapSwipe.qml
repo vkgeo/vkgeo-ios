@@ -67,6 +67,12 @@ Item {
         }
     }
 
+    function updateMapItemsStates() {
+        for (var i = 0; i < map.mapItems.length; i++) {
+            map.mapItems[i].updateState();
+        }
+    }
+
     function updateMapItemLocation(id, update_time, latitude, longitude) {
         for (var i = 0; i < map.mapItems.length; i++) {
             var map_item = map.mapItems[i];

@@ -152,6 +152,8 @@ Page {
 
         onTriggered: {
             VKHelper.updateTrustedFriendsLocations(false);
+
+            mapSwipe.updateMapItemsStates();
         }
     }
 
