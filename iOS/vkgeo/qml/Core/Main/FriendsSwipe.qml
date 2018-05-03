@@ -1,5 +1,6 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
+import QtQuick.Layouts 1.3
 import QtGraphicalEffects 1.0
 
 import "../../Util.js" as UtilScript
@@ -75,18 +76,16 @@ Item {
 
             property var listView: ListView.view
 
-            Row {
+            RowLayout {
                 anchors.fill: parent
-                leftPadding:  UtilScript.pt(16)
-                rightPadding: UtilScript.pt(16)
                 spacing:      UtilScript.pt(8)
 
                 Rectangle {
-                    id:                     avatarRectangle
-                    anchors.verticalCenter: parent.verticalCenter
-                    width:                  UtilScript.pt(64)
-                    height:                 UtilScript.pt(64)
-                    color:                  "transparent"
+                    width:             UtilScript.pt(64)
+                    height:            UtilScript.pt(64)
+                    color:             "transparent"
+                    Layout.leftMargin: UtilScript.pt(16)
+                    Layout.alignment:  Qt.AlignHCenter | Qt.AlignVCenter
 
                     OpacityMask {
                         id:           opacityMask
@@ -110,7 +109,6 @@ Item {
                     }
 
                     Image {
-                        id:       onlineImage
                         x:        opacityMask.width  / 2 + opacityMask.width  / 2 * Math.sin(angle) - width  / 2
                         y:        opacityMask.height / 2 + opacityMask.height / 2 * Math.cos(angle) - height / 2
                         z:        1
@@ -122,15 +120,23 @@ Item {
 
                         property real angle: Math.PI / 4
                     }
+
+                    MouseArea {
+                        anchors.fill: parent
+
+                        onClicked: {
+                            var component = Qt.createComponent("../FriendProfilePage.qml");
+
+                            if (component.status === Component.Ready) {
+                                mainStackView.push(component);
+                            } else {
+                                console.log(component.errorString());
+                            }
+                        }
+                    }
                 }
 
                 Text {
-                    width:               parent.width - parent.spacing * 2
-                                                      - parent.leftPadding
-                                                      - parent.rightPadding
-                                                      - avatarRectangle.width
-                                                      - showOnMapButton.width
-                    height:              parent.height
                     text:                "%1 %2".arg(firstName).arg(lastName)
                     color:               "black"
                     font.pointSize:      16
@@ -140,15 +146,17 @@ Item {
                     wrapMode:            Text.Wrap
                     fontSizeMode:        Text.Fit
                     minimumPointSize:    8
+                    Layout.fillWidth:    true
+                    Layout.fillHeight:   true
                 }
 
                 Image {
-                    id:                     showOnMapButton
-                    anchors.verticalCenter: parent.verticalCenter
-                    width:                  UtilScript.pt(48)
-                    height:                 UtilScript.pt(48)
-                    source:                 buttonToShow(trusted, locationAvailable)
-                    fillMode:               Image.PreserveAspectFit
+                    width:              UtilScript.pt(48)
+                    height:             UtilScript.pt(48)
+                    source:             buttonToShow(trusted, locationAvailable)
+                    fillMode:           Image.PreserveAspectFit
+                    Layout.rightMargin: UtilScript.pt(16)
+                    Layout.alignment:   Qt.AlignHCenter | Qt.AlignVCenter
 
                     function buttonToShow(trusted, location_available) {
                         if (trusted) {

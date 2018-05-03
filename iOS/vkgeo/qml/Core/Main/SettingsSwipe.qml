@@ -1,22 +1,23 @@
 import QtQuick 2.9
+import QtQuick.Layouts 1.3
 
 import "../../Util.js" as UtilScript
 
 Item {
     id: settingsSwipe
 
-    Column {
-        anchors.centerIn: parent
-        width:            parent.width
-        spacing:          UtilScript.pt(32)
+    ColumnLayout {
+        anchors.fill: parent
+        spacing:      UtilScript.pt(32)
 
         Rectangle {
-            anchors.horizontalCenter: parent.horizontalCenter
-            width:                    parent.width - UtilScript.pt(32)
-            height:                   UtilScript.pt(64)
-            color:                    enabled ? "steelblue" : "darkgray"
-            radius:                   UtilScript.pt(8)
-            enabled:                  VKHelper.friendsCount !== 0
+            width:            UtilScript.pt(280)
+            height:           UtilScript.pt(64)
+            color:            enabled ? "steelblue" : "darkgray"
+            radius:           UtilScript.pt(8)
+            enabled:          VKHelper.friendsCount !== 0
+            Layout.topMargin: UtilScript.pt(16)
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
             Text {
                 anchors.fill:        parent
@@ -48,11 +49,18 @@ Item {
         }
 
         Rectangle {
-            anchors.horizontalCenter: parent.horizontalCenter
-            width:                    parent.width - UtilScript.pt(32)
-            height:                   UtilScript.pt(64)
-            color:                    "steelblue"
-            radius:                   UtilScript.pt(8)
+            color:             "transparent"
+            Layout.fillWidth:  true
+            Layout.fillHeight: true
+        }
+
+        Rectangle {
+            width:               UtilScript.pt(280)
+            height:              UtilScript.pt(64)
+            color:               "steelblue"
+            radius:              UtilScript.pt(8)
+            Layout.bottomMargin: UtilScript.pt(16)
+            Layout.alignment:    Qt.AlignHCenter | Qt.AlignVCenter
 
             Text {
                 anchors.fill:        parent

@@ -1,5 +1,6 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
+import QtQuick.Layouts 1.3
 import QtGraphicalEffects 1.0
 
 import "../Util.js" as UtilScript
@@ -8,26 +9,24 @@ Page {
     id: trustedFriendsPage
 
     header: Rectangle {
-        height: trustedFriendsPage.safeAreaTopMargin + headerControlsRectangle.height
+        height: trustedFriendsPage.safeAreaTopMargin + headerControlsLayout.height
         color:  "lightsteelblue"
 
-        Rectangle {
-            id:             headerControlsRectangle
+        RowLayout {
+            id:             headerControlsLayout
             anchors.bottom: parent.bottom
             anchors.left:   parent.left
             anchors.right:  parent.right
             height:         UtilScript.pt(48)
-            color:          "transparent"
+            spacing:        UtilScript.pt(4)
 
             Rectangle {
-                id:                     cancelButton
-                anchors.left:           parent.left
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.leftMargin:     UtilScript.pt(8)
-                width:                  UtilScript.pt(80)
-                height:                 UtilScript.pt(32)
-                color:                  "steelblue"
-                radius:                 UtilScript.pt(8)
+                width:             UtilScript.pt(80)
+                height:            UtilScript.pt(32)
+                color:             "steelblue"
+                radius:            UtilScript.pt(8)
+                Layout.leftMargin: UtilScript.pt(8)
+                Layout.alignment:  Qt.AlignHCenter | Qt.AlignVCenter
 
                 Text {
                     anchors.fill:        parent
@@ -53,13 +52,6 @@ Page {
             }
 
             Text {
-                anchors.centerIn:    parent
-                width:               parent.width - UtilScript.pt(8)
-                                                  - cancelButton.width
-                                                  - cancelButton.leftMargin
-                                                  - saveButton.width
-                                                  - saveButton.rightMargin
-                height:              parent.height
                 text:                qsTr("Trusted Friends")
                 color:               "white"
                 font.pointSize:      16
@@ -70,17 +62,17 @@ Page {
                 wrapMode:            Text.Wrap
                 fontSizeMode:        Text.Fit
                 minimumPointSize:    8
+                Layout.fillWidth:    true
+                Layout.fillHeight:   true
             }
 
             Rectangle {
-                id:                     saveButton
-                anchors.right:          parent.right
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.rightMargin:    UtilScript.pt(8)
-                width:                  UtilScript.pt(80)
-                height:                 UtilScript.pt(32)
-                color:                  "steelblue"
-                radius:                 UtilScript.pt(8)
+                width:              UtilScript.pt(80)
+                height:             UtilScript.pt(32)
+                color:              "steelblue"
+                radius:             UtilScript.pt(8)
+                Layout.rightMargin: UtilScript.pt(8)
+                Layout.alignment:   Qt.AlignHCenter | Qt.AlignVCenter
 
                 Text {
                     anchors.fill:        parent
@@ -154,17 +146,16 @@ Page {
 
             property var listView: ListView.view
 
-            Row {
+            RowLayout {
                 anchors.fill: parent
-                leftPadding:  UtilScript.pt(8)
-                rightPadding: UtilScript.pt(8)
                 spacing:      UtilScript.pt(8)
 
                 OpacityMask {
-                    id:                     opacityMask
-                    anchors.verticalCenter: parent.verticalCenter
-                    width:                  UtilScript.pt(64)
-                    height:                 UtilScript.pt(64)
+                    id:                opacityMask
+                    width:             UtilScript.pt(64)
+                    height:            UtilScript.pt(64)
+                    Layout.leftMargin: UtilScript.pt(16)
+                    Layout.alignment:  Qt.AlignHCenter | Qt.AlignVCenter
 
                     source: Image {
                         width:    opacityMask.width
@@ -184,12 +175,6 @@ Page {
                 }
 
                 Text {
-                    width:               parent.width - parent.spacing * 2
-                                                      - parent.leftPadding
-                                                      - parent.rightPadding
-                                                      - opacityMask.width
-                                                      - trustedSwitch.width
-                    height:              parent.height
                     text:                "%1 %2".arg(firstName).arg(lastName)
                     color:               "black"
                     font.pointSize:      16
@@ -199,12 +184,14 @@ Page {
                     wrapMode:            Text.Wrap
                     fontSizeMode:        Text.Fit
                     minimumPointSize:    8
+                    Layout.fillWidth:    true
+                    Layout.fillHeight:   true
                 }
 
                 Switch {
-                    id:                     trustedSwitch
-                    anchors.verticalCenter: parent.verticalCenter
-                    checked:                trusted
+                    checked:            trusted
+                    Layout.rightMargin: UtilScript.pt(16)
+                    Layout.alignment:   Qt.AlignHCenter | Qt.AlignVCenter
 
                     onToggled: {
                         if (!friendDelegate.listView.setTrust(index, checked)) {

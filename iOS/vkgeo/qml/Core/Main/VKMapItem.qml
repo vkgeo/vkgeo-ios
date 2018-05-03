@@ -49,7 +49,6 @@ MapQuickItem {
         }
 
         Image {
-            id:       unknownLocationImage
             x:        opacityMask.width  / 2 + opacityMask.width  / 2 * Math.sin(angle) - width  / 2
             y:        opacityMask.height / 2 + opacityMask.height / 2 * Math.cos(angle) - height / 2
             z:        1
