@@ -14,7 +14,7 @@ MapQuickItem {
     property bool valid:           false
     property bool locationUnknown: false
 
-    property int locationTimeout:  6 * 60 * 60
+    property int locationTimeout:  12 * 60 * 60
 
     property real updateTime:      0.0
 
