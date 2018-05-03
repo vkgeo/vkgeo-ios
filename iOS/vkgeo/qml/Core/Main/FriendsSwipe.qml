@@ -128,7 +128,14 @@ Item {
                             var component = Qt.createComponent("../FriendProfilePage.qml");
 
                             if (component.status === Component.Ready) {
-                                mainStackView.push(component);
+                                var profile_page = mainStackView.push(component);
+
+                                profile_page.id          = id;
+                                profile_page.online      = online;
+                                profile_page.firstName   = firstName;
+                                profile_page.lastName    = lastName;
+                                profile_page.bigPhotoUrl = bigPhotoUrl;
+                                profile_page.status      = status;
                             } else {
                                 console.log(component.errorString());
                             }

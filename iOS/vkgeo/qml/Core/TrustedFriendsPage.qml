@@ -52,7 +52,7 @@ Page {
             }
 
             Text {
-                text:                qsTr("Trusted Friends")
+                text:                qsTr("Trusted friends")
                 color:               "white"
                 font.pointSize:      16
                 font.family:         "Helvetica"

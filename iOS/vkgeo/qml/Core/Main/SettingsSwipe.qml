@@ -21,7 +21,7 @@ Item {
 
             Text {
                 anchors.fill:        parent
-                text:                qsTr("Trusted Friends List")
+                text:                qsTr("Trusted friends list")
                 color:               "white"
                 font.pointSize:      16
                 font.family:         "Helvetica"
