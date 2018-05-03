@@ -18,7 +18,8 @@ Item {
         for (var i = 0; i < friends_list.length; i++) {
             friendsListModel.append(friends_list[i]);
 
-            friendsListModel.set(i, { "locationAvailable": false, "updateTime": 0, "latitude": 0, "longitude": 0 });
+            friendsListModel.set(i, { "locationAvailable": false, "updateTime": 0,
+                                      "latitude": 0, "longitude": 0 });
         }
     }
 
@@ -29,6 +30,35 @@ Item {
             if (user_id === frnd.userId) {
                 friendsListModel.set(i, { "locationAvailable": true, "updateTime": update_time,
                                           "latitude": latitude, "longitude": longitude });
+
+                break;
+            }
+        }
+    }
+
+    function openProfilePage(user_id) {
+        for (var i = 0; i < friendsListModel.count; i++) {
+            var frnd = friendsListModel.get(i);
+
+            if (user_id === frnd.userId) {
+                var component = Qt.createComponent("../FriendProfilePage.qml");
+
+                if (component.status === Component.Ready) {
+                    var profile_page = mainStackView.push(component);
+
+                    profile_page.userId            = frnd.userId;
+                    profile_page.online            = frnd.online;
+                    profile_page.locationAvailable = frnd.locationAvailable;
+                    profile_page.updateTime        = frnd.updateTime;
+                    profile_page.firstName         = frnd.firstName;
+                    profile_page.lastName          = frnd.lastName;
+                    profile_page.bigPhotoUrl       = frnd.bigPhotoUrl;
+                    profile_page.status            = frnd.status;
+
+                    profile_page.locateFriendOnMap.connect(friendsSwipe.locateFriendOnMap);
+                } else {
+                    console.log(component.errorString());
+                }
 
                 break;
             }
@@ -125,20 +155,7 @@ Item {
                         anchors.fill: parent
 
                         onClicked: {
-                            var component = Qt.createComponent("../FriendProfilePage.qml");
-
-                            if (component.status === Component.Ready) {
-                                var profile_page = mainStackView.push(component);
-
-                                profile_page.userId      = userId;
-                                profile_page.online      = online;
-                                profile_page.firstName   = firstName;
-                                profile_page.lastName    = lastName;
-                                profile_page.bigPhotoUrl = bigPhotoUrl;
-                                profile_page.status      = status;
-                            } else {
-                                console.log(component.errorString());
-                            }
+                            friendDelegate.listView.openProfilePage(userId);
                         }
                     }
                 }
@@ -212,6 +229,10 @@ Item {
 
                 refreshTimer.stop();
             }
+        }
+
+        function openProfilePage(user_id) {
+            friendsSwipe.openProfilePage(user_id);
         }
 
         function locateFriendOnMap(user_id) {

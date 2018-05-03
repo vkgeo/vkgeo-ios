@@ -115,6 +115,10 @@ Page {
 
         MapSwipe {
             id: mapSwipe
+
+            onOpenProfilePage: {
+                friendsSwipe.openProfilePage(user_id);
+            }
         }
 
         FriendsSwipe {

@@ -8,6 +8,8 @@ import "../../Util.js" as UtilScript
 Item {
     id: mapSwipe
 
+    signal openProfilePage(string user_id)
+
     function updateMyLocation(coordinate) {
         if (map.myMapItem !== null) {
             map.myMapItem.coordinate = coordinate;
@@ -48,6 +50,8 @@ Item {
 
                 if (frnd.trusted) {
                     var new_map_item = component.createObject(map, { "userId": frnd.userId, "photoUrl": frnd.photoUrl });
+
+                    new_map_item.openProfilePage.connect(mapSwipe.openProfilePage);
 
                     map.addMapItem(new_map_item);
 

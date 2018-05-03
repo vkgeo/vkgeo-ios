@@ -2,8 +2,8 @@
     <qresource prefix="/">
         <file>resources/images/login/button_login.png</file>
         <file>resources/images/main/avatar_mask.png</file>
+        <file>resources/images/main/avatar_obsolete_location_label.png</file>
         <file>resources/images/main/avatar_online_label.png</file>
-        <file>resources/images/main/avatar_unknown_location_label.png</file>
         <file>resources/images/main/button_invite_trusted.png</file>
         <file>resources/images/main/button_invite_untrusted.png</file>
         <file>resources/images/main/button_show_all.png</file>

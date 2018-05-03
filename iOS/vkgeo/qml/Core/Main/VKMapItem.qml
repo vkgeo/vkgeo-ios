@@ -11,8 +11,8 @@ MapQuickItem {
     height:      sourceItem.height
     anchorPoint: Qt.point(width / 2, height / 2)
 
-    property bool valid:           false
-    property bool locationUnknown: false
+    property bool valid:            false
+    property bool locationObsolete: false
 
     property int locationTimeout:  12 * 60 * 60
 
@@ -20,6 +20,8 @@ MapQuickItem {
 
     property string userId:        ""
     property string photoUrl:      ""
+
+    signal openProfilePage(string user_id)
 
     sourceItem: Rectangle {
         width:   UtilScript.pt(48)
@@ -34,7 +36,7 @@ MapQuickItem {
             source: Image {
                 width:    opacityMask.width
                 height:   opacityMask.height
-                source:   photoUrl
+                source:   vkMapItem.photoUrl
                 fillMode: Image.Stretch
                 visible:  false
             }
@@ -54,11 +56,19 @@ MapQuickItem {
             z:        1
             width:    UtilScript.pt(16)
             height:   UtilScript.pt(16)
-            source:   "qrc:/resources/images/main/avatar_unknown_location_label.png"
+            source:   "qrc:/resources/images/main/avatar_obsolete_location_label.png"
             fillMode: Image.PreserveAspectFit
-            visible:  vkMapItem.locationUnknown
+            visible:  vkMapItem.locationObsolete
 
             property real angle: Math.PI / 4
+        }
+
+        MouseArea {
+            anchors.fill: parent
+
+            onClicked: {
+                vkMapItem.openProfilePage(vkMapItem.userId);
+            }
         }
     }
 
@@ -72,9 +82,9 @@ MapQuickItem {
 
     function updateState() {
         if ((new Date()).getTime() / 1000 > updateTime + locationTimeout) {
-            locationUnknown = true;
+            locationObsolete = true;
         } else {
-            locationUnknown = false;
+            locationObsolete = false;
         }
     }
 

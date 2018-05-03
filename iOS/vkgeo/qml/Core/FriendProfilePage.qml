@@ -82,9 +82,12 @@ Page {
     }
 
     property bool online:              false
+    property bool locationAvailable:   false
 
     property int safeAreaTopMargin:    0
     property int safeAreaBottomMargin: 0
+
+    property real updateTime:          0.0
 
     property string userId:            ""
     property string firstName:         ""
@@ -99,6 +102,8 @@ Page {
             safeAreaBottomMargin = UIHelper.safeAreaBottomMargin();
         }
     }
+
+    signal locateFriendOnMap(string user_id)
 
     Flickable {
         id:                   profileFlickable
@@ -191,6 +196,57 @@ Page {
                 Layout.fillWidth:    true
             }
 
+            Text {
+                leftPadding:         UtilScript.pt(16)
+                rightPadding:        UtilScript.pt(16)
+                text:                "Location updated at: %1".arg((new Date(friendProfilePage.updateTime * 1000))
+                                                                        .toLocaleString())
+                color:               "black"
+                font.pointSize:      16
+                font.family:         "Helvetica"
+                font.italic:         true
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment:   Text.AlignVCenter
+                wrapMode:            Text.Wrap
+                fontSizeMode:        Text.Fit
+                minimumPointSize:    8
+                visible:             friendProfilePage.locationAvailable
+                Layout.fillWidth:    true
+            }
+
+            Rectangle {
+                width:            UtilScript.pt(280)
+                height:           UtilScript.pt(64)
+                color:            "steelblue"
+                radius:           UtilScript.pt(8)
+                visible:          friendProfilePage.locationAvailable
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                Text {
+                    anchors.fill:        parent
+                    text:                qsTr("Locate on map")
+                    color:               "white"
+                    font.pointSize:      16
+                    font.family:         "Helvetica"
+                    font.bold:           true
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment:   Text.AlignVCenter
+                    wrapMode:            Text.Wrap
+                    fontSizeMode:        Text.Fit
+                    minimumPointSize:    8
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        locateFriendOnMap(friendProfilePage.userId);
+
+                        mainStackView.pop();
+                    }
+                }
+            }
+
             Rectangle {
                 width:            UtilScript.pt(280)
                 height:           UtilScript.pt(64)
@@ -200,7 +256,7 @@ Page {
 
                 Text {
                     anchors.fill:        parent
-                    text:                qsTr("Open full profile")
+                    text:                qsTr("Open profile")
                     color:               "white"
                     font.pointSize:      16
                     font.family:         "Helvetica"
