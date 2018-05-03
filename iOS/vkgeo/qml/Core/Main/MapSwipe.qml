@@ -199,6 +199,26 @@ Item {
     }
 
     Image {
+        anchors.left:         parent.left
+        anchors.bottom:       parent.bottom
+        anchors.leftMargin:   UtilScript.pt(8)
+        anchors.bottomMargin: UtilScript.pt(24)
+        z:                    1
+        width:                UtilScript.pt(48)
+        height:               UtilScript.pt(48)
+        source:               "qrc:/resources/images/main/button_show_all.png"
+        fillMode:             Image.PreserveAspectFit
+
+        MouseArea {
+            anchors.fill: parent
+
+            onClicked: {
+                map.showAllMapItems();
+            }
+        }
+    }
+
+    Image {
         anchors.right:        parent.right
         anchors.bottom:       parent.bottom
         anchors.rightMargin:  UtilScript.pt(8)
