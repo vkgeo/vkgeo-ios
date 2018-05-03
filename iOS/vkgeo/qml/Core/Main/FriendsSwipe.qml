@@ -81,26 +81,46 @@ Item {
                 rightPadding: UtilScript.pt(16)
                 spacing:      UtilScript.pt(8)
 
-                OpacityMask {
-                    id:                     opacityMask
+                Rectangle {
+                    id:                     avatarRectangle
                     anchors.verticalCenter: parent.verticalCenter
                     width:                  UtilScript.pt(64)
                     height:                 UtilScript.pt(64)
+                    color:                  "transparent"
 
-                    source: Image {
-                        width:    opacityMask.width
-                        height:   opacityMask.height
-                        source:   photoUrl
-                        fillMode: Image.Stretch
-                        visible:  false
+                    OpacityMask {
+                        id:           opacityMask
+                        anchors.fill: parent
+
+                        source: Image {
+                            width:    opacityMask.width
+                            height:   opacityMask.height
+                            source:   photoUrl
+                            fillMode: Image.Stretch
+                            visible:  false
+                        }
+
+                        maskSource: Image {
+                            width:    opacityMask.width
+                            height:   opacityMask.height
+                            source:   "qrc:/resources/images/main/avatar_mask.png"
+                            fillMode: Image.PreserveAspectFit
+                            visible:  false
+                        }
                     }
 
-                    maskSource: Image {
-                        width:    opacityMask.width
-                        height:   opacityMask.height
-                        source:   "qrc:/resources/images/main/avatar_mask.png"
+                    Image {
+                        id:       onlineImage
+                        x:        opacityMask.width  / 2 + opacityMask.width  / 2 * Math.sin(angle) - width  / 2
+                        y:        opacityMask.height / 2 + opacityMask.height / 2 * Math.cos(angle) - height / 2
+                        z:        1
+                        width:    UtilScript.pt(16)
+                        height:   UtilScript.pt(16)
+                        source:   "qrc:/resources/images/main/avatar_online_label.png"
                         fillMode: Image.PreserveAspectFit
-                        visible:  false
+                        visible:  online
+
+                        property real angle: Math.PI / 4
                     }
                 }
 
@@ -108,7 +128,7 @@ Item {
                     width:               parent.width - parent.spacing * 2
                                                       - parent.leftPadding
                                                       - parent.rightPadding
-                                                      - opacityMask.width
+                                                      - avatarRectangle.width
                                                       - showOnMapButton.width
                     height:              parent.height
                     text:                "%1 %2".arg(firstName).arg(lastName)
