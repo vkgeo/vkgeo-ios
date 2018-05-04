@@ -266,6 +266,6 @@ Item {
         }
 
         VKHelper.friendsUpdated.connect(updateMapItems);
-        VKHelper.trustedFriendLocationUpdated.connect(updateMapItemLocation);
+        VKHelper.trackedFriendLocationUpdated.connect(updateMapItemLocation);
     }
 }

@@ -42,7 +42,7 @@ Item {
         }
     }
 
-    function trustedFriendLocationAvailable(user_id, update_time, latitude, longitude) {
+    function trackedFriendLocationAvailable(user_id, update_time, latitude, longitude) {
         for (var i = 0; i < friendsList.length; i++) {
             var frnd = friendsList[i];
 
@@ -245,18 +245,16 @@ Item {
                         Image {
                             width:              UtilScript.pt(48)
                             height:             UtilScript.pt(48)
-                            source:             buttonToShow(trusted, locationAvailable)
+                            source:             buttonToShow(locationAvailable, trusted)
                             fillMode:           Image.PreserveAspectFit
                             Layout.rightMargin: UtilScript.pt(16)
                             Layout.alignment:   Qt.AlignHCenter | Qt.AlignVCenter
 
-                            function buttonToShow(trusted, location_available) {
-                                if (trusted) {
-                                    if (location_available) {
-                                        return "qrc:/resources/images/main/button_show_on_map.png";
-                                    } else {
-                                        return "qrc:/resources/images/main/button_invite_trusted.png";
-                                    }
+                            function buttonToShow(location_available, trusted) {
+                                if (location_available) {
+                                    return "qrc:/resources/images/main/button_show_on_map.png";
+                                } else if (trusted) {
+                                    return "qrc:/resources/images/main/button_invite_trusted.png";
                                 } else {
                                     return "qrc:/resources/images/main/button_invite_untrusted.png";
                                 }
@@ -266,7 +264,7 @@ Item {
                                 anchors.fill: parent
 
                                 onClicked: {
-                                    if (trusted && locationAvailable) {
+                                    if (locationAvailable) {
                                         friendDelegate.listView.locateFriendOnMap(userId);
                                     } else {
                                         // Invite
@@ -323,6 +321,6 @@ Item {
 
     Component.onCompleted: {
         VKHelper.friendsUpdated.connect(updateFriends);
-        VKHelper.trustedFriendLocationUpdated.connect(trustedFriendLocationAvailable);
+        VKHelper.trackedFriendLocationUpdated.connect(trackedFriendLocationAvailable);
     }
 }

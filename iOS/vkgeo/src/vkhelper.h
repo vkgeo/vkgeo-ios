@@ -46,7 +46,7 @@ public:
                      REQUEST_QUEUE_TIMER_INTERVAL              = 1000,
                      REPORT_LOCATION_TIMER_INTERVAL            = 1000,
                      REPORT_LOCATION_INTERVAL                  = 300,
-                     UPDATE_TRUSTED_FRIENDS_LOCATIONS_INTERVAL = 60,
+                     UPDATE_TRACKED_FRIENDS_LOCATIONS_INTERVAL = 60,
                      MAX_BATCH_SIZE                            = 25,
                      MAX_NOTES_GET_COUNT                       = 100,
                      MAX_FRIENDS_GET_COUNT                     = 5000;
@@ -79,7 +79,7 @@ public:
 
     Q_INVOKABLE void updateTrustedFriendsList(QVariantList trusted_friends_list);
 
-    Q_INVOKABLE void updateTrustedFriendsLocations(bool expedited);
+    Q_INVOKABLE void updateTrackedFriendsLocations(bool expedited);
 
     static void setAuthState(const int &state);
 
@@ -88,7 +88,7 @@ signals:
     void friendsCountChanged(int friendsCount);
     void photoUrlChanged(QString photoUrl);
     void friendsUpdated();
-    void trustedFriendLocationUpdated(QString id, qint64 updateTime, qreal latitude, qreal longitude);
+    void trackedFriendLocationUpdated(QString id, qint64 updateTime, qreal latitude, qreal longitude);
 
 private slots:
     void RequestQueueTimerTimeout();
@@ -130,7 +130,7 @@ private:
 
     bool                         Initialized;
     int                          AuthState, MaxTrustedFriendsCount;
-    qint64                       LastReportLocationTime, LastUpdateTrustedFriendsLocationsTime;
+    qint64                       LastReportLocationTime, LastUpdateTrackedFriendsLocationsTime;
     QString                      PhotoUrl, TrustedFriendsListId;
     QQueue<QVariantMap>          RequestQueue;
     QTimer                       RequestQueueTimer, ReportLocationTimer;

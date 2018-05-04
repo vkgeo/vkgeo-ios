@@ -104,8 +104,8 @@ Page {
         }
     }
 
-    function updateTrustedFriendsLocations() {
-        VKHelper.updateTrustedFriendsLocations(true);
+    function updateTrackedFriendsLocations() {
+        VKHelper.updateTrackedFriendsLocations(true);
     }
 
     SwipeView {
@@ -155,13 +155,13 @@ Page {
         repeat:   true
 
         onTriggered: {
-            VKHelper.updateTrustedFriendsLocations(false);
+            VKHelper.updateTrackedFriendsLocations(false);
 
             mapSwipe.updateMapItemsStates();
         }
     }
 
     Component.onCompleted: {
-        VKHelper.friendsUpdated.connect(updateTrustedFriendsLocations);
+        VKHelper.friendsUpdated.connect(updateTrackedFriendsLocations);
     }
 }

@@ -167,7 +167,7 @@ VKHelper::VKHelper(QObject *parent) : QObject(parent)
     AuthState                             = VKAuthState::StateUnknown;
     MaxTrustedFriendsCount                = DEFAULT_MAX_TRUSTED_FRIENDS_COUNT;
     LastReportLocationTime                = 0;
-    LastUpdateTrustedFriendsLocationsTime = 0;
+    LastUpdateTrackedFriendsLocationsTime = 0;
     PhotoUrl                              = DEFAULT_PHOTO_URL;
     TrustedFriendsListId                  = "";
     Instance                              = this;
@@ -229,7 +229,7 @@ void VKHelper::cleanup()
 {
     if (Initialized) {
         LastReportLocationTime                = 0;
-        LastUpdateTrustedFriendsLocationsTime = 0;
+        LastUpdateTrackedFriendsLocationsTime = 0;
         PhotoUrl                              = DEFAULT_PHOTO_URL;
         TrustedFriendsListId                  = "";
 
@@ -365,11 +365,11 @@ void VKHelper::updateTrustedFriendsList(QVariantList trusted_friends_list)
     }
 }
 
-void VKHelper::updateTrustedFriendsLocations(bool expedited)
+void VKHelper::updateTrackedFriendsLocations(bool expedited)
 {
     if (Initialized) {
-        if (expedited || QDateTime::currentSecsSinceEpoch() > LastUpdateTrustedFriendsLocationsTime + UPDATE_TRUSTED_FRIENDS_LOCATIONS_INTERVAL) {
-            LastUpdateTrustedFriendsLocationsTime = QDateTime::currentSecsSinceEpoch();
+        if (expedited || QDateTime::currentSecsSinceEpoch() > LastUpdateTrackedFriendsLocationsTime + UPDATE_TRACKED_FRIENDS_LOCATIONS_INTERVAL) {
+            LastUpdateTrackedFriendsLocationsTime = QDateTime::currentSecsSinceEpoch();
 
             foreach (QString key, FriendsData.keys()) {
                 QVariantMap frnd = FriendsData[key].toMap();
@@ -381,7 +381,7 @@ void VKHelper::updateTrustedFriendsLocations(bool expedited)
                     parameters["user_id"] = key;
 
                     request["method"]     = "notes.get";
-                    request["context"]    = "updateTrustedFriendsLocations";
+                    request["context"]    = "updateTrackedFriendsLocations";
                     request["parameters"] = parameters;
 
                     EnqueueRequest(request);
@@ -888,7 +888,7 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
         } else {
             qWarning() << "ProcessNotesGetResponse() : invalid json";
         }
-    } else if (resp_request["context"].toString() == "updateTrustedFriendsLocations") {
+    } else if (resp_request["context"].toString() == "updateTrackedFriendsLocations") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
 
         if (!json_document.isNull() && json_document.object().contains("response")) {
@@ -928,7 +928,7 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
 
                                     if (user_data.contains("update_time") && user_data.contains("latitude") &&
                                                                              user_data.contains("longitude")) {
-                                        emit trustedFriendLocationUpdated(user_id, user_data["update_time"].toLongLong(),
+                                        emit trackedFriendLocationUpdated(user_id, user_data["update_time"].toLongLong(),
                                                                                    user_data["latitude"].toReal(),
                                                                                    user_data["longitude"].toReal());
                                     } else {
