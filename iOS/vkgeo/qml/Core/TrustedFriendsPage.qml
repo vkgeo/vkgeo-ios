@@ -241,7 +241,7 @@ Page {
                             width:    opacityMask.width
                             height:   opacityMask.height
                             source:   photoUrl
-                            fillMode: Image.Stretch
+                            fillMode: Image.PreserveAspectCrop
                             visible:  false
                         }
 

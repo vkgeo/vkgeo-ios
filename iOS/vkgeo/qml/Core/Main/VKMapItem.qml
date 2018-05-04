@@ -37,7 +37,7 @@ MapQuickItem {
                 width:    opacityMask.width
                 height:   opacityMask.height
                 source:   vkMapItem.photoUrl
-                fillMode: Image.Stretch
+                fillMode: Image.PreserveAspectCrop
                 visible:  false
             }
 

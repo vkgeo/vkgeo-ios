@@ -137,7 +137,7 @@ Page {
                         width:    opacityMask.width
                         height:   opacityMask.height
                         source:   friendProfilePage.bigPhotoUrl
-                        fillMode: Image.Stretch
+                        fillMode: Image.PreserveAspectCrop
                         visible:  false
                     }
 
