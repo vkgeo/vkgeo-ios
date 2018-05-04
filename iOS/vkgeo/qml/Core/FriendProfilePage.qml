@@ -3,6 +3,8 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtGraphicalEffects 1.0
 
+import "Misc"
+
 import "../Util.js" as UtilScript
 
 Page {
@@ -43,34 +45,15 @@ Page {
                 Layout.fillHeight:   true
             }
 
-            Rectangle {
+            VKButton {
                 width:              UtilScript.pt(80)
                 height:             UtilScript.pt(32)
-                color:              "steelblue"
-                radius:             UtilScript.pt(8)
+                text:               qsTr("Close")
                 Layout.rightMargin: UtilScript.pt(8)
                 Layout.alignment:   Qt.AlignHCenter | Qt.AlignVCenter
 
-                Text {
-                    anchors.fill:        parent
-                    text:                qsTr("Close")
-                    color:               "white"
-                    font.pointSize:      16
-                    font.family:         "Helvetica"
-                    font.bold:           true
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment:   Text.AlignVCenter
-                    wrapMode:            Text.Wrap
-                    fontSizeMode:        Text.Fit
-                    minimumPointSize:    8
-                }
-
-                MouseArea {
-                    anchors.fill: parent
-
-                    onClicked: {
-                        mainStackView.pop();
-                    }
+                onClicked: {
+                    mainStackView.pop();
                 }
             }
         }
@@ -213,67 +196,29 @@ Page {
                 Layout.fillWidth:    true
             }
 
-            Rectangle {
+            VKButton {
                 width:            UtilScript.pt(280)
                 height:           UtilScript.pt(64)
-                color:            "steelblue"
-                radius:           UtilScript.pt(8)
+                text:             qsTr("Locate on map")
                 visible:          friendProfilePage.locationAvailable
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
-                Text {
-                    anchors.fill:        parent
-                    text:                qsTr("Locate on map")
-                    color:               "white"
-                    font.pointSize:      16
-                    font.family:         "Helvetica"
-                    font.bold:           true
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment:   Text.AlignVCenter
-                    wrapMode:            Text.Wrap
-                    fontSizeMode:        Text.Fit
-                    minimumPointSize:    8
-                }
+                onClicked: {
+                    locateFriendOnMap(friendProfilePage.userId);
 
-                MouseArea {
-                    anchors.fill: parent
-
-                    onClicked: {
-                        locateFriendOnMap(friendProfilePage.userId);
-
-                        mainStackView.pop();
-                    }
+                    mainStackView.pop();
                 }
             }
 
-            Rectangle {
+            VKButton {
                 width:            UtilScript.pt(280)
                 height:           UtilScript.pt(64)
-                color:            "steelblue"
-                radius:           UtilScript.pt(8)
+                text:             qsTr("Open profile")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
-                Text {
-                    anchors.fill:        parent
-                    text:                qsTr("Open profile")
-                    color:               "white"
-                    font.pointSize:      16
-                    font.family:         "Helvetica"
-                    font.bold:           true
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment:   Text.AlignVCenter
-                    wrapMode:            Text.Wrap
-                    fontSizeMode:        Text.Fit
-                    minimumPointSize:    8
-                }
-
-                MouseArea {
-                    anchors.fill: parent
-
-                    onClicked: {
-                        if (!Qt.openUrlExternally("vk://vk.com/id%1".arg(friendProfilePage.userId))) {
-                            Qt.openUrlExternally("https://m.vk.com/id%1".arg(friendProfilePage.userId));
-                        }
+                onClicked: {
+                    if (!Qt.openUrlExternally("vk://vk.com/id%1".arg(friendProfilePage.userId))) {
+                        Qt.openUrlExternally("https://m.vk.com/id%1".arg(friendProfilePage.userId));
                     }
                 }
             }

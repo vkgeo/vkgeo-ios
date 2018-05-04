@@ -3,6 +3,8 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtGraphicalEffects 1.0
 
+import "Misc"
+
 import "../Util.js" as UtilScript
 
 Page {
@@ -20,34 +22,15 @@ Page {
             height:         UtilScript.pt(48)
             spacing:        UtilScript.pt(4)
 
-            Rectangle {
+            VKButton {
                 width:             UtilScript.pt(80)
                 height:            UtilScript.pt(32)
-                color:             "steelblue"
-                radius:            UtilScript.pt(8)
+                text:              qsTr("Cancel")
                 Layout.leftMargin: UtilScript.pt(8)
                 Layout.alignment:  Qt.AlignHCenter | Qt.AlignVCenter
 
-                Text {
-                    anchors.fill:        parent
-                    text:                qsTr("Cancel")
-                    color:               "white"
-                    font.pointSize:      16
-                    font.family:         "Helvetica"
-                    font.bold:           true
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment:   Text.AlignVCenter
-                    wrapMode:            Text.Wrap
-                    fontSizeMode:        Text.Fit
-                    minimumPointSize:    8
-                }
-
-                MouseArea {
-                    anchors.fill: parent
-
-                    onClicked: {
-                        mainStackView.pop();
-                    }
+                onClicked: {
+                    mainStackView.pop();
                 }
             }
 
@@ -66,46 +49,27 @@ Page {
                 Layout.fillHeight:   true
             }
 
-            Rectangle {
+            VKButton {
                 width:              UtilScript.pt(80)
                 height:             UtilScript.pt(32)
-                color:              "steelblue"
-                radius:             UtilScript.pt(8)
+                text:               qsTr("Save")
                 Layout.rightMargin: UtilScript.pt(8)
                 Layout.alignment:   Qt.AlignHCenter | Qt.AlignVCenter
 
-                Text {
-                    anchors.fill:        parent
-                    text:                qsTr("Save")
-                    color:               "white"
-                    font.pointSize:      16
-                    font.family:         "Helvetica"
-                    font.bold:           true
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment:   Text.AlignVCenter
-                    wrapMode:            Text.Wrap
-                    fontSizeMode:        Text.Fit
-                    minimumPointSize:    8
-                }
+                onClicked: {
+                    var trusted_friends_list = [];
 
-                MouseArea {
-                    anchors.fill: parent
+                    for (var i = 0; i < trustedFriendsPage.friendsList.length; i++) {
+                        var frnd = trustedFriendsPage.friendsList[i];
 
-                    onClicked: {
-                        var trusted_friends_list = [];
-
-                        for (var i = 0; i < trustedFriendsPage.friendsList.length; i++) {
-                            var frnd = trustedFriendsPage.friendsList[i];
-
-                            if (frnd.trusted) {
-                                trusted_friends_list.push(frnd.userId);
-                            }
+                        if (frnd.trusted) {
+                            trusted_friends_list.push(frnd.userId);
                         }
-
-                        VKHelper.updateTrustedFriendsList(trusted_friends_list);
-
-                        mainStackView.pop();
                     }
+
+                    VKHelper.updateTrustedFriendsList(trusted_friends_list);
+
+                    mainStackView.pop();
                 }
             }
         }

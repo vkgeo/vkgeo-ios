@@ -10,5 +10,6 @@
         <file>qml/Core/Main/MapSwipe.qml</file>
         <file>qml/Core/Main/SettingsSwipe.qml</file>
         <file>qml/Core/Main/VKMapItem.qml</file>
+        <file>qml/Core/Misc/VKButton.qml</file>
     </qresource>
 </RCC>
