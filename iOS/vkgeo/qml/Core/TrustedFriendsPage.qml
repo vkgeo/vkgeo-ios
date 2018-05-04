@@ -191,8 +191,10 @@ Page {
             Layout.fillWidth: true
 
             background: Rectangle {
-                color:  "lightsteelblue"
-                radius: UtilScript.pt(8)
+                color:        "lightsteelblue"
+                radius:       UtilScript.pt(8)
+                border.width: UtilScript.pt(1)
+                border.color: "steelblue"
             }
 
             onTextChanged: {
