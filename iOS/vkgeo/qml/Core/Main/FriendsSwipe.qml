@@ -8,28 +8,64 @@ import "../../Util.js" as UtilScript
 Item {
     id: friendsSwipe
 
+    property var friendsList: []
+
     signal locateFriendOnMap(string user_id)
 
     function updateFriends() {
+        friendsList = VKHelper.getFriendsList();
+
+        for (var i = 0; i < friendsList.length; i++) {
+            var frnd = friendsList[i];
+
+            frnd.locationAvailable = false;
+            frnd.updateTime        = 0;
+            frnd.latitude          = 0;
+            frnd.longitude         = 0;
+
+            friendsList[i] = frnd;
+        }
+
+        updateModel();
+    }
+
+    function updateModel() {
         friendsListModel.clear();
 
-        var friends_list = VKHelper.getFriendsList();
+        for (var i = 0; i < friendsList.length; i++) {
+            var frnd = friendsList[i];
 
-        for (var i = 0; i < friends_list.length; i++) {
-            friendsListModel.append(friends_list[i]);
-
-            friendsListModel.set(i, { "locationAvailable": false, "updateTime": 0,
-                                      "latitude": 0, "longitude": 0 });
+            if ("%1 %2".arg(frnd.firstName).arg(frnd.lastName).toUpperCase()
+                       .includes(filterTextField.text.toUpperCase())) {
+                friendsListModel.append(frnd);
+            }
         }
     }
 
     function trustedFriendLocationAvailable(user_id, update_time, latitude, longitude) {
-        for (var i = 0; i < friendsListModel.count; i++) {
-            var frnd = friendsListModel.get(i);
+        for (var i = 0; i < friendsList.length; i++) {
+            var frnd = friendsList[i];
 
             if (user_id === frnd.userId) {
-                friendsListModel.set(i, { "locationAvailable": true, "updateTime": update_time,
-                                          "latitude": latitude, "longitude": longitude });
+                frnd.locationAvailable = true;
+                frnd.updateTime        = update_time;
+                frnd.latitude          = latitude;
+                frnd.longitude         = longitude;
+
+                friendsList[i] = frnd;
+
+                break;
+            }
+        }
+
+        for (var j = 0; j < friendsListModel.count; j++) {
+            var model_frnd = friendsListModel.get(j);
+
+            if (user_id === model_frnd.userId) {
+                friendsListModel.set(j, { "locationAvailable" : true,
+                                          "updateTime"        : update_time,
+                                          "latitude"          : latitude,
+                                          "longitude"         : longitude });
 
                 break;
             }
@@ -65,188 +101,220 @@ Item {
         }
     }
 
-    Image {
-        id:                       refreshImage
-        anchors.top:              parent.top
-        anchors.horizontalCenter: parent.horizontalCenter
-        width:                    UtilScript.pt(64)
-        height:                   UtilScript.pt(64)
-        source:                   "qrc:/resources/images/main/refresh.png"
-        fillMode:                 Image.PreserveAspectFit
-        visible:                  false
-
-        PropertyAnimation {
-            target:   refreshImage
-            property: "rotation"
-            from:     0
-            to:       360
-            duration: 500
-            loops:    Animation.Infinite
-            running:  refreshImage.visible
-        }
-    }
-
-    ListView {
-        id:           friendsListView
+    ColumnLayout {
         anchors.fill: parent
-        z:            1
-        orientation:  ListView.Vertical
+        spacing:      UtilScript.pt(8)
 
-        model: ListModel {
-            id: friendsListModel
+        TextField {
+            id:               filterTextField
+            placeholderText:  qsTr("Quick search")
+            inputMethodHints: Qt.ImhNoPredictiveText
+            Layout.topMargin: UtilScript.pt(8)
+            Layout.fillWidth: true
+
+            background: Rectangle {
+                color:  "lightsteelblue"
+                radius: UtilScript.pt(8)
+            }
+
+            onTextChanged: {
+                friendsSwipe.updateModel();
+            }
+
+            onEditingFinished: {
+                focus = false;
+            }
         }
 
-        delegate: Rectangle {
-            id:           friendDelegate
-            width:        listView.width
-            height:       UtilScript.pt(80)
-            clip:         true
-            border.width: UtilScript.pt(1)
-            border.color: "lightsteelblue"
+        Rectangle {
+            color:             "transparent"
+            Layout.fillWidth:  true
+            Layout.fillHeight: true
 
-            property var listView: ListView.view
+            Image {
+                id:                       refreshImage
+                anchors.top:              parent.top
+                anchors.horizontalCenter: parent.horizontalCenter
+                width:                    UtilScript.pt(64)
+                height:                   UtilScript.pt(64)
+                source:                   "qrc:/resources/images/main/refresh.png"
+                fillMode:                 Image.PreserveAspectFit
+                visible:                  false
 
-            RowLayout {
+                PropertyAnimation {
+                    target:   refreshImage
+                    property: "rotation"
+                    from:     0
+                    to:       360
+                    duration: 500
+                    loops:    Animation.Infinite
+                    running:  refreshImage.visible
+                }
+            }
+
+            ListView {
                 anchors.fill: parent
-                spacing:      UtilScript.pt(8)
+                z:            1
+                orientation:  ListView.Vertical
+                clip:         true
 
-                Rectangle {
-                    width:             UtilScript.pt(64)
-                    height:            UtilScript.pt(64)
-                    color:             "transparent"
-                    Layout.leftMargin: UtilScript.pt(16)
-                    Layout.alignment:  Qt.AlignHCenter | Qt.AlignVCenter
-
-                    OpacityMask {
-                        id:           opacityMask
-                        anchors.fill: parent
-
-                        source: Image {
-                            width:    opacityMask.width
-                            height:   opacityMask.height
-                            source:   photoUrl
-                            fillMode: Image.Stretch
-                            visible:  false
-                        }
-
-                        maskSource: Image {
-                            width:    opacityMask.width
-                            height:   opacityMask.height
-                            source:   "qrc:/resources/images/main/avatar_mask.png"
-                            fillMode: Image.PreserveAspectFit
-                            visible:  false
-                        }
-                    }
-
-                    Image {
-                        x:        opacityMask.width  / 2 + opacityMask.width  / 2 * Math.sin(angle) - width  / 2
-                        y:        opacityMask.height / 2 + opacityMask.height / 2 * Math.cos(angle) - height / 2
-                        z:        1
-                        width:    UtilScript.pt(16)
-                        height:   UtilScript.pt(16)
-                        source:   "qrc:/resources/images/main/avatar_online_label.png"
-                        fillMode: Image.PreserveAspectFit
-                        visible:  online
-
-                        property real angle: Math.PI / 4
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-
-                        onClicked: {
-                            friendDelegate.listView.openProfilePage(userId);
-                        }
-                    }
+                model: ListModel {
+                    id: friendsListModel
                 }
 
-                Text {
-                    text:                "%1 %2".arg(firstName).arg(lastName)
-                    color:               "black"
-                    font.pointSize:      16
-                    font.family:         "Helvetica"
-                    horizontalAlignment: Text.AlignLeft
-                    verticalAlignment:   Text.AlignVCenter
-                    wrapMode:            Text.Wrap
-                    fontSizeMode:        Text.Fit
-                    minimumPointSize:    8
-                    Layout.fillWidth:    true
-                    Layout.fillHeight:   true
-                }
+                delegate: Rectangle {
+                    id:           friendDelegate
+                    width:        listView.width
+                    height:       UtilScript.pt(80)
+                    clip:         true
+                    border.width: UtilScript.pt(1)
+                    border.color: "lightsteelblue"
 
-                Image {
-                    width:              UtilScript.pt(48)
-                    height:             UtilScript.pt(48)
-                    source:             buttonToShow(trusted, locationAvailable)
-                    fillMode:           Image.PreserveAspectFit
-                    Layout.rightMargin: UtilScript.pt(16)
-                    Layout.alignment:   Qt.AlignHCenter | Qt.AlignVCenter
+                    property var listView: ListView.view
 
-                    function buttonToShow(trusted, location_available) {
-                        if (trusted) {
-                            if (location_available) {
-                                return "qrc:/resources/images/main/button_show_on_map.png";
-                            } else {
-                                return "qrc:/resources/images/main/button_invite_trusted.png";
+                    RowLayout {
+                        anchors.fill: parent
+                        spacing:      UtilScript.pt(8)
+
+                        Rectangle {
+                            width:             UtilScript.pt(64)
+                            height:            UtilScript.pt(64)
+                            color:             "transparent"
+                            Layout.leftMargin: UtilScript.pt(16)
+                            Layout.alignment:  Qt.AlignHCenter | Qt.AlignVCenter
+
+                            OpacityMask {
+                                id:           opacityMask
+                                anchors.fill: parent
+
+                                source: Image {
+                                    width:    opacityMask.width
+                                    height:   opacityMask.height
+                                    source:   photoUrl
+                                    fillMode: Image.Stretch
+                                    visible:  false
+                                }
+
+                                maskSource: Image {
+                                    width:    opacityMask.width
+                                    height:   opacityMask.height
+                                    source:   "qrc:/resources/images/main/avatar_mask.png"
+                                    fillMode: Image.PreserveAspectFit
+                                    visible:  false
+                                }
                             }
-                        } else {
-                            return "qrc:/resources/images/main/button_invite_untrusted.png";
-                        }
-                    }
 
-                    MouseArea {
-                        anchors.fill: parent
+                            Image {
+                                x:        opacityMask.width  / 2 + opacityMask.width  / 2 * Math.sin(angle) - width  / 2
+                                y:        opacityMask.height / 2 + opacityMask.height / 2 * Math.cos(angle) - height / 2
+                                z:        1
+                                width:    UtilScript.pt(16)
+                                height:   UtilScript.pt(16)
+                                source:   "qrc:/resources/images/main/avatar_online_label.png"
+                                fillMode: Image.PreserveAspectFit
+                                visible:  online
 
-                        onClicked: {
-                            if (trusted && locationAvailable) {
-                                friendDelegate.listView.locateFriendOnMap(userId);
-                            } else {
-                                // Invite
+                                property real angle: Math.PI / 4
+                            }
+
+                            MouseArea {
+                                anchors.fill: parent
+
+                                onClicked: {
+                                    friendDelegate.listView.openProfilePage(userId);
+                                }
                             }
                         }
+
+                        Text {
+                            text:                "%1 %2".arg(firstName).arg(lastName)
+                            color:               "black"
+                            font.pointSize:      16
+                            font.family:         "Helvetica"
+                            horizontalAlignment: Text.AlignLeft
+                            verticalAlignment:   Text.AlignVCenter
+                            wrapMode:            Text.Wrap
+                            fontSizeMode:        Text.Fit
+                            minimumPointSize:    8
+                            Layout.fillWidth:    true
+                            Layout.fillHeight:   true
+                        }
+
+                        Image {
+                            width:              UtilScript.pt(48)
+                            height:             UtilScript.pt(48)
+                            source:             buttonToShow(trusted, locationAvailable)
+                            fillMode:           Image.PreserveAspectFit
+                            Layout.rightMargin: UtilScript.pt(16)
+                            Layout.alignment:   Qt.AlignHCenter | Qt.AlignVCenter
+
+                            function buttonToShow(trusted, location_available) {
+                                if (trusted) {
+                                    if (location_available) {
+                                        return "qrc:/resources/images/main/button_show_on_map.png";
+                                    } else {
+                                        return "qrc:/resources/images/main/button_invite_trusted.png";
+                                    }
+                                } else {
+                                    return "qrc:/resources/images/main/button_invite_untrusted.png";
+                                }
+                            }
+
+                            MouseArea {
+                                anchors.fill: parent
+
+                                onClicked: {
+                                    if (trusted && locationAvailable) {
+                                        friendDelegate.listView.locateFriendOnMap(userId);
+                                    } else {
+                                        // Invite
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
-            }
-        }
 
-        ScrollBar.vertical: ScrollBar {
-            policy: ScrollBar.AlwaysOn
-        }
-
-        property bool refreshStarted: false
-
-        onContentYChanged: {
-            if (contentY < 0 - refreshImage.height) {
-                if (!refreshStarted) {
-                    refreshStarted = true;
-
-                    refreshTimer.start();
+                ScrollBar.vertical: ScrollBar {
+                    policy: ScrollBar.AlwaysOn
                 }
-            } else {
-                refreshImage.visible = false;
 
-                refreshStarted = false;
+                property bool refreshStarted: false
 
-                refreshTimer.stop();
-            }
-        }
+                onContentYChanged: {
+                    if (contentY < 0 - refreshImage.height) {
+                        if (!refreshStarted) {
+                            refreshStarted = true;
 
-        function openProfilePage(user_id) {
-            friendsSwipe.openProfilePage(user_id);
-        }
+                            refreshTimer.start();
+                        }
+                    } else {
+                        refreshImage.visible = false;
 
-        function locateFriendOnMap(user_id) {
-            friendsSwipe.locateFriendOnMap(user_id);
-        }
+                        refreshStarted = false;
 
-        Timer {
-            id:       refreshTimer
-            interval: 500
+                        refreshTimer.stop();
+                    }
+                }
 
-            onTriggered: {
-                refreshImage.visible = true;
+                function openProfilePage(user_id) {
+                    friendsSwipe.openProfilePage(user_id);
+                }
 
-                VKHelper.updateFriends();
+                function locateFriendOnMap(user_id) {
+                    friendsSwipe.locateFriendOnMap(user_id);
+                }
+
+                Timer {
+                    id:       refreshTimer
+                    interval: 500
+
+                    onTriggered: {
+                        refreshImage.visible = true;
+
+                        VKHelper.updateFriends();
+                    }
+                }
             }
         }
     }

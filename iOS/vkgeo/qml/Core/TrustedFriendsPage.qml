@@ -94,8 +94,8 @@ Page {
                     onClicked: {
                         var trusted_friends_list = [];
 
-                        for (var i = 0; i < trustedFriendsListModel.count; i++) {
-                            var frnd = trustedFriendsListModel.get(i);
+                        for (var i = 0; i < trustedFriendsPage.friendsList.length; i++) {
+                            var frnd = trustedFriendsPage.friendsList[i];
 
                             if (frnd.trusted) {
                                 trusted_friends_list.push(frnd.userId);
@@ -118,6 +118,9 @@ Page {
 
     property int safeAreaTopMargin:    0
     property int safeAreaBottomMargin: 0
+    property int trustedFriendsCount:  0
+
+    property var friendsList:          []
 
     StackView.onStatusChanged: {
         if (StackView.status === StackView.Activating ||
@@ -127,117 +130,177 @@ Page {
         }
     }
 
-    ListView {
-        id:           friendsListView
-        anchors.fill: parent
-        orientation:  ListView.Vertical
+    function updateModel() {
+        trustedFriendsListModel.clear();
 
-        model: ListModel {
-            id: trustedFriendsListModel
+        for (var i = 0; i < friendsList.length; i++) {
+            var frnd = friendsList[i];
+
+            if ("%1 %2".arg(frnd.firstName).arg(frnd.lastName).toUpperCase()
+                       .includes(filterTextField.text.toUpperCase())) {
+                trustedFriendsListModel.append(frnd);
+            }
+        }
+    }
+
+    function setTrust(user_id, trusted) {
+        if (trustedFriendsCount < VKHelper.maxTrustedFriendsCount || !trusted) {
+            for (var i = 0; i < friendsList.length; i++) {
+                var frnd = friendsList[i];
+
+                if (user_id === frnd.userId) {
+                    frnd.trusted = trusted;
+
+                    friendsList[i] = frnd;
+
+                    break;
+                }
+            }
+
+            for (var j = 0; j < trustedFriendsListModel.count; j++) {
+                var model_frnd = trustedFriendsListModel.get(j);
+
+                if (user_id === model_frnd.userId) {
+                    trustedFriendsListModel.set(j, { "trusted": trusted });
+
+                    break;
+                }
+            }
+
+            if (trusted) {
+                trustedFriendsCount++;
+            } else {
+                trustedFriendsCount--;
+            }
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    ColumnLayout {
+        anchors.fill: parent
+        spacing:      UtilScript.pt(8)
+
+        TextField {
+            id:               filterTextField
+            placeholderText:  qsTr("Quick search")
+            inputMethodHints: Qt.ImhNoPredictiveText
+            Layout.topMargin: UtilScript.pt(8)
+            Layout.fillWidth: true
+
+            background: Rectangle {
+                color:  "lightsteelblue"
+                radius: UtilScript.pt(8)
+            }
+
+            onTextChanged: {
+                trustedFriendsPage.updateModel();
+            }
+
+            onEditingFinished: {
+                focus = false;
+            }
         }
 
-        delegate: Rectangle {
-            id:           friendDelegate
-            width:        listView.width
-            height:       UtilScript.pt(80)
-            clip:         true
-            border.width: UtilScript.pt(1)
-            border.color: "lightsteelblue"
+        ListView {
+            orientation:       ListView.Vertical
+            clip:              true
+            Layout.fillWidth:  true
+            Layout.fillHeight: true
 
-            property var listView: ListView.view
+            model: ListModel {
+                id: trustedFriendsListModel
+            }
 
-            RowLayout {
-                anchors.fill: parent
-                spacing:      UtilScript.pt(8)
+            delegate: Rectangle {
+                id:           friendDelegate
+                width:        listView.width
+                height:       UtilScript.pt(80)
+                clip:         true
+                border.width: UtilScript.pt(1)
+                border.color: "lightsteelblue"
 
-                OpacityMask {
-                    id:                opacityMask
-                    width:             UtilScript.pt(64)
-                    height:            UtilScript.pt(64)
-                    Layout.leftMargin: UtilScript.pt(16)
-                    Layout.alignment:  Qt.AlignHCenter | Qt.AlignVCenter
+                property var listView: ListView.view
 
-                    source: Image {
-                        width:    opacityMask.width
-                        height:   opacityMask.height
-                        source:   photoUrl
-                        fillMode: Image.Stretch
-                        visible:  false
+                RowLayout {
+                    anchors.fill: parent
+                    spacing:      UtilScript.pt(8)
+
+                    OpacityMask {
+                        id:                opacityMask
+                        width:             UtilScript.pt(64)
+                        height:            UtilScript.pt(64)
+                        Layout.leftMargin: UtilScript.pt(16)
+                        Layout.alignment:  Qt.AlignHCenter | Qt.AlignVCenter
+
+                        source: Image {
+                            width:    opacityMask.width
+                            height:   opacityMask.height
+                            source:   photoUrl
+                            fillMode: Image.Stretch
+                            visible:  false
+                        }
+
+                        maskSource: Image {
+                            width:    opacityMask.width
+                            height:   opacityMask.height
+                            source:   "qrc:/resources/images/main/avatar_mask.png"
+                            fillMode: Image.PreserveAspectFit
+                            visible:  false
+                        }
                     }
 
-                    maskSource: Image {
-                        width:    opacityMask.width
-                        height:   opacityMask.height
-                        source:   "qrc:/resources/images/main/avatar_mask.png"
-                        fillMode: Image.PreserveAspectFit
-                        visible:  false
+                    Text {
+                        text:                "%1 %2".arg(firstName).arg(lastName)
+                        color:               "black"
+                        font.pointSize:      16
+                        font.family:         "Helvetica"
+                        horizontalAlignment: Text.AlignLeft
+                        verticalAlignment:   Text.AlignVCenter
+                        wrapMode:            Text.Wrap
+                        fontSizeMode:        Text.Fit
+                        minimumPointSize:    8
+                        Layout.fillWidth:    true
+                        Layout.fillHeight:   true
                     }
-                }
 
-                Text {
-                    text:                "%1 %2".arg(firstName).arg(lastName)
-                    color:               "black"
-                    font.pointSize:      16
-                    font.family:         "Helvetica"
-                    horizontalAlignment: Text.AlignLeft
-                    verticalAlignment:   Text.AlignVCenter
-                    wrapMode:            Text.Wrap
-                    fontSizeMode:        Text.Fit
-                    minimumPointSize:    8
-                    Layout.fillWidth:    true
-                    Layout.fillHeight:   true
-                }
+                    Switch {
+                        checked:            trusted
+                        Layout.rightMargin: UtilScript.pt(16)
+                        Layout.alignment:   Qt.AlignHCenter | Qt.AlignVCenter
 
-                Switch {
-                    checked:            trusted
-                    Layout.rightMargin: UtilScript.pt(16)
-                    Layout.alignment:   Qt.AlignHCenter | Qt.AlignVCenter
-
-                    onToggled: {
-                        if (!friendDelegate.listView.setTrust(index, checked)) {
-                            checked = !checked;
+                        onToggled: {
+                            if (!friendDelegate.listView.setTrust(userId, checked)) {
+                                checked = !checked;
+                            }
                         }
                     }
                 }
             }
+
+            ScrollBar.vertical: ScrollBar {
+                policy: ScrollBar.AlwaysOn
+            }
+
+            function setTrust(user_id, trusted) {
+                return trustedFriendsPage.setTrust(user_id, trusted);
+            }
         }
+    }
 
-        ScrollBar.vertical: ScrollBar {
-            policy: ScrollBar.AlwaysOn
-        }
+    Component.onCompleted: {
+        friendsList = VKHelper.getFriendsList();
 
-        property int trustedFriendsCount: 0
+        for (var i = 0; i < friendsList.length; i++) {
+            var frnd = friendsList[i];
 
-        function setTrust(index, trusted) {
-            if (trustedFriendsCount < VKHelper.maxTrustedFriendsCount || !trusted) {
-                var frnd_update = { "trusted": trusted };
-
-                trustedFriendsListModel.set(index, frnd_update);
-
-                if (trusted) {
-                    trustedFriendsCount++;
-                } else {
-                    trustedFriendsCount--;
-                }
-
-                return true;
-            } else {
-                return false;
+            if (frnd.trusted) {
+                trustedFriendsCount++;
             }
         }
 
-        Component.onCompleted: {
-            trustedFriendsListModel.clear();
-
-            var friends_list = VKHelper.getFriendsList();
-
-            for (var i = 0; i < friends_list.length; i++) {
-                trustedFriendsListModel.append(friends_list[i]);
-
-                if (friends_list[i].trusted) {
-                    trustedFriendsCount++;
-                }
-            }
-        }
+        updateModel();
     }
 }

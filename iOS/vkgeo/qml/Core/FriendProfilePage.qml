@@ -127,7 +127,6 @@ Page {
                 width:            UtilScript.pt(128)
                 height:           UtilScript.pt(128)
                 color:            "transparent"
-                Layout.topMargin: UtilScript.pt(16)
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 OpacityMask {
