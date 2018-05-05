@@ -104,7 +104,7 @@ Page {
         ColumnLayout {
             id:      profileLayout
             width:   profileFlickable.width
-            spacing: UtilScript.pt(32)
+            spacing: UtilScript.pt(16)
 
             Rectangle {
                 width:            UtilScript.pt(128)

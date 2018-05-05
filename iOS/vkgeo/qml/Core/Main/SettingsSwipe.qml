@@ -10,18 +10,37 @@ Item {
 
     ColumnLayout {
         anchors.fill: parent
-        spacing:      UtilScript.pt(32)
+        spacing:      UtilScript.pt(16)
 
         VKButton {
             width:            UtilScript.pt(280)
             height:           UtilScript.pt(64)
             text:             qsTr("Trusted friends list")
-            enabled:          VKHelper.friendsCount !== 0
+            enabled:          VKHelper.friendsCount > 0 && VKHelper.maxTrustedFriendsCount > 0
             Layout.topMargin: UtilScript.pt(16)
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
             onClicked: {
                 var component = Qt.createComponent("../TrustedFriendsPage.qml");
+
+                if (component.status === Component.Ready) {
+                    mainStackView.push(component);
+                } else {
+                    console.log(component.errorString());
+                }
+            }
+        }
+
+        VKButton {
+            width:            UtilScript.pt(280)
+            height:           UtilScript.pt(64)
+            text:             qsTr("Tracked friends list")
+            enabled:          VKHelper.friendsCount > 0 && VKHelper.maxTrackedFriendsCount > 0
+            Layout.topMargin: UtilScript.pt(16)
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+            onClicked: {
+                var component = Qt.createComponent("../TrackedFriendsPage.qml");
 
                 if (component.status === Component.Ready) {
                     mainStackView.push(component);

@@ -245,18 +245,18 @@ Item {
                         Image {
                             width:              UtilScript.pt(48)
                             height:             UtilScript.pt(48)
-                            source:             buttonToShow(locationAvailable, trusted)
+                            source:             buttonToShow(locationAvailable, trusted, tracked)
                             fillMode:           Image.PreserveAspectFit
                             Layout.rightMargin: UtilScript.pt(16)
                             Layout.alignment:   Qt.AlignHCenter | Qt.AlignVCenter
 
-                            function buttonToShow(location_available, trusted) {
+                            function buttonToShow(location_available, trusted, tracked) {
                                 if (location_available) {
                                     return "qrc:/resources/images/main/button_show_on_map.png";
-                                } else if (trusted) {
-                                    return "qrc:/resources/images/main/button_invite_trusted.png";
+                                } else if (trusted || tracked) {
+                                    return "qrc:/resources/images/main/button_invite_tracked.png";
                                 } else {
-                                    return "qrc:/resources/images/main/button_invite_untrusted.png";
+                                    return "qrc:/resources/images/main/button_invite_other.png";
                                 }
                             }
 

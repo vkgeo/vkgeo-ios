@@ -39,10 +39,12 @@ class VKHelper : public QObject
     Q_PROPERTY(int     friendsCount READ friendsCount NOTIFY friendsCountChanged)
     Q_PROPERTY(QString photoUrl     READ photoUrl     NOTIFY photoUrlChanged)
 
-    Q_PROPERTY(int maxTrustedFriendsCount READ maxTrustedFriendsCount WRITE setMaxTrustedFriendsCount)
+    Q_PROPERTY(int maxTrustedFriendsCount READ maxTrustedFriendsCount WRITE setMaxTrustedFriendsCount NOTIFY maxTrustedFriendsCountChanged)
+    Q_PROPERTY(int maxTrackedFriendsCount READ maxTrackedFriendsCount WRITE setMaxTrackedFriendsCount NOTIFY maxTrackedFriendsCountChanged)
 
 public:
     static const int DEFAULT_MAX_TRUSTED_FRIENDS_COUNT         = 10,
+                     DEFAULT_MAX_TRACKED_FRIENDS_COUNT         = 5,
                      REQUEST_QUEUE_TIMER_INTERVAL              = 1000,
                      REPORT_LOCATION_TIMER_INTERVAL            = 1000,
                      REPORT_LOCATION_INTERVAL                  = 300,
@@ -53,7 +55,8 @@ public:
 
     static const QString DEFAULT_PHOTO_URL,
                          DATA_NOTE_TITLE,
-                         TRUSTED_FRIENDS_LIST_NAME;
+                         TRUSTED_FRIENDS_LIST_NAME,
+                         TRACKED_FRIENDS_LIST_NAME;
 
     explicit VKHelper(QObject *parent = 0);
     virtual ~VKHelper();
@@ -64,6 +67,9 @@ public:
 
     int maxTrustedFriendsCount() const;
     void setMaxTrustedFriendsCount(const int &count);
+
+    int maxTrackedFriendsCount() const;
+    void setMaxTrackedFriendsCount(const int &count);
 
     Q_INVOKABLE void initialize();
     Q_INVOKABLE void cleanup();
@@ -78,6 +84,7 @@ public:
     Q_INVOKABLE QVariantList getFriendsList();
 
     Q_INVOKABLE void updateTrustedFriendsList(QVariantList trusted_friends_list);
+    Q_INVOKABLE void updateTrackedFriendsList(QVariantList tracked_friends_list);
 
     Q_INVOKABLE void updateTrackedFriendsLocations(bool expedited);
 
@@ -87,6 +94,8 @@ signals:
     void authStateChanged(int authState);
     void friendsCountChanged(int friendsCount);
     void photoUrlChanged(QString photoUrl);
+    void maxTrustedFriendsCountChanged(int maxTrustedFriendsCount);
+    void maxTrackedFriendsCountChanged(int maxTrackedFriendsCount);
     void friendsUpdated();
     void trackedFriendLocationUpdated(QString id, qint64 updateTime, qreal latitude, qreal longitude);
 
@@ -129,9 +138,9 @@ private:
     void ProcessFriendsEditListError(QVariantMap err_request);
 
     bool                         Initialized;
-    int                          AuthState, MaxTrustedFriendsCount;
+    int                          AuthState, MaxTrustedFriendsCount, MaxTrackedFriendsCount;
     qint64                       LastReportLocationTime, LastUpdateTrackedFriendsLocationsTime;
-    QString                      PhotoUrl, TrustedFriendsListId;
+    QString                      PhotoUrl, TrustedFriendsListId, TrackedFriendsListId;
     QQueue<QVariantMap>          RequestQueue;
     QTimer                       RequestQueueTimer, ReportLocationTimer;
     QMap<QString, int>           ContextTracker;

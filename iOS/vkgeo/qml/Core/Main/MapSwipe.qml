@@ -48,7 +48,7 @@ Item {
             for (var j = 0; j < friends_list.length; j++) {
                 var frnd = friends_list[j];
 
-                if (frnd.trusted) {
+                if (frnd.trusted || frnd.tracked) {
                     var new_map_item = component.createObject(map, { "userId": frnd.userId, "photoUrl": frnd.photoUrl });
 
                     new_map_item.openProfilePage.connect(mapSwipe.openProfilePage);
@@ -202,7 +202,7 @@ Item {
         function showAllMapItems() {
             autoAction = true;
 
-            fitViewportToMapItems();
+            fitViewportToVisibleMapItems();
 
             autoAction = false;
         }

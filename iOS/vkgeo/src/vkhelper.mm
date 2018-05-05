@@ -12,8 +12,9 @@
 const QString VKHelper::DEFAULT_PHOTO_URL        ("https://vk.com/images/camera_50.png");
 const QString VKHelper::DATA_NOTE_TITLE          ("VKGeo Data");
 const QString VKHelper::TRUSTED_FRIENDS_LIST_NAME("VKGeo Trusted Friends");
+const QString VKHelper::TRACKED_FRIENDS_LIST_NAME("VKGeo Tracked Friends");
 
-static NSArray *AUTH_SCOPE = @[@"friends", @"notes"];
+static NSArray *AUTH_SCOPE = @[ @"friends", @"notes", @"offline" ];
 
 VKHelper *VKHelper::Instance = NULL;
 
@@ -132,6 +133,9 @@ bool compareFriends(const QVariant &friend_1, const QVariant &friend_2)
     bool friend_1_trusted = friend_1.toMap().contains("trusted") ? (friend_1.toMap())["trusted"].toBool() : false;
     bool friend_2_trusted = friend_2.toMap().contains("trusted") ? (friend_2.toMap())["trusted"].toBool() : false;
 
+    bool friend_1_tracked = friend_1.toMap().contains("tracked") ? (friend_1.toMap())["tracked"].toBool() : false;
+    bool friend_2_tracked = friend_2.toMap().contains("tracked") ? (friend_2.toMap())["tracked"].toBool() : false;
+
     bool friend_1_online = friend_1.toMap().contains("online") ? (friend_1.toMap())["online"].toBool() : false;
     bool friend_2_online = friend_2.toMap().contains("online") ? (friend_2.toMap())["online"].toBool() : false;
 
@@ -147,9 +151,15 @@ bool compareFriends(const QVariant &friend_1, const QVariant &friend_2)
                                 "";
 
     if (friend_1_trusted == friend_2_trusted) {
-        if (friend_1_online == friend_2_online) {
-            return friend_1_name < friend_2_name;
-        } else if (friend_1_online) {
+        if (friend_1_tracked == friend_2_tracked) {
+            if (friend_1_online == friend_2_online) {
+                return friend_1_name < friend_2_name;
+            } else if (friend_1_online) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (friend_1_tracked) {
             return true;
         } else {
             return false;
@@ -166,6 +176,7 @@ VKHelper::VKHelper(QObject *parent) : QObject(parent)
     Initialized                           = false;
     AuthState                             = VKAuthState::StateUnknown;
     MaxTrustedFriendsCount                = DEFAULT_MAX_TRUSTED_FRIENDS_COUNT;
+    MaxTrackedFriendsCount                = DEFAULT_MAX_TRACKED_FRIENDS_COUNT;
     LastReportLocationTime                = 0;
     LastUpdateTrackedFriendsLocationsTime = 0;
     PhotoUrl                              = DEFAULT_PHOTO_URL;
@@ -203,6 +214,20 @@ int VKHelper::maxTrustedFriendsCount() const
 void VKHelper::setMaxTrustedFriendsCount(const int &count)
 {
     MaxTrustedFriendsCount = count;
+
+    emit maxTrustedFriendsCountChanged(MaxTrustedFriendsCount);
+}
+
+int VKHelper::maxTrackedFriendsCount() const
+{
+    return MaxTrackedFriendsCount;
+}
+
+void VKHelper::setMaxTrackedFriendsCount(const int &count)
+{
+    MaxTrackedFriendsCount = count;
+
+    emit maxTrackedFriendsCountChanged(MaxTrackedFriendsCount);
 }
 
 void VKHelper::initialize()
@@ -231,6 +256,7 @@ void VKHelper::cleanup()
         LastUpdateTrackedFriendsLocationsTime = 0;
         PhotoUrl                              = DEFAULT_PHOTO_URL;
         TrustedFriendsListId                  = "";
+        TrackedFriendsListId                  = "";
 
         emit photoUrlChanged(PhotoUrl);
 
@@ -337,6 +363,7 @@ void VKHelper::updateTrustedFriendsList(QVariantList trusted_friends_list)
                 QVariantMap frnd = FriendsData[friend_id].toMap();
 
                 frnd["trusted"] = true;
+                frnd["tracked"] = false;
 
                 FriendsData[friend_id] = frnd;
             }
@@ -364,6 +391,57 @@ void VKHelper::updateTrustedFriendsList(QVariantList trusted_friends_list)
     }
 }
 
+void VKHelper::updateTrackedFriendsList(QVariantList tracked_friends_list)
+{
+    if (Initialized && !ContextHaveActiveRequests("updateTrackedFriendsList")) {
+        QStringList user_id_list;
+
+        foreach (QString key, FriendsData.keys()) {
+            QVariantMap frnd = FriendsData[key].toMap();
+
+            frnd["tracked"] = false;
+
+            FriendsData[key] = frnd;
+        }
+
+        for (int i = 0; i < tracked_friends_list.count() && i < MaxTrackedFriendsCount; i++) {
+            QString friend_id = tracked_friends_list[i].toString();
+
+            user_id_list.append(friend_id);
+
+            if (FriendsData.contains(friend_id)) {
+                QVariantMap frnd = FriendsData[friend_id].toMap();
+
+                if (!frnd.contains("trusted") || !frnd["trusted"].toBool()) {
+                    frnd["tracked"] = true;
+                }
+
+                FriendsData[friend_id] = frnd;
+            }
+        }
+
+        QVariantMap request, parameters;
+
+        if (TrackedFriendsListId == "") {
+            request["method"]   = "friends.getLists";
+            request["context"]  = "updateTrackedFriendsList";
+            request["user_ids"] = user_id_list.join(",");
+        } else {
+            parameters["list_id"]  = TrackedFriendsListId.toInt();
+            parameters["name"]     = TRACKED_FRIENDS_LIST_NAME;
+            parameters["user_ids"] = user_id_list.join(",");
+
+            request["method"]     = "friends.editList";
+            request["context"]    = "updateTrackedFriendsList";
+            request["parameters"] = parameters;
+        }
+
+        EnqueueRequest(request);
+
+        emit friendsUpdated();
+    }
+}
+
 void VKHelper::updateTrackedFriendsLocations(bool expedited)
 {
     if (Initialized) {
@@ -373,7 +451,8 @@ void VKHelper::updateTrackedFriendsLocations(bool expedited)
             foreach (QString key, FriendsData.keys()) {
                 QVariantMap frnd = FriendsData[key].toMap();
 
-                if (frnd.contains("trusted") && frnd["trusted"].toBool()) {
+                if ((frnd.contains("trusted") && frnd["trusted"].toBool()) ||
+                    (frnd.contains("tracked") && frnd["tracked"].toBool())) {
                     QVariantMap request, parameters;
 
                     parameters["count"]   = MAX_NOTES_GET_COUNT;
@@ -1033,6 +1112,7 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
 
                                 frnd["userId"]  = QString::number(json_friend.value("id").toInt());
                                 frnd["trusted"] = false;
+                                frnd["tracked"] = false;
 
                                 if (json_friend.contains("first_name")) {
                                     frnd["firstName"] = json_friend.value("first_name").toString();
@@ -1082,7 +1162,7 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
                             qWarning() << "ProcessFriendsGetResponse() : invalid entry";
                         }
                     }
-                } else {
+                } else if (list_id == TrustedFriendsListId) {
                     for (int i = 0; i < json_items.count() && offset + i < MaxTrustedFriendsCount; i++) {
                         QString friend_id = QString::number(json_items.at(i).toInt());
 
@@ -1090,10 +1170,27 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
                             QVariantMap frnd = FriendsDataTmp[friend_id].toMap();
 
                             frnd["trusted"] = true;
+                            frnd["tracked"] = false;
 
                             FriendsDataTmp[friend_id] = frnd;
                         }
                     }
+                } else if (list_id == TrackedFriendsListId) {
+                    for (int i = 0; i < json_items.count() && offset + i < MaxTrackedFriendsCount; i++) {
+                        QString friend_id = QString::number(json_items.at(i).toInt());
+
+                        if (FriendsDataTmp.contains(friend_id)) {
+                            QVariantMap frnd = FriendsDataTmp[friend_id].toMap();
+
+                            if (!frnd.contains("trusted") || !frnd["trusted"].toBool()) {
+                                frnd["tracked"] = true;
+                            }
+
+                            FriendsDataTmp[friend_id] = frnd;
+                        }
+                    }
+                } else {
+                    qWarning() << "ProcessFriendsGetResponse() : unknown list id";
                 }
 
                 if (offset + json_items.count() < friends_count) {
@@ -1159,7 +1256,7 @@ void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp
             QJsonObject json_response = json_document.object().value("response").toObject();
 
             if (json_response.contains("count") && json_response.contains("items")) {
-                QString trusted_friends_list_id;
+                QString trusted_friends_list_id, tracked_friends_list_id;
 
                 QJsonArray json_items = json_response.value("items").toArray();
 
@@ -1169,10 +1266,12 @@ void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp
                     if (json_list.contains("id") && json_list.contains("name")) {
                         if (json_list.value("name").toString() == TRUSTED_FRIENDS_LIST_NAME) {
                             trusted_friends_list_id = QString::number(json_list.value("id").toInt());
+                        } else if (json_list.value("name").toString() == TRACKED_FRIENDS_LIST_NAME) {
+                            tracked_friends_list_id = QString::number(json_list.value("id").toInt());
+                        }
 
-                            if (trusted_friends_list_id != "") {
-                                break;
-                            }
+                        if (trusted_friends_list_id != "" && tracked_friends_list_id != "") {
+                            break;
                         }
                     }
                 }
@@ -1180,6 +1279,9 @@ void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp
                 if (resp_request.contains("user_data")) {
                     if (trusted_friends_list_id != "") {
                         TrustedFriendsListId = trusted_friends_list_id;
+                    }
+                    if (tracked_friends_list_id != "") {
+                        TrackedFriendsListId = tracked_friends_list_id;
                     }
 
                     QVariantMap request, parameters;
@@ -1208,7 +1310,7 @@ void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp
             QJsonObject json_response = json_document.object().value("response").toObject();
 
             if (json_response.contains("count") && json_response.contains("items")) {
-                QString trusted_friends_list_id;
+                QString trusted_friends_list_id, tracked_friends_list_id;
 
                 QJsonArray json_items = json_response.value("items").toArray();
 
@@ -1218,10 +1320,12 @@ void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp
                     if (json_list.contains("id") && json_list.contains("name")) {
                         if (json_list.value("name").toString() == TRUSTED_FRIENDS_LIST_NAME) {
                             trusted_friends_list_id = QString::number(json_list.value("id").toInt());
+                        } else if (json_list.value("name").toString() == TRACKED_FRIENDS_LIST_NAME) {
+                            tracked_friends_list_id = QString::number(json_list.value("id").toInt());
+                        }
 
-                            if (trusted_friends_list_id != "") {
-                                break;
-                            }
+                        if (trusted_friends_list_id != "" && tracked_friends_list_id != "") {
+                            break;
                         }
                     }
                 }
@@ -1233,6 +1337,20 @@ void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp
 
                     parameters["count"]   = MAX_FRIENDS_GET_COUNT;
                     parameters["list_id"] = TrustedFriendsListId.toInt();
+
+                    request["method"]     = "friends.get";
+                    request["context"]    = resp_request["context"].toString();
+                    request["parameters"] = parameters;
+
+                    EnqueueRequest(request);
+                }
+                if (tracked_friends_list_id != "") {
+                    TrackedFriendsListId = tracked_friends_list_id;
+
+                    QVariantMap request, parameters;
+
+                    parameters["count"]   = MAX_FRIENDS_GET_COUNT;
+                    parameters["list_id"] = TrackedFriendsListId.toInt();
 
                     request["method"]     = "friends.get";
                     request["context"]    = resp_request["context"].toString();
@@ -1310,6 +1428,63 @@ void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp
         } else {
             qWarning() << "ProcessFriendsGetListsResponse() : invalid json";
         }
+    } else if (resp_request["context"].toString() == "updateTrackedFriendsList") {
+        QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
+
+        if (!json_document.isNull() && json_document.object().contains("response")) {
+            QJsonObject json_response = json_document.object().value("response").toObject();
+
+            if (json_response.contains("count") && json_response.contains("items")) {
+                QString tracked_friends_list_id;
+
+                QJsonArray json_items = json_response.value("items").toArray();
+
+                for (int i = 0; i < json_items.count(); i++) {
+                    QJsonObject json_list = json_items.at(i).toObject();
+
+                    if (json_list.contains("id") && json_list.contains("name")) {
+                        if (json_list.value("name").toString() == TRACKED_FRIENDS_LIST_NAME) {
+                            tracked_friends_list_id = QString::number(json_list.value("id").toInt());
+
+                            if (tracked_friends_list_id != "") {
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (resp_request.contains("user_ids")) {
+                    QVariantMap request, parameters;
+
+                    if (tracked_friends_list_id != "") {
+                        TrackedFriendsListId = tracked_friends_list_id;
+
+                        parameters["list_id"]  = TrackedFriendsListId.toInt();
+                        parameters["name"]     = TRACKED_FRIENDS_LIST_NAME;
+                        parameters["user_ids"] = resp_request["user_ids"].toString();
+
+                        request["method"]     = "friends.editList";
+                        request["context"]    = resp_request["context"].toString();
+                        request["parameters"] = parameters;
+                    } else {
+                        parameters["name"]     = TRACKED_FRIENDS_LIST_NAME;
+                        parameters["user_ids"] = resp_request["user_ids"].toString();
+
+                        request["method"]     = "friends.addList";
+                        request["context"]    = resp_request["context"].toString();
+                        request["parameters"] = parameters;
+                    }
+
+                    EnqueueRequest(request);
+                } else {
+                    qWarning() << "ProcessFriendsGetListsResponse() : invalid request";
+                }
+            } else {
+                qWarning() << "ProcessFriendsGetListsResponse() : invalid response";
+            }
+        } else {
+            qWarning() << "ProcessFriendsGetListsResponse() : invalid json";
+        }
     }
 }
 
@@ -1341,6 +1516,20 @@ void VKHelper::ProcessFriendsAddListResponse(QString response, QVariantMap resp_
         } else {
             qWarning() << "ProcessFriendsAddListResponse() : invalid json";
         }
+    } else if (resp_request["context"].toString() == "updateTrackedFriendsList") {
+        QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
+
+        if (!json_document.isNull() && json_document.object().contains("response")) {
+            QJsonObject json_response = json_document.object().value("response").toObject();
+
+            if (json_response.contains("list_id")) {
+                TrackedFriendsListId = QString::number(json_response.value("list_id").toInt());
+            } else {
+                qWarning() << "ProcessFriendsAddListResponse() : invalid response";
+            }
+        } else {
+            qWarning() << "ProcessFriendsAddListResponse() : invalid json";
+        }
     }
 }
 
@@ -1359,5 +1548,7 @@ void VKHelper::ProcessFriendsEditListError(QVariantMap err_request)
 {
     if (err_request["context"].toString() == "updateTrustedFriendsList") {
         TrustedFriendsListId = "";
+    } else if (err_request["context"].toString() == "updateTrackedFriendsList") {
+        TrackedFriendsListId = "";
     }
 }
