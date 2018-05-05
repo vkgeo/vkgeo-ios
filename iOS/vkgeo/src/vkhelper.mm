@@ -169,7 +169,6 @@ VKHelper::VKHelper(QObject *parent) : QObject(parent)
     LastReportLocationTime                = 0;
     LastUpdateTrackedFriendsLocationsTime = 0;
     PhotoUrl                              = DEFAULT_PHOTO_URL;
-    TrustedFriendsListId                  = "";
     Instance                              = this;
     VKDelegateInstance                    = NULL;
 }
@@ -899,7 +898,7 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
 
                 int     offset      = 0;
                 int     notes_count = json_response.value("count").toInt();
-                QString user_id     = "";
+                QString user_id;
 
                 if (resp_request.contains("parameters") && resp_request["parameters"].toMap().contains("offset")) {
                     offset = (resp_request["parameters"].toMap())["offset"].toInt();
@@ -1013,7 +1012,7 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
             if (json_response.contains("count") && json_response.contains("items")) {
                 int     offset        = 0;
                 int     friends_count = json_response.value("count").toInt();
-                QString list_id       = "";
+                QString list_id;
 
                 if (resp_request.contains("parameters") && resp_request["parameters"].toMap().contains("offset")) {
                     offset = (resp_request["parameters"].toMap())["offset"].toInt();
