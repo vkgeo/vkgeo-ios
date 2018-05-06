@@ -41,6 +41,7 @@ Item {
                 minimumPointSize:    8
                 textFormat:          Text.StyledText
                 Layout.fillWidth:    true
+                Layout.alignment:    Qt.AlignVCenter
             }
 
             Text {
@@ -56,6 +57,7 @@ Item {
                 fontSizeMode:        Text.Fit
                 minimumPointSize:    8
                 Layout.fillWidth:    true
+                Layout.alignment:    Qt.AlignVCenter
 
                 function textToShow(max_count) {
                     if (max_count > 0) {
@@ -87,6 +89,7 @@ Item {
             ToolSeparator {
                 orientation:      Qt.Horizontal
                 Layout.fillWidth: true
+                Layout.alignment: Qt.AlignVCenter
             }
 
             Text {
@@ -103,6 +106,7 @@ Item {
                 minimumPointSize:    8
                 textFormat:          Text.StyledText
                 Layout.fillWidth:    true
+                Layout.alignment:    Qt.AlignVCenter
             }
 
             Text {
@@ -118,6 +122,7 @@ Item {
                 fontSizeMode:        Text.Fit
                 minimumPointSize:    8
                 Layout.fillWidth:    true
+                Layout.alignment:    Qt.AlignVCenter
 
                 function textToShow(max_count) {
                     if (max_count > 0) {
@@ -149,6 +154,7 @@ Item {
             ToolSeparator {
                 orientation:      Qt.Horizontal
                 Layout.fillWidth: true
+                Layout.alignment: Qt.AlignVCenter
             }
 
             VKButton {
@@ -175,8 +181,8 @@ Item {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 onClicked: {
-                    if (!Qt.openUrlExternally("vk://vk.com/public166101702")) {
-                        Qt.openUrlExternally("https://m.vk.com/public166101702");
+                    if (!Qt.openUrlExternally("vk://vk.com/vkgeo_app")) {
+                        Qt.openUrlExternally("https://m.vk.com/vkgeo_app");
                     }
                 }
             }

@@ -16,17 +16,18 @@ Page {
         color:  "lightsteelblue"
 
         RowLayout {
-            id:             headerControlsLayout
-            anchors.bottom: parent.bottom
-            anchors.left:   parent.left
-            anchors.right:  parent.right
-            height:         UtilScript.pt(48)
-            spacing:        UtilScript.pt(4)
+            id:                  headerControlsLayout
+            anchors.bottom:      parent.bottom
+            anchors.left:        parent.left
+            anchors.right:       parent.right
+            anchors.leftMargin:  UtilScript.pt(8)
+            anchors.rightMargin: UtilScript.pt(8)
+            height:              UtilScript.pt(48)
+            spacing:             UtilScript.pt(4)
 
             Rectangle {
                 width:             UtilScript.pt(80)
                 color:             "transparent"
-                Layout.leftMargin: UtilScript.pt(8)
                 Layout.fillHeight: true
                 Layout.alignment:  Qt.AlignHCenter
             }
@@ -47,11 +48,10 @@ Page {
             }
 
             VKButton {
-                width:              UtilScript.pt(80)
-                height:             UtilScript.pt(32)
-                text:               qsTr("Close")
-                Layout.rightMargin: UtilScript.pt(8)
-                Layout.alignment:   Qt.AlignHCenter | Qt.AlignVCenter
+                width:            UtilScript.pt(80)
+                height:           UtilScript.pt(32)
+                text:             qsTr("Close")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 onClicked: {
                     mainStackView.pop();

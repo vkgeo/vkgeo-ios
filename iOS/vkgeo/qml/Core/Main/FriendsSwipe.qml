@@ -3,6 +3,8 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtGraphicalEffects 1.0
 
+import "../Misc"
+
 import "../../Util.js" as UtilScript
 
 Item {
@@ -129,29 +131,18 @@ Item {
     }
 
     ColumnLayout {
-        anchors.fill: parent
-        spacing:      UtilScript.pt(8)
+        anchors.fill:      parent
+        anchors.topMargin: UtilScript.pt(4)
+        spacing:           UtilScript.pt(4)
 
-        TextField {
+        FilterTextField {
             id:               filterTextField
             placeholderText:  qsTr("Quick search")
-            inputMethodHints: Qt.ImhNoPredictiveText
-            Layout.topMargin: UtilScript.pt(8)
             Layout.fillWidth: true
-
-            background: Rectangle {
-                color:        "lightsteelblue"
-                radius:       UtilScript.pt(8)
-                border.width: UtilScript.pt(1)
-                border.color: "steelblue"
-            }
+            Layout.alignment: Qt.AlignVCenter
 
             onTextChanged: {
                 friendsSwipe.updateModel();
-            }
-
-            onEditingFinished: {
-                focus = false;
             }
         }
 
@@ -202,15 +193,16 @@ Item {
                     property var listView: ListView.view
 
                     RowLayout {
-                        anchors.fill: parent
-                        spacing:      UtilScript.pt(8)
+                        anchors.fill:        parent
+                        anchors.leftMargin:  UtilScript.pt(16)
+                        anchors.rightMargin: UtilScript.pt(16)
+                        spacing:             UtilScript.pt(8)
 
                         Rectangle {
-                            width:             UtilScript.pt(64)
-                            height:            UtilScript.pt(64)
-                            color:             "transparent"
-                            Layout.leftMargin: UtilScript.pt(16)
-                            Layout.alignment:  Qt.AlignHCenter | Qt.AlignVCenter
+                            width:            UtilScript.pt(64)
+                            height:           UtilScript.pt(64)
+                            color:            "transparent"
+                            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                             OpacityMask {
                                 id:           opacityMask
@@ -270,12 +262,11 @@ Item {
                         }
 
                         Image {
-                            width:              UtilScript.pt(48)
-                            height:             UtilScript.pt(48)
-                            source:             buttonToShow(locationAvailable, trusted, tracked, invited)
-                            fillMode:           Image.PreserveAspectFit
-                            Layout.rightMargin: UtilScript.pt(16)
-                            Layout.alignment:   Qt.AlignHCenter | Qt.AlignVCenter
+                            width:            UtilScript.pt(48)
+                            height:           UtilScript.pt(48)
+                            source:           buttonToShow(locationAvailable, trusted, tracked, invited)
+                            fillMode:         Image.PreserveAspectFit
+                            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                             function buttonToShow(location_available, trusted, tracked, invited) {
                                 if (location_available) {

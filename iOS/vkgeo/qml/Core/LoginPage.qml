@@ -45,6 +45,7 @@ Page {
                 minimumPointSize:     8
                 Layout.maximumHeight: parent.height / 2
                 Layout.fillWidth:     true
+                Layout.alignment:     Qt.AlignVCenter
             }
 
             Image {

@@ -16,19 +16,20 @@ Page {
         color:  "lightsteelblue"
 
         RowLayout {
-            id:             headerControlsLayout
-            anchors.bottom: parent.bottom
-            anchors.left:   parent.left
-            anchors.right:  parent.right
-            height:         UtilScript.pt(48)
-            spacing:        UtilScript.pt(4)
+            id:                  headerControlsLayout
+            anchors.bottom:      parent.bottom
+            anchors.left:        parent.left
+            anchors.right:       parent.right
+            anchors.leftMargin:  UtilScript.pt(8)
+            anchors.rightMargin: UtilScript.pt(8)
+            height:              UtilScript.pt(48)
+            spacing:             UtilScript.pt(4)
 
             VKButton {
-                width:             UtilScript.pt(80)
-                height:            UtilScript.pt(32)
-                text:              qsTr("Cancel")
-                Layout.leftMargin: UtilScript.pt(8)
-                Layout.alignment:  Qt.AlignHCenter | Qt.AlignVCenter
+                width:            UtilScript.pt(80)
+                height:           UtilScript.pt(32)
+                text:             qsTr("Cancel")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 onClicked: {
                     mainStackView.pop();
@@ -51,11 +52,10 @@ Page {
             }
 
             VKButton {
-                width:              UtilScript.pt(80)
-                height:             UtilScript.pt(32)
-                text:               qsTr("Save")
-                Layout.rightMargin: UtilScript.pt(8)
-                Layout.alignment:   Qt.AlignHCenter | Qt.AlignVCenter
+                width:            UtilScript.pt(80)
+                height:           UtilScript.pt(32)
+                text:             qsTr("Save")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 onClicked: {
                     var tracked_friends_list = [];
@@ -146,29 +146,18 @@ Page {
     }
 
     ColumnLayout {
-        anchors.fill: parent
-        spacing:      UtilScript.pt(8)
+        anchors.fill:      parent
+        anchors.topMargin: UtilScript.pt(4)
+        spacing:           UtilScript.pt(4)
 
-        TextField {
+        FilterTextField {
             id:               filterTextField
             placeholderText:  qsTr("Quick search")
-            inputMethodHints: Qt.ImhNoPredictiveText
-            Layout.topMargin: UtilScript.pt(8)
             Layout.fillWidth: true
-
-            background: Rectangle {
-                color:        "lightsteelblue"
-                radius:       UtilScript.pt(8)
-                border.width: UtilScript.pt(1)
-                border.color: "steelblue"
-            }
+            Layout.alignment: Qt.AlignVCenter
 
             onTextChanged: {
                 trackedFriendsPage.updateModel();
-            }
-
-            onEditingFinished: {
-                focus = false;
             }
         }
 
@@ -193,15 +182,16 @@ Page {
                 property var listView: ListView.view
 
                 RowLayout {
-                    anchors.fill: parent
-                    spacing:      UtilScript.pt(8)
+                    anchors.fill:        parent
+                    anchors.leftMargin:  UtilScript.pt(16)
+                    anchors.rightMargin: UtilScript.pt(16)
+                    spacing:             UtilScript.pt(8)
 
                     OpacityMask {
-                        id:                opacityMask
-                        width:             UtilScript.pt(64)
-                        height:            UtilScript.pt(64)
-                        Layout.leftMargin: UtilScript.pt(16)
-                        Layout.alignment:  Qt.AlignHCenter | Qt.AlignVCenter
+                        id:               opacityMask
+                        width:            UtilScript.pt(64)
+                        height:           UtilScript.pt(64)
+                        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                         source: Image {
                             width:    opacityMask.width
@@ -235,9 +225,8 @@ Page {
                     }
 
                     Switch {
-                        checked:            tracked
-                        Layout.rightMargin: UtilScript.pt(16)
-                        Layout.alignment:   Qt.AlignHCenter | Qt.AlignVCenter
+                        checked:          tracked
+                        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                         onToggled: {
                             if (!friendDelegate.listView.setTrack(userId, checked)) {
