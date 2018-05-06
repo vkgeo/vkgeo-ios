@@ -469,6 +469,23 @@ void VKHelper::updateTrackedFriendsLocations(bool expedited)
     }
 }
 
+void VKHelper::inviteUser(QString user_id, QString request_text)
+{
+    if (Initialized) {
+        QVariantMap request, parameters;
+
+        parameters["user_id"] = user_id;
+        parameters["text"]    = request_text;
+        parameters["type"]    = "invite";
+
+        request["method"]     = "apps.sendRequest";
+        request["context"]    = "inviteUser";
+        request["parameters"] = parameters;
+
+        EnqueueRequest(request);
+    }
+}
+
 void VKHelper::setAuthState(const int &state)
 {
     Instance->AuthState = state;
@@ -852,6 +869,37 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
                     ContextTrackerDelRequest(request);
 
                     ProcessFriendsEditListError(request);
+                }
+            };
+
+            VKRequestTracker[vk_request] = true;
+
+            ContextTrackerAddRequest(request);
+
+            return vk_request;
+        } else if (request["method"].toString() == "apps.sendRequest") {
+            VKRequest *vk_request = [VKRequest requestWithMethod:request["method"].toString().toNSString() parameters:vk_parameters];
+
+            vk_request.completeBlock = ^(VKResponse *response) {
+                if (VKRequestTracker.contains(vk_request)) {
+                    VKRequestTracker.remove(vk_request);
+
+                    ContextTrackerDelRequest(request);
+
+                    ProcessAppsSendRequestResponse(QString::fromNSString(response.responseString), request);
+                }
+            };
+            vk_request.errorBlock = ^(NSError *error) {
+                Q_UNUSED(error)
+
+                qWarning() << QString("ProcessRequest() : %1 request failed").arg(QString::fromNSString(vk_request.methodName));
+
+                if (VKRequestTracker.contains(vk_request)) {
+                    VKRequestTracker.remove(vk_request);
+
+                    ContextTrackerDelRequest(request);
+
+                    ProcessAppsSendRequestError(request);
                 }
             };
 
@@ -1551,4 +1599,15 @@ void VKHelper::ProcessFriendsEditListError(QVariantMap err_request)
     } else if (err_request["context"].toString() == "updateTrackedFriendsList") {
         TrackedFriendsListId = "";
     }
+}
+
+void VKHelper::ProcessAppsSendRequestResponse(QString response, QVariantMap resp_request)
+{
+    Q_UNUSED(response)
+    Q_UNUSED(resp_request)
+}
+
+void VKHelper::ProcessAppsSendRequestError(QVariantMap err_request)
+{
+    Q_UNUSED(err_request)
 }

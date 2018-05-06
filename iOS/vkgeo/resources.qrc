@@ -5,7 +5,9 @@
         <file>resources/images/main/avatar_obsolete_location_label.png</file>
         <file>resources/images/main/avatar_online_label.png</file>
         <file>resources/images/main/button_invite_other.png</file>
+        <file>resources/images/main/button_invite_other_done.png</file>
         <file>resources/images/main/button_invite_tracked.png</file>
+        <file>resources/images/main/button_invite_tracked_done.png</file>
         <file>resources/images/main/button_show_all.png</file>
         <file>resources/images/main/button_show_on_map.png</file>
         <file>resources/images/main/button_track.png</file>

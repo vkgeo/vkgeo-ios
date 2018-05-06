@@ -18,6 +18,7 @@ Item {
         for (var i = 0; i < friendsList.length; i++) {
             var frnd = friendsList[i];
 
+            frnd.invited           = false;
             frnd.locationAvailable = false;
             frnd.updateTime        = 0;
             frnd.latitude          = 0;
@@ -95,6 +96,32 @@ Item {
                 } else {
                     console.log(component.errorString());
                 }
+
+                break;
+            }
+        }
+    }
+
+    function inviteUser(user_id) {
+        VKHelper.inviteUser(user_id, qsTr("I invite you to install the VKGeo app and join the community"));
+
+        for (var i = 0; i < friendsList.length; i++) {
+            var frnd = friendsList[i];
+
+            if (user_id === frnd.userId) {
+                frnd.invited = true;
+
+                friendsList[i] = frnd;
+
+                break;
+            }
+        }
+
+        for (var j = 0; j < friendsListModel.count; j++) {
+            var model_frnd = friendsListModel.get(j);
+
+            if (user_id === model_frnd.userId) {
+                friendsListModel.set(j, { "invited" : true });
 
                 break;
             }
@@ -245,18 +272,26 @@ Item {
                         Image {
                             width:              UtilScript.pt(48)
                             height:             UtilScript.pt(48)
-                            source:             buttonToShow(locationAvailable, trusted, tracked)
+                            source:             buttonToShow(locationAvailable, trusted, tracked, invited)
                             fillMode:           Image.PreserveAspectFit
                             Layout.rightMargin: UtilScript.pt(16)
                             Layout.alignment:   Qt.AlignHCenter | Qt.AlignVCenter
 
-                            function buttonToShow(location_available, trusted, tracked) {
+                            function buttonToShow(location_available, trusted, tracked, invited) {
                                 if (location_available) {
                                     return "qrc:/resources/images/main/button_show_on_map.png";
                                 } else if (trusted || tracked) {
-                                    return "qrc:/resources/images/main/button_invite_tracked.png";
+                                    if (invited) {
+                                        return "qrc:/resources/images/main/button_invite_tracked_done.png";
+                                    } else {
+                                        return "qrc:/resources/images/main/button_invite_tracked.png";
+                                    }
                                 } else {
-                                    return "qrc:/resources/images/main/button_invite_other.png";
+                                    if (invited) {
+                                        return "qrc:/resources/images/main/button_invite_other_done.png";
+                                    } else {
+                                        return "qrc:/resources/images/main/button_invite_other.png";
+                                    }
                                 }
                             }
 
@@ -266,8 +301,8 @@ Item {
                                 onClicked: {
                                     if (locationAvailable) {
                                         friendDelegate.listView.locateFriendOnMap(userId);
-                                    } else {
-                                        // Invite
+                                    } else if (!invited) {
+                                        friendDelegate.listView.inviteUser(userId);
                                     }
                                 }
                             }
@@ -303,6 +338,10 @@ Item {
 
                 function locateFriendOnMap(user_id) {
                     friendsSwipe.locateFriendOnMap(user_id);
+                }
+
+                function inviteUser(user_id) {
+                    friendsSwipe.inviteUser(user_id);
                 }
 
                 Timer {
