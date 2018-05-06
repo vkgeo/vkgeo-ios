@@ -20,19 +20,19 @@ Window {
     onDisableAdsChanged: {
         setSetting("DisableAds", disableAds ? "true" : "false");
 
-        updateAdditionalFeatures();
+        updateFeatures();
     }
 
     onEnableTrackedFriendsChanged: {
         setSetting("EnableTrackedFriends", enableTrackedFriends ? "true" : "false");
 
-        updateAdditionalFeatures();
+        updateFeatures();
     }
 
     onIncreaseTrackingLimitsChanged: {
         setSetting("IncreaseTrackingLimits", increaseTrackingLimits ? "true" : "false");
 
-        updateAdditionalFeatures();
+        updateFeatures();
     }
 
     onVkAuthStateChanged: {
@@ -93,7 +93,7 @@ Window {
         }
     }
 
-    function updateAdditionalFeatures() {
+    function updateFeatures() {
         if (mainStackView.depth > 0 && mainStackView.currentItem.hasOwnProperty("bannerViewHeight")) {
             if (disableAds) {
                 AdMobHelper.hideBannerView();
@@ -164,7 +164,7 @@ Window {
         enableTrackedFriends   = (getSetting("EnableTrackedFriends",   "false") === "true");
         increaseTrackingLimits = (getSetting("IncreaseTrackingLimits", "false") === "true");
 
-        updateAdditionalFeatures();
+        updateFeatures();
 
         AdMobHelper.initialize();
         VKHelper.initialize();

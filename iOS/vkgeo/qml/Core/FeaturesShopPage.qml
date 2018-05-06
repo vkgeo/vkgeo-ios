@@ -8,11 +8,11 @@ import "Misc"
 import "../Util.js" as UtilScript
 
 Page {
-    id: additionalFeaturesPage
+    id: featuresShopPage
 
     header: Rectangle {
-        height: additionalFeaturesPage.bannerViewHeight + additionalFeaturesPage.safeAreaTopMargin +
-                                                          headerControlsLayout.height
+        height: featuresShopPage.bannerViewHeight + featuresShopPage.safeAreaTopMargin +
+                                                    headerControlsLayout.height
         color:  "lightsteelblue"
 
         RowLayout {
@@ -33,7 +33,7 @@ Page {
             }
 
             Text {
-                text:                qsTr("Additional features")
+                text:                qsTr("Features shop")
                 color:               "white"
                 font.pointSize:      16
                 font.family:         "Helvetica"
@@ -61,7 +61,7 @@ Page {
     }
 
     footer: Rectangle {
-        height: additionalFeaturesPage.safeAreaBottomMargin
+        height: featuresShopPage.safeAreaBottomMargin
         color:  "lightsteelblue"
     }
 
@@ -201,8 +201,8 @@ Page {
                     VKButton {
                         width:            UtilScript.pt(80)
                         height:           UtilScript.pt(32)
-                        text:             additionalFeaturesPage.getPrice(trackedFriendsProduct.status,
-                                                                          trackedFriendsProduct.price)
+                        text:             featuresShopPage.getPrice(trackedFriendsProduct.status,
+                                                                    trackedFriendsProduct.price)
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                         onClicked: {
@@ -244,8 +244,8 @@ Page {
                     VKButton {
                         width:            UtilScript.pt(80)
                         height:           UtilScript.pt(32)
-                        text:             additionalFeaturesPage.getPrice(increasedLimitsProduct.status,
-                                                                          increasedLimitsProduct.price)
+                        text:             featuresShopPage.getPrice(increasedLimitsProduct.status,
+                                                                    increasedLimitsProduct.price)
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                         onClicked: {

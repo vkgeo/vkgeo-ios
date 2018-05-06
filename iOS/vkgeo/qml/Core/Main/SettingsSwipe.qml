@@ -128,7 +128,7 @@ Item {
                     if (max_count > 0) {
                         return qsTr("Currently you can have up to %1 tracked friends.").arg(max_count);
                     } else {
-                        return qsTr("Currently you can't have tracked friends. Please visit \"Additional features\" section for details.");
+                        return qsTr("Currently you can't have tracked friends. Please visit Features shop for details.");
                     }
                 }
             }
@@ -160,11 +160,11 @@ Item {
             VKButton {
                 width:            UtilScript.pt(280)
                 height:           UtilScript.pt(64)
-                text:             qsTr("Additional features")
+                text:             qsTr("Features shop")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 onClicked: {
-                    var component = Qt.createComponent("../AdditionalFeaturesPage.qml");
+                    var component = Qt.createComponent("../FeaturesShopPage.qml");
 
                     if (component.status === Component.Ready) {
                         mainStackView.push(component);
