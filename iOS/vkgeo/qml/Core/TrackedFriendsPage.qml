@@ -11,7 +11,8 @@ Page {
     id: trackedFriendsPage
 
     header: Rectangle {
-        height: trackedFriendsPage.safeAreaTopMargin + headerControlsLayout.height
+        height: trackedFriendsPage.bannerViewHeight + trackedFriendsPage.safeAreaTopMargin +
+                                                      headerControlsLayout.height
         color:  "lightsteelblue"
 
         RowLayout {
@@ -80,6 +81,7 @@ Page {
         color:  "lightsteelblue"
     }
 
+    property int bannerViewHeight:     AdMobHelper.bannerViewHeight
     property int safeAreaTopMargin:    0
     property int safeAreaBottomMargin: 0
     property int trackedFriendsCount:  0

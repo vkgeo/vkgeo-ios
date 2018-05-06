@@ -11,7 +11,8 @@ Page {
     id: trustedFriendsPage
 
     header: Rectangle {
-        height: trustedFriendsPage.safeAreaTopMargin + headerControlsLayout.height
+        height: trustedFriendsPage.bannerViewHeight + trustedFriendsPage.safeAreaTopMargin +
+                                                      headerControlsLayout.height
         color:  "lightsteelblue"
 
         RowLayout {
@@ -80,6 +81,7 @@ Page {
         color:  "lightsteelblue"
     }
 
+    property int bannerViewHeight:     AdMobHelper.bannerViewHeight
     property int safeAreaTopMargin:    0
     property int safeAreaBottomMargin: 0
     property int trustedFriendsCount:  0

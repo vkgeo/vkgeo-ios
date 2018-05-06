@@ -11,8 +11,8 @@ Page {
     id: mainPage
 
     header: Rectangle {
-        height: mainPage.bannerViewHeight
-        color:  "transparent"
+        height: mainPage.bannerViewHeight + mainPage.safeAreaTopMargin
+        color:  "lightsteelblue"
     }
 
     footer: Rectangle {
@@ -78,6 +78,7 @@ Page {
     property bool appInForeground:     Qt.application.active
 
     property int bannerViewHeight:     AdMobHelper.bannerViewHeight
+    property int safeAreaTopMargin:    0
     property int safeAreaBottomMargin: 0
     property int vkAuthState:          VKHelper.authState
 
@@ -100,6 +101,7 @@ Page {
     StackView.onStatusChanged: {
         if (StackView.status === StackView.Activating ||
             StackView.status === StackView.Active) {
+            safeAreaTopMargin    = UIHelper.safeAreaTopMargin();
             safeAreaBottomMargin = UIHelper.safeAreaBottomMargin();
         }
     }
