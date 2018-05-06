@@ -98,7 +98,7 @@ Page {
         clip:                 true
 
         ScrollBar.vertical: ScrollBar {
-            policy: ScrollBar.AsNeeded
+            policy: ScrollBar.AlwaysOn
         }
 
         ColumnLayout {

@@ -19,7 +19,7 @@ Item {
         clip:                 true
 
         ScrollBar.vertical: ScrollBar {
-            policy: ScrollBar.AsNeeded
+            policy: ScrollBar.AlwaysOn
         }
 
         ColumnLayout {
@@ -30,7 +30,7 @@ Item {
             Text {
                 leftPadding:         UtilScript.pt(16)
                 rightPadding:        UtilScript.pt(16)
-                text:                qsTr("You can see the location of trusted friends, if they also treating you as trusted friend, and they <b>can also see your location</b>.")
+                text:                qsTr("You can see the location of trusted friends, if they also treat you as a trusted friend, and they <b>can see your location</b>.")
                 color:               "black"
                 font.pointSize:      16
                 font.family:         "Helvetica"
@@ -39,6 +39,7 @@ Item {
                 wrapMode:            Text.Wrap
                 fontSizeMode:        Text.Fit
                 minimumPointSize:    8
+                textFormat:          Text.StyledText
                 Layout.fillWidth:    true
             }
 
@@ -68,7 +69,7 @@ Item {
             Text {
                 leftPadding:         UtilScript.pt(16)
                 rightPadding:        UtilScript.pt(16)
-                text:                qsTr("You can see the location of tracked friends, if they treating you as trusted friend, but tracked friends <b>cannot see your location</b>.")
+                text:                qsTr("You can see the location of tracked friends, if they treat you as a trusted friend, but they <b>cannot see your location</b>.")
                 color:               "black"
                 font.pointSize:      16
                 font.family:         "Helvetica"
@@ -77,6 +78,7 @@ Item {
                 wrapMode:            Text.Wrap
                 fontSizeMode:        Text.Fit
                 minimumPointSize:    8
+                textFormat:          Text.StyledText
                 Layout.fillWidth:    true
             }
 
