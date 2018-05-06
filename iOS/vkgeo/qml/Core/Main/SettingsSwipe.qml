@@ -27,6 +27,21 @@ Item {
             width:   settingsFlickable.width
             spacing: UtilScript.pt(16)
 
+            Text {
+                leftPadding:         UtilScript.pt(16)
+                rightPadding:        UtilScript.pt(16)
+                text:                qsTr("You can see the location of trusted friends, if they also treating you as trusted friend, and they <b>can also see your location</b>.")
+                color:               "black"
+                font.pointSize:      16
+                font.family:         "Helvetica"
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment:   Text.AlignVCenter
+                wrapMode:            Text.Wrap
+                fontSizeMode:        Text.Fit
+                minimumPointSize:    8
+                Layout.fillWidth:    true
+            }
+
             VKButton {
                 width:            UtilScript.pt(280)
                 height:           UtilScript.pt(64)
@@ -43,6 +58,26 @@ Item {
                         console.log(component.errorString());
                     }
                 }
+            }
+
+            ToolSeparator {
+                orientation:      Qt.Horizontal
+                Layout.fillWidth: true
+            }
+
+            Text {
+                leftPadding:         UtilScript.pt(16)
+                rightPadding:        UtilScript.pt(16)
+                text:                qsTr("You can see the location of tracked friends, if they treating you as trusted friend, but tracked friends <b>cannot see your location</b>.")
+                color:               "black"
+                font.pointSize:      16
+                font.family:         "Helvetica"
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment:   Text.AlignVCenter
+                wrapMode:            Text.Wrap
+                fontSizeMode:        Text.Fit
+                minimumPointSize:    8
+                Layout.fillWidth:    true
             }
 
             VKButton {
@@ -63,10 +98,9 @@ Item {
                 }
             }
 
-            Rectangle {
-                implicitHeight:    UtilScript.pt(64)
-                color:             "transparent"
-                Layout.fillWidth:  true
+            ToolSeparator {
+                orientation:      Qt.Horizontal
+                Layout.fillWidth: true
             }
 
             VKButton {
