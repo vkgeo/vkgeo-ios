@@ -1,0 +1,7 @@
+/* 
+  InfoPlist.strings
+*/
+
+CFBundleDisplayName                          = "Друзья на карте";
+NSLocationAlwaysAndWhenInUseUsageDescription = "Вы должны разрешить доступ к своему местоположению, если хотите, чтобы ваши доверенные друзья видели его";
+NSLocationWhenInUseUsageDescription          = "Вы должны разрешить доступ к своему местоположению, если хотите, чтобы ваши доверенные друзья видели его";
