@@ -43,6 +43,29 @@ Item {
                 Layout.fillWidth:    true
             }
 
+            Text {
+                leftPadding:         UtilScript.pt(16)
+                rightPadding:        UtilScript.pt(16)
+                text:                textToShow(VKHelper.maxTrustedFriendsCount)
+                color:               "black"
+                font.pointSize:      16
+                font.family:         "Helvetica"
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment:   Text.AlignVCenter
+                wrapMode:            Text.Wrap
+                fontSizeMode:        Text.Fit
+                minimumPointSize:    8
+                Layout.fillWidth:    true
+
+                function textToShow(max_count) {
+                    if (max_count > 0) {
+                        return qsTr("Currently you can have up to %1 trusted friends.").arg(max_count);
+                    } else {
+                        return qsTr("Currently you can't have trusted friends.");
+                    }
+                }
+            }
+
             VKButton {
                 width:            UtilScript.pt(280)
                 height:           UtilScript.pt(64)
@@ -80,6 +103,29 @@ Item {
                 minimumPointSize:    8
                 textFormat:          Text.StyledText
                 Layout.fillWidth:    true
+            }
+
+            Text {
+                leftPadding:         UtilScript.pt(16)
+                rightPadding:        UtilScript.pt(16)
+                text:                textToShow(VKHelper.maxTrackedFriendsCount)
+                color:               "black"
+                font.pointSize:      16
+                font.family:         "Helvetica"
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment:   Text.AlignVCenter
+                wrapMode:            Text.Wrap
+                fontSizeMode:        Text.Fit
+                minimumPointSize:    8
+                Layout.fillWidth:    true
+
+                function textToShow(max_count) {
+                    if (max_count > 0) {
+                        return qsTr("Currently you can have up to %1 tracked friends.").arg(max_count);
+                    } else {
+                        return qsTr("Currently you can't have tracked friends. Please visit \"Additional features\" section for details.");
+                    }
+                }
             }
 
             VKButton {
