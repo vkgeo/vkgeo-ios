@@ -171,6 +171,19 @@ Item {
             VKButton {
                 width:            UtilScript.pt(280)
                 height:           UtilScript.pt(64)
+                text:             qsTr("Support")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                onClicked: {
+                    if (!Qt.openUrlExternally("vk://vk.com/public166101702")) {
+                        Qt.openUrlExternally("https://m.vk.com/public166101702");
+                    }
+                }
+            }
+
+            VKButton {
+                width:            UtilScript.pt(280)
+                height:           UtilScript.pt(64)
                 text:             qsTr("Log out of VK")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
