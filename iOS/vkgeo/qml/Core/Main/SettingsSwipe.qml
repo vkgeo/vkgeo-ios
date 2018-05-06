@@ -154,6 +154,23 @@ Item {
             VKButton {
                 width:            UtilScript.pt(280)
                 height:           UtilScript.pt(64)
+                text:             qsTr("Additional features")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                onClicked: {
+                    var component = Qt.createComponent("../AdditionalFeaturesPage.qml");
+
+                    if (component.status === Component.Ready) {
+                        mainStackView.push(component);
+                    } else {
+                        console.log(component.errorString());
+                    }
+                }
+            }
+
+            VKButton {
+                width:            UtilScript.pt(280)
+                height:           UtilScript.pt(64)
                 text:             qsTr("Log out of VK")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 

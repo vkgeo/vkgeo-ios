@@ -1,4 +1,4 @@
-QT += quick quickcontrols2 sql location positioning
+QT += quick quickcontrols2 sql location positioning purchasing
 CONFIG += c++11
 
 DEFINES += QT_DEPRECATED_WARNINGS

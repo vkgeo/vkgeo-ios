@@ -673,9 +673,8 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
                 }
             };
             vk_request.errorBlock = ^(NSError *error) {
-                Q_UNUSED(error)
-
-                qWarning() << QString("ProcessRequest() : %1 request failed").arg(QString::fromNSString(vk_request.methodName));
+                qWarning() << QString("ProcessRequest() : %1 request failed : %2").arg(QString::fromNSString(vk_request.methodName))
+                                                                                  .arg(QString::fromNSString([error localizedDescription]));
 
                 if (VKRequestTracker.contains(vk_request)) {
                     VKRequestTracker.remove(vk_request);
@@ -704,9 +703,8 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
                 }
             };
             vk_request.errorBlock = ^(NSError *error) {
-                Q_UNUSED(error)
-
-                qWarning() << QString("ProcessRequest() : %1 request failed").arg(QString::fromNSString(vk_request.methodName));
+                qWarning() << QString("ProcessRequest() : %1 request failed : %2").arg(QString::fromNSString(vk_request.methodName))
+                                                                                  .arg(QString::fromNSString([error localizedDescription]));
 
                 if (VKRequestTracker.contains(vk_request)) {
                     VKRequestTracker.remove(vk_request);
@@ -735,9 +733,8 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
                 }
             };
             vk_request.errorBlock = ^(NSError *error) {
-                Q_UNUSED(error)
-
-                qWarning() << QString("ProcessRequest() : %1 request failed").arg(QString::fromNSString(vk_request.methodName));
+                qWarning() << QString("ProcessRequest() : %1 request failed : %2").arg(QString::fromNSString(vk_request.methodName))
+                                                                                  .arg(QString::fromNSString([error localizedDescription]));
 
                 if (VKRequestTracker.contains(vk_request)) {
                     VKRequestTracker.remove(vk_request);
@@ -766,9 +763,8 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
                 }
             };
             vk_request.errorBlock = ^(NSError *error) {
-                Q_UNUSED(error)
-
-                qWarning() << QString("ProcessRequest() : %1 request failed").arg(QString::fromNSString(vk_request.methodName));
+                qWarning() << QString("ProcessRequest() : %1 request failed : %2").arg(QString::fromNSString(vk_request.methodName))
+                                                                                  .arg(QString::fromNSString([error localizedDescription]));
 
                 if (VKRequestTracker.contains(vk_request)) {
                     VKRequestTracker.remove(vk_request);
@@ -797,9 +793,8 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
                 }
             };
             vk_request.errorBlock = ^(NSError *error) {
-                Q_UNUSED(error)
-
-                qWarning() << QString("ProcessRequest() : %1 request failed").arg(QString::fromNSString(vk_request.methodName));
+                qWarning() << QString("ProcessRequest() : %1 request failed : %2").arg(QString::fromNSString(vk_request.methodName))
+                                                                                  .arg(QString::fromNSString([error localizedDescription]));
 
                 if (VKRequestTracker.contains(vk_request)) {
                     VKRequestTracker.remove(vk_request);
@@ -828,9 +823,8 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
                 }
             };
             vk_request.errorBlock = ^(NSError *error) {
-                Q_UNUSED(error)
-
-                qWarning() << QString("ProcessRequest() : %1 request failed").arg(QString::fromNSString(vk_request.methodName));
+                qWarning() << QString("ProcessRequest() : %1 request failed : %2").arg(QString::fromNSString(vk_request.methodName))
+                                                                                  .arg(QString::fromNSString([error localizedDescription]));
 
                 if (VKRequestTracker.contains(vk_request)) {
                     VKRequestTracker.remove(vk_request);
@@ -859,9 +853,8 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
                 }
             };
             vk_request.errorBlock = ^(NSError *error) {
-                Q_UNUSED(error)
-
-                qWarning() << QString("ProcessRequest() : %1 request failed").arg(QString::fromNSString(vk_request.methodName));
+                qWarning() << QString("ProcessRequest() : %1 request failed : %2").arg(QString::fromNSString(vk_request.methodName))
+                                                                                  .arg(QString::fromNSString([error localizedDescription]));
 
                 if (VKRequestTracker.contains(vk_request)) {
                     VKRequestTracker.remove(vk_request);
@@ -890,9 +883,8 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
                 }
             };
             vk_request.errorBlock = ^(NSError *error) {
-                Q_UNUSED(error)
-
-                qWarning() << QString("ProcessRequest() : %1 request failed").arg(QString::fromNSString(vk_request.methodName));
+                qWarning() << QString("ProcessRequest() : %1 request failed : %2").arg(QString::fromNSString(vk_request.methodName))
+                                                                                  .arg(QString::fromNSString([error localizedDescription]));
 
                 if (VKRequestTracker.contains(vk_request)) {
                     VKRequestTracker.remove(vk_request);

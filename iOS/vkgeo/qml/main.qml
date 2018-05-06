@@ -10,8 +10,30 @@ Window {
     id:      mainWindow
     visible: true
 
-    property int vkAuthState: VKHelper.authState
-    property var loginPage:   null
+    property bool disableAds:             false
+    property bool enableTrackedFriends:   false
+    property bool increaseTrackingLimits: false
+
+    property int vkAuthState:             VKHelper.authState
+    property var loginPage:               null
+
+    onDisableAdsChanged: {
+        setSetting("DisableAds", disableAds ? "true" : "false");
+
+        updateAdditionalFeatures();
+    }
+
+    onEnableTrackedFriendsChanged: {
+        setSetting("EnableTrackedFriends", enableTrackedFriends ? "true" : "false");
+
+        updateAdditionalFeatures();
+    }
+
+    onIncreaseTrackingLimitsChanged: {
+        setSetting("IncreaseTrackingLimits", increaseTrackingLimits ? "true" : "false");
+
+        updateAdditionalFeatures();
+    }
 
     onVkAuthStateChanged: {
         if (vkAuthState === VKAuthState.StateNotAuthorized) {
@@ -71,6 +93,32 @@ Window {
         }
     }
 
+    function updateAdditionalFeatures() {
+        if (mainStackView.depth > 0 && mainStackView.currentItem.hasOwnProperty("bannerViewHeight")) {
+            if (disableAds) {
+                AdMobHelper.hideBannerView();
+            } else {
+                AdMobHelper.showBannerView();
+            }
+        }
+
+        if (increaseTrackingLimits) {
+            VKHelper.maxTrustedFriendsCount = 20;
+        } else {
+            VKHelper.maxTrustedFriendsCount = 10;
+        }
+
+        if (enableTrackedFriends) {
+            if (increaseTrackingLimits) {
+                VKHelper.maxTrackedFriendsCount = 10;
+            } else {
+                VKHelper.maxTrackedFriendsCount = 5;
+            }
+        } else {
+            VKHelper.maxTrackedFriendsCount = 0;
+        }
+    }
+
     StackView {
         id:           mainStackView
         anchors.fill: parent
@@ -88,7 +136,11 @@ Window {
                 currentItem.forceActiveFocus();
 
                 if (currentItem.hasOwnProperty("bannerViewHeight")) {
-                    AdMobHelper.showBannerView();
+                    if (mainWindow.disableAds) {
+                        AdMobHelper.hideBannerView();
+                    } else {
+                        AdMobHelper.showBannerView();
+                    }
                 } else {
                     AdMobHelper.hideBannerView();
                 }
@@ -108,6 +160,12 @@ Window {
     }
 
     Component.onCompleted: {
+        disableAds             = (getSetting("DisableAds",             "false") === "true");
+        enableTrackedFriends   = (getSetting("EnableTrackedFriends",   "false") === "true");
+        increaseTrackingLimits = (getSetting("IncreaseTrackingLimits", "false") === "true");
+
+        updateAdditionalFeatures();
+
         AdMobHelper.initialize();
         VKHelper.initialize();
 
