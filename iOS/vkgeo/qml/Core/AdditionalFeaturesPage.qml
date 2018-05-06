@@ -226,7 +226,7 @@ Page {
                     spacing:         UtilScript.pt(4)
 
                     Text {
-                        text:                qsTr("Tracking limits x 2")
+                        text:                qsTr("Tracking limits x 3")
                         color:               "white"
                         font.pointSize:      16
                         font.family:         "Helvetica"

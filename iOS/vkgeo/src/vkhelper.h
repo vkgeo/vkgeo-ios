@@ -43,7 +43,7 @@ class VKHelper : public QObject
     Q_PROPERTY(int maxTrackedFriendsCount READ maxTrackedFriendsCount WRITE setMaxTrackedFriendsCount NOTIFY maxTrackedFriendsCountChanged)
 
 public:
-    static const int DEFAULT_MAX_TRUSTED_FRIENDS_COUNT         = 10,
+    static const int DEFAULT_MAX_TRUSTED_FRIENDS_COUNT         = 5,
                      DEFAULT_MAX_TRACKED_FRIENDS_COUNT         = 5,
                      REQUEST_QUEUE_TIMER_INTERVAL              = 1000,
                      REPORT_LOCATION_TIMER_INTERVAL            = 1000,

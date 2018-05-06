@@ -103,14 +103,14 @@ Window {
         }
 
         if (increaseTrackingLimits) {
-            VKHelper.maxTrustedFriendsCount = 20;
+            VKHelper.maxTrustedFriendsCount = 15;
         } else {
-            VKHelper.maxTrustedFriendsCount = 10;
+            VKHelper.maxTrustedFriendsCount = 5;
         }
 
         if (enableTrackedFriends) {
             if (increaseTrackingLimits) {
-                VKHelper.maxTrackedFriendsCount = 10;
+                VKHelper.maxTrackedFriendsCount = 15;
             } else {
                 VKHelper.maxTrackedFriendsCount = 5;
             }
