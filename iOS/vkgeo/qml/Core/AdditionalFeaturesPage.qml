@@ -172,8 +172,8 @@ Page {
                 color:              "lightsteelblue"
                 radius:             UtilScript.pt(8)
                 visible:            !mainWindow.enableTrackedFriends
-                Layout.leftMargin:  UtilScript.pt(8)
-                Layout.rightMargin: UtilScript.pt(8)
+                Layout.leftMargin:  UtilScript.pt(16)
+                Layout.rightMargin: UtilScript.pt(16)
                 Layout.fillWidth:   true
                 Layout.alignment:   Qt.AlignVCenter
 
@@ -215,8 +215,8 @@ Page {
                 color:              "lightsteelblue"
                 radius:             UtilScript.pt(8)
                 visible:            !mainWindow.increaseTrackingLimits
-                Layout.leftMargin:  UtilScript.pt(8)
-                Layout.rightMargin: UtilScript.pt(8)
+                Layout.leftMargin:  UtilScript.pt(16)
+                Layout.rightMargin: UtilScript.pt(16)
                 Layout.fillWidth:   true
                 Layout.alignment:   Qt.AlignVCenter
 
@@ -257,8 +257,8 @@ Page {
                 height:             UtilScript.pt(64)
                 color:              "lightsteelblue"
                 radius:             UtilScript.pt(8)
-                Layout.leftMargin:  UtilScript.pt(8)
-                Layout.rightMargin: UtilScript.pt(8)
+                Layout.leftMargin:  UtilScript.pt(16)
+                Layout.rightMargin: UtilScript.pt(16)
                 Layout.fillWidth:   true
                 Layout.alignment:   Qt.AlignVCenter
 
