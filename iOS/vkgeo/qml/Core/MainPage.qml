@@ -144,10 +144,12 @@ Page {
         preferredPositioningMethods: PositionSource.AllPositioningMethods
 
         onPositionChanged: {
-            mapSwipe.updateMyLocation(position.coordinate);
+            if (position.latitudeValid && position.longitudeValid) {
+                mapSwipe.updateMyLocation(position.coordinate);
 
-            VKHelper.reportLocation(position.coordinate.latitude,
-                                    position.coordinate.longitude);
+                VKHelper.reportLocation(position.coordinate.latitude,
+                                        position.coordinate.longitude);
+            }
         }
     }
 
