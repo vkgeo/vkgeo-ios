@@ -3,6 +3,8 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import VKHelper 1.0
 
+import "Misc"
+
 import "../Util.js" as UtilScript
 
 Page {
@@ -22,8 +24,10 @@ Page {
         color:        "lightsteelblue"
 
         ColumnLayout {
-            anchors.fill: parent
-            spacing:      UtilScript.pt(32)
+            anchors.fill:         parent
+            anchors.topMargin:    UtilScript.pt(16)
+            anchors.bottomMargin: UtilScript.pt(16)
+            spacing:              UtilScript.pt(32)
 
             Rectangle {
                 color:             "transparent"
@@ -68,6 +72,17 @@ Page {
                 color:             "transparent"
                 Layout.fillWidth:  true
                 Layout.fillHeight: true
+            }
+
+            VKButton {
+                width:            UtilScript.pt(280)
+                height:           UtilScript.pt(64)
+                text:             qsTr("Privacy policy")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                onClicked: {
+                    Qt.openUrlExternally(qsTr("https://vkgeo.sourceforge.io/"));
+                }
             }
         }
     }
