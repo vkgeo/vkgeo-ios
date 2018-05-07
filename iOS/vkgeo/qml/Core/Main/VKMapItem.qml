@@ -10,24 +10,23 @@ MapQuickItem {
     width:       sourceItem.width
     height:      sourceItem.height
     anchorPoint: Qt.point(width / 2, height / 2)
+    visible:     false
 
-    property bool valid:            false
     property bool locationObsolete: false
 
-    property int locationTimeout:  12 * 60 * 60
+    property int locationTimeout:   12 * 60 * 60
 
-    property real updateTime:      0.0
+    property real updateTime:       0.0
 
-    property string userId:        ""
-    property string photoUrl:      ""
+    property string userId:         ""
+    property string photoUrl:       ""
 
     signal openProfilePage(string user_id)
 
     sourceItem: Rectangle {
-        width:   UtilScript.pt(48)
-        height:  UtilScript.pt(48)
-        color:   "transparent"
-        visible: vkMapItem.valid
+        width:  UtilScript.pt(48)
+        height: UtilScript.pt(48)
+        color:  "transparent"
 
         OpacityMask {
             id:           opacityMask
@@ -73,7 +72,7 @@ MapQuickItem {
     }
 
     onCoordinateChanged: {
-        valid = true;
+        visible = true;
     }
 
     onUpdateTimeChanged: {

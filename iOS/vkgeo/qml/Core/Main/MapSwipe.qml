@@ -163,6 +163,10 @@ Item {
             }
         }
 
+        onCopyrightLinkActivated: {
+            Qt.openUrlExternally(link);
+        }
+
         function trackMapItem(map_item) {
             if (trackedMapItem !== null) {
                 trackedMapItem.coordinateChanged.disconnect(centerOnTrackedMapItem);
@@ -218,7 +222,7 @@ Item {
         anchors.left:         parent.left
         anchors.bottom:       parent.bottom
         anchors.leftMargin:   UtilScript.pt(8)
-        anchors.bottomMargin: UtilScript.pt(24)
+        anchors.bottomMargin: UtilScript.pt(32)
         z:                    1
         width:                UtilScript.pt(48)
         height:               UtilScript.pt(48)
@@ -239,14 +243,14 @@ Item {
         anchors.right:        parent.right
         anchors.bottom:       parent.bottom
         anchors.rightMargin:  UtilScript.pt(8)
-        anchors.bottomMargin: UtilScript.pt(24)
+        anchors.bottomMargin: UtilScript.pt(32)
         z:                    1
         width:                UtilScript.pt(48)
         height:               UtilScript.pt(48)
         source:               enabled ? "qrc:/resources/images/main/button_track.png" :
                                         "qrc:/resources/images/main/button_track_disabled.png"
         fillMode:             Image.PreserveAspectFit
-        enabled:              map.myMapItem !== null && map.myMapItem.valid
+        enabled:              map.myMapItem !== null && map.myMapItem.visible
 
         MouseArea {
             anchors.fill: parent
