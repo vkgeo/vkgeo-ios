@@ -152,6 +152,10 @@ Window {
         id: mainPage
     }
 
+    FeaturesShopPage {
+        id: featuresShopPage
+    }
+
     MouseArea {
         id:           screenLockMouseArea
         anchors.fill: parent

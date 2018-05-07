@@ -164,13 +164,7 @@ Item {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 onClicked: {
-                    var component = Qt.createComponent("../FeaturesShopPage.qml");
-
-                    if (component.status === Component.Ready) {
-                        mainStackView.push(component);
-                    } else {
-                        console.log(component.errorString());
-                    }
+                    mainStackView.push(featuresShopPage);
                 }
             }
 
