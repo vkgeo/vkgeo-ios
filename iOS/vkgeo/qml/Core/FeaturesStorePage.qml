@@ -1,17 +1,16 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
-import QtPurchasing 1.0
 
 import "Misc"
 
 import "../Util.js" as UtilScript
 
 Page {
-    id: featuresShopPage
+    id: featuresStorePage
 
     header: Rectangle {
-        height: Math.max(featuresShopPage.safeAreaTopMargin, featuresShopPage.bannerViewHeight) +
+        height: Math.max(featuresStorePage.safeAreaTopMargin, featuresStorePage.bannerViewHeight) +
                 headerControlsLayout.height
         color:  "lightsteelblue"
 
@@ -33,7 +32,7 @@ Page {
             }
 
             Text {
-                text:                qsTr("Features shop")
+                text:                qsTr("Features store")
                 color:               "white"
                 font.pointSize:      16
                 font.family:         "Helvetica"
@@ -61,7 +60,7 @@ Page {
     }
 
     footer: Rectangle {
-        height: featuresShopPage.safeAreaBottomMargin
+        height: featuresStorePage.safeAreaBottomMargin
         color:  "lightsteelblue"
     }
 
@@ -74,80 +73,6 @@ Page {
             StackView.status === StackView.Active) {
             safeAreaTopMargin    = UIHelper.safeAreaTopMargin();
             safeAreaBottomMargin = UIHelper.safeAreaBottomMargin();
-        }
-    }
-
-    function getPrice(status, price) {
-        if (status === Product.Registered) {
-            var result = /([\d \.,]+)/.exec(price);
-
-            if (Array.isArray(result) && result.length > 1) {
-                return result[1].trim();
-            } else {
-                return qsTr("BUY");
-            }
-        } else {
-            return qsTr("BUY");
-        }
-    }
-
-    Store {
-        id: store
-
-        Product {
-            id:         trackedFriendsProduct
-            identifier: "vkgeo.unlockable.trackedfriends"
-            type:       Product.Unlockable
-
-            onPurchaseSucceeded: {
-                mainWindow.disableAds           = true;
-                mainWindow.enableTrackedFriends = true;
-
-                transaction.finalize();
-            }
-
-            onPurchaseRestored: {
-                mainWindow.disableAds           = true;
-                mainWindow.enableTrackedFriends = true;
-
-                transaction.finalize();
-            }
-
-            onPurchaseFailed: {
-                if (transaction.failureReason === Transaction.ErrorOccurred) {
-                    console.log(transaction.errorString);
-                }
-
-                transaction.finalize();
-            }
-        }
-
-        Product {
-            id:         increasedLimitsProduct
-            identifier: "vkgeo.unlockable.increasedlimits"
-            type:       Product.Unlockable
-
-            onPurchaseSucceeded: {
-                mainWindow.disableAds             = true;
-                mainWindow.increaseTrackingLimits = true;
-
-                transaction.finalize();
-            }
-
-            onPurchaseRestored: {
-                mainWindow.disableAds             = true;
-                mainWindow.increaseTrackingLimits = true;
-
-                transaction.finalize();
-            }
-
-            onPurchaseFailed: {
-                if (transaction.failureReason === Transaction.ErrorOccurred) {
-                    console.log(transaction.errorString);
-                }
-
-                transaction.finalize();
-            }
         }
     }
 
@@ -201,8 +126,8 @@ Page {
                     VKButton {
                         width:            UtilScript.pt(80)
                         height:           UtilScript.pt(32)
-                        text:             featuresShopPage.getPrice(trackedFriendsProduct.status,
-                                                                    trackedFriendsProduct.price)
+                        text:             store.getPrice(trackedFriendsProduct.status,
+                                                         trackedFriendsProduct.price)
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                         onClicked: {
@@ -244,8 +169,8 @@ Page {
                     VKButton {
                         width:            UtilScript.pt(80)
                         height:           UtilScript.pt(32)
-                        text:             featuresShopPage.getPrice(increasedLimitsProduct.status,
-                                                                    increasedLimitsProduct.price)
+                        text:             store.getPrice(increasedLimitsProduct.status,
+                                                         increasedLimitsProduct.price)
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                         onClicked: {

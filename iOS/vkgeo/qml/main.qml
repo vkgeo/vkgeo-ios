@@ -2,6 +2,7 @@ import QtQuick 2.9
 import QtQuick.Window 2.3
 import QtQuick.Controls 2.2
 import QtQuick.LocalStorage 2.0
+import QtPurchasing 1.0
 import VKHelper 1.0
 
 import "Core"
@@ -119,6 +120,80 @@ Window {
         }
     }
 
+    Store {
+        id: store
+
+        function getPrice(status, price) {
+            if (status === Product.Registered) {
+                var result = /([\d \.,]+)/.exec(price);
+
+                if (Array.isArray(result) && result.length > 1) {
+                    return result[1].trim();
+                } else {
+                    return qsTr("BUY");
+                }
+            } else {
+                return qsTr("BUY");
+            }
+        }
+
+        Product {
+            id:         trackedFriendsProduct
+            identifier: "vkgeo.unlockable.trackedfriends"
+            type:       Product.Unlockable
+
+            onPurchaseSucceeded: {
+                mainWindow.disableAds           = true;
+                mainWindow.enableTrackedFriends = true;
+
+                transaction.finalize();
+            }
+
+            onPurchaseRestored: {
+                mainWindow.disableAds           = true;
+                mainWindow.enableTrackedFriends = true;
+
+                transaction.finalize();
+            }
+
+            onPurchaseFailed: {
+                if (transaction.failureReason === Transaction.ErrorOccurred) {
+                    console.log(transaction.errorString);
+                }
+
+                transaction.finalize();
+            }
+        }
+
+        Product {
+            id:         increasedLimitsProduct
+            identifier: "vkgeo.unlockable.increasedlimits"
+            type:       Product.Unlockable
+
+            onPurchaseSucceeded: {
+                mainWindow.disableAds             = true;
+                mainWindow.increaseTrackingLimits = true;
+
+                transaction.finalize();
+            }
+
+            onPurchaseRestored: {
+                mainWindow.disableAds             = true;
+                mainWindow.increaseTrackingLimits = true;
+
+                transaction.finalize();
+            }
+
+            onPurchaseFailed: {
+                if (transaction.failureReason === Transaction.ErrorOccurred) {
+                    console.log(transaction.errorString);
+                }
+
+                transaction.finalize();
+            }
+        }
+    }
+
     StackView {
         id:           mainStackView
         anchors.fill: parent
@@ -150,10 +225,6 @@ Window {
 
     MainPage {
         id: mainPage
-    }
-
-    FeaturesShopPage {
-        id: featuresShopPage
     }
 
     MouseArea {

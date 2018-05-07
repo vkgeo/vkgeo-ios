@@ -2,7 +2,7 @@
     <qresource prefix="/">
         <file>qml/Util.js</file>
         <file>qml/main.qml</file>
-        <file>qml/Core/FeaturesShopPage.qml</file>
+        <file>qml/Core/FeaturesStorePage.qml</file>
         <file>qml/Core/FriendProfilePage.qml</file>
         <file>qml/Core/LoginPage.qml</file>
         <file>qml/Core/MainPage.qml</file>
