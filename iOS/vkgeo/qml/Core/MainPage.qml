@@ -11,7 +11,7 @@ Page {
     id: mainPage
 
     header: Rectangle {
-        height: mainPage.bannerViewHeight + mainPage.safeAreaTopMargin
+        height: Math.max(mainPage.safeAreaTopMargin, mainPage.bannerViewHeight)
         color:  "lightsteelblue"
     }
 
@@ -77,9 +77,9 @@ Page {
 
     property bool appInForeground:     Qt.application.active
 
-    property int bannerViewHeight:     AdMobHelper.bannerViewHeight
     property int safeAreaTopMargin:    0
     property int safeAreaBottomMargin: 0
+    property int bannerViewHeight:     AdMobHelper.bannerViewHeight
     property int vkAuthState:          VKHelper.authState
 
     onAppInForegroundChanged: {

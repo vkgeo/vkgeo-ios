@@ -11,8 +11,8 @@ Page {
     id: friendProfilePage
 
     header: Rectangle {
-        height: friendProfilePage.bannerViewHeight + friendProfilePage.safeAreaTopMargin +
-                                                     headerControlsLayout.height
+        height: Math.max(friendProfilePage.safeAreaTopMargin, friendProfilePage.bannerViewHeight) +
+                headerControlsLayout.height
         color:  "lightsteelblue"
 
         RowLayout {
@@ -68,9 +68,9 @@ Page {
     property bool online:              false
     property bool locationAvailable:   false
 
-    property int bannerViewHeight:     AdMobHelper.bannerViewHeight
     property int safeAreaTopMargin:    0
     property int safeAreaBottomMargin: 0
+    property int bannerViewHeight:     AdMobHelper.bannerViewHeight
 
     property real updateTime:          0.0
 

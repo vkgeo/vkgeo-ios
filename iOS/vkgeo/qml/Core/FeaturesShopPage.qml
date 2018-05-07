@@ -11,8 +11,8 @@ Page {
     id: featuresShopPage
 
     header: Rectangle {
-        height: featuresShopPage.bannerViewHeight + featuresShopPage.safeAreaTopMargin +
-                                                    headerControlsLayout.height
+        height: Math.max(featuresShopPage.safeAreaTopMargin, featuresShopPage.bannerViewHeight) +
+                headerControlsLayout.height
         color:  "lightsteelblue"
 
         RowLayout {
@@ -65,9 +65,9 @@ Page {
         color:  "lightsteelblue"
     }
 
-    property int bannerViewHeight:     AdMobHelper.bannerViewHeight
     property int safeAreaTopMargin:    0
     property int safeAreaBottomMargin: 0
+    property int bannerViewHeight:     AdMobHelper.bannerViewHeight
 
     StackView.onStatusChanged: {
         if (StackView.status === StackView.Activating ||
