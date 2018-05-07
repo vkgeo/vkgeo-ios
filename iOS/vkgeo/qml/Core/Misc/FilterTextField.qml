@@ -8,7 +8,7 @@ Pane {
     id: filterTextField
 
     background: Rectangle {
-        color:        "lightsteelblue"
+        color:        "white"
         radius:       UtilScript.pt(8)
         border.width: UtilScript.pt(1)
         border.color: "steelblue"
