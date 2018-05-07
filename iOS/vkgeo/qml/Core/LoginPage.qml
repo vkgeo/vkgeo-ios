@@ -81,7 +81,7 @@ Page {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 onClicked: {
-                    Qt.openUrlExternally(qsTr("https://vkgeo.sourceforge.io/"));
+                    Qt.openUrlExternally(qsTr("https://vkgeo.sourceforge.io/en/privacy.php"));
                 }
             }
         }
