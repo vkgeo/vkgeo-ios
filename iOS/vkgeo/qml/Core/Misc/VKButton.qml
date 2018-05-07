@@ -13,6 +13,7 @@ Rectangle {
 
     Text {
         anchors.fill:        parent
+        anchors.margins:     UtilScript.pt(2)
         text:                vkButton.text
         color:               "white"
         font.pointSize:      16
@@ -20,7 +21,7 @@ Rectangle {
         font.bold:           true
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment:   Text.AlignVCenter
-        wrapMode:            Text.Wrap
+        wrapMode:            Text.NoWrap
         fontSizeMode:        Text.Fit
         minimumPointSize:    8
     }
