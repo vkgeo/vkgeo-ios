@@ -5,164 +5,164 @@
     <name>FriendProfilePage</name>
     <message>
         <source>Friend profile</source>
-        <translation type="unfinished"></translation>
+        <translation>Профиль друга</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Закрыть</translation>
     </message>
     <message>
         <source>Locate on map</source>
-        <translation type="unfinished"></translation>
+        <translation>Показать на карте</translation>
     </message>
     <message>
         <source>Open profile</source>
-        <translation type="unfinished"></translation>
+        <translation>Открыть профиль</translation>
     </message>
 </context>
 <context>
     <name>FriendsSwipe</name>
     <message>
         <source>I invite you to install the VKGeo app and join the community</source>
-        <translation type="unfinished"></translation>
+        <translation>Я приглашаю вас установить приложение VKGeo и присоединиться к сообществу</translation>
     </message>
     <message>
         <source>Quick search</source>
-        <translation type="unfinished"></translation>
+        <translation>Быстрый поиск</translation>
     </message>
 </context>
 <context>
     <name>LoginPage</name>
     <message>
         <source>Sign in with your VK account</source>
-        <translation type="unfinished"></translation>
+        <translation>Войдите в свой профиль ВКонтакте</translation>
     </message>
     <message>
         <source>Privacy policy</source>
-        <translation type="unfinished"></translation>
+        <translation>Политика конфиденциальности</translation>
     </message>
     <message>
         <source>https://vkgeo.sourceforge.io/en/privacy.php</source>
-        <translation type="unfinished"></translation>
+        <translation>https://vkgeo.sourceforge.io/ru/privacy.php</translation>
     </message>
 </context>
 <context>
     <name>SettingsSwipe</name>
     <message>
         <source>You can see the location of trusted friends, if they also treat you as a trusted friend, and they &lt;b&gt;can see your location&lt;/b&gt;.</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы можете видеть местоположение доверенных друзей, если они также считают вас доверенным другом, и они &lt;b&gt;могут видеть ваше местоположение&lt;/b&gt;.</translation>
     </message>
     <message>
         <source>Currently you can have up to %1 trusted friends.</source>
-        <translation type="unfinished"></translation>
+        <translation>В данный момент вы можете иметь не более %1 доверенных друзей.</translation>
     </message>
     <message>
         <source>Currently you can&apos;t have trusted friends.</source>
-        <translation type="unfinished"></translation>
+        <translation>В данный момент вы не можете иметь доверенных друзей.</translation>
     </message>
     <message>
         <source>Trusted friends list</source>
-        <translation type="unfinished"></translation>
+        <translation>Список доверенных друзей</translation>
     </message>
     <message>
         <source>You can see the location of tracked friends, if they treat you as a trusted friend, but they &lt;b&gt;cannot see your location&lt;/b&gt;.</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы можете видеть местоположение отслеживаемых друзей, если они считают вас доверенным другом, но они &lt;b&gt;не могут видеть ваше местоположение&lt;/b&gt;.</translation>
     </message>
     <message>
         <source>Currently you can have up to %1 tracked friends.</source>
-        <translation type="unfinished"></translation>
+        <translation>В данный момент вы можете иметь не более %1 отслеживаемых друзей.</translation>
     </message>
     <message>
         <source>Currently you can&apos;t have tracked friends. Please visit Store for details.</source>
-        <translation type="unfinished"></translation>
+        <translation>В данный момент вы не можете иметь отслеживаемых друзей. Пожалуйста, посетите Магазин для получения дополнительной информации.</translation>
     </message>
     <message>
         <source>Tracked friends list</source>
-        <translation type="unfinished"></translation>
+        <translation>Список отслеживаемых друзей</translation>
     </message>
     <message>
         <source>Store</source>
-        <translation type="unfinished"></translation>
+        <translation>Магазин</translation>
     </message>
     <message>
         <source>Support</source>
-        <translation type="unfinished"></translation>
+        <translation>Поддержка</translation>
     </message>
     <message>
         <source>Log out of VK</source>
-        <translation type="unfinished"></translation>
+        <translation>Выход из ВКонтакте</translation>
     </message>
 </context>
 <context>
     <name>StorePage</name>
     <message>
         <source>Store</source>
-        <translation type="unfinished"></translation>
+        <translation>Магазин</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Закрыть</translation>
     </message>
     <message>
         <source>Tracked friends</source>
-        <translation type="unfinished"></translation>
+        <translation>Отслеживаемые друзья</translation>
     </message>
     <message>
         <source>Tracking limits x 3</source>
-        <translation type="unfinished"></translation>
+        <translation>Лимиты отслеживания x 3</translation>
     </message>
     <message>
         <source>Restore purchases</source>
-        <translation type="unfinished"></translation>
+        <translation>Восстановить покупки</translation>
     </message>
     <message>
         <source>OK</source>
-        <translation type="unfinished"></translation>
+        <translation>OK</translation>
     </message>
 </context>
 <context>
     <name>TrackedFriendsPage</name>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Отменить</translation>
     </message>
     <message>
         <source>Tracked friends</source>
-        <translation type="unfinished"></translation>
+        <translation>Отслеживаемые друзья</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Сохранить</translation>
     </message>
     <message>
         <source>Quick search</source>
-        <translation type="unfinished"></translation>
+        <translation>Быстрый поиск</translation>
     </message>
 </context>
 <context>
     <name>TrustedFriendsPage</name>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Отменить</translation>
     </message>
     <message>
         <source>Trusted friends</source>
-        <translation type="unfinished"></translation>
+        <translation>Доверенные друзья</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Сохранить</translation>
     </message>
     <message>
         <source>Quick search</source>
-        <translation type="unfinished"></translation>
+        <translation>Быстрый поиск</translation>
     </message>
 </context>
 <context>
     <name>main</name>
     <message>
         <source>BUY</source>
-        <translation type="unfinished"></translation>
+        <translation>КУПИТЬ</translation>
     </message>
 </context>
 </TS>
