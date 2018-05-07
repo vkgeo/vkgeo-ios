@@ -7,10 +7,10 @@ import "Misc"
 import "../Util.js" as UtilScript
 
 Page {
-    id: featuresStorePage
+    id: storePage
 
     header: Rectangle {
-        height: Math.max(featuresStorePage.safeAreaTopMargin, featuresStorePage.bannerViewHeight) +
+        height: Math.max(storePage.safeAreaTopMargin, storePage.bannerViewHeight) +
                 headerControlsLayout.height
         color:  "lightsteelblue"
 
@@ -32,7 +32,7 @@ Page {
             }
 
             Text {
-                text:                qsTr("Features store")
+                text:                qsTr("Store")
                 color:               "white"
                 font.pointSize:      16
                 font.family:         "Helvetica"
@@ -60,7 +60,7 @@ Page {
     }
 
     footer: Rectangle {
-        height: featuresStorePage.safeAreaBottomMargin
+        height: storePage.safeAreaBottomMargin
         color:  "lightsteelblue"
     }
 
@@ -77,12 +77,12 @@ Page {
     }
 
     Flickable {
-        id:                   featuresFlickable
+        id:                   storeFlickable
         anchors.fill:         parent
         anchors.topMargin:    UtilScript.pt(16)
         anchors.bottomMargin: UtilScript.pt(16)
-        contentWidth:         featuresLayout.width
-        contentHeight:        featuresLayout.height
+        contentWidth:         storeLayout.width
+        contentHeight:        storeLayout.height
         clip:                 true
 
         ScrollBar.vertical: ScrollBar {
@@ -90,8 +90,8 @@ Page {
         }
 
         ColumnLayout {
-            id:      featuresLayout
-            width:   featuresFlickable.width
+            id:      storeLayout
+            width:   storeFlickable.width
             spacing: UtilScript.pt(16)
 
             Rectangle {
