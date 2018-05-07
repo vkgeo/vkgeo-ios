@@ -8,11 +8,13 @@ SOURCES += src/main.cpp
 OBJECTIVE_SOURCES += \
     src/vkgeoappdelegate.mm \
     src/admobhelper.mm \
+    src/storehelper.mm \
     src/uihelper.mm \
     src/vkhelper.mm
 
 HEADERS += \
     src/admobhelper.h \
+    src/storehelper.h \
     src/uihelper.h \
     src/vkhelper.h \
     src/vkhelpershared.h

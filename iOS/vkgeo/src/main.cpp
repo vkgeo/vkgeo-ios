@@ -5,6 +5,7 @@
 #include <QtQml/QQmlContext>
 
 #include "admobhelper.h"
+#include "storehelper.h"
 #include "uihelper.h"
 #include "vkhelpershared.h"
 
@@ -24,6 +25,7 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
     engine.rootContext()->setContextProperty(QStringLiteral("AdMobHelper"), new AdMobHelper(&app));
+    engine.rootContext()->setContextProperty(QStringLiteral("StoreHelper"), new StoreHelper(&app));
     engine.rootContext()->setContextProperty(QStringLiteral("UIHelper"), new UIHelper(&app));
 
     if (VKHelperShared != NULL) {
