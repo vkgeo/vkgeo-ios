@@ -32,7 +32,7 @@
     </message>
     <message>
         <source>Invitation sent</source>
-        <translation type="unfinished"></translation>
+        <translation>Приглашение отправлено</translation>
     </message>
 </context>
 <context>
