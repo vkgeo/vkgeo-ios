@@ -92,6 +92,7 @@ Item {
                     profile_page.firstName         = frnd.firstName;
                     profile_page.lastName          = frnd.lastName;
                     profile_page.bigPhotoUrl       = frnd.bigPhotoUrl;
+                    profile_page.screenName        = frnd.screenName;
                     profile_page.status            = frnd.status;
 
                     profile_page.locateFriendOnMap.connect(friendsSwipe.locateFriendOnMap);

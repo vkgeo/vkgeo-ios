@@ -78,6 +78,7 @@ Page {
     property string firstName:         ""
     property string lastName:          ""
     property string bigPhotoUrl:       ""
+    property string screenName:        ""
     property string status:            ""
 
     StackView.onStatusChanged: {
@@ -222,8 +223,8 @@ Page {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 onClicked: {
-                    if (!Qt.openUrlExternally("vk://vk.com/id%1".arg(friendProfilePage.userId))) {
-                        Qt.openUrlExternally("https://m.vk.com/id%1".arg(friendProfilePage.userId));
+                    if (!Qt.openUrlExternally("vk://vk.com/%1".arg(friendProfilePage.screenName))) {
+                        Qt.openUrlExternally("https://m.vk.com/%1".arg(friendProfilePage.screenName));
                     }
                 }
             }

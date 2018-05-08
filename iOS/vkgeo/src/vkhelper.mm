@@ -309,7 +309,7 @@ void VKHelper::updateFriends()
         FriendsDataTmp.clear();
 
         parameters["count"]  = MAX_FRIENDS_GET_COUNT;
-        parameters["fields"] = "photo_100,photo_200_orig,online,last_seen,status";
+        parameters["fields"] = "photo_100,photo_200_orig,online,screen_name,last_seen,status";
 
         request["method"]     = "friends.get";
         request["context"]    = "updateFriends";
@@ -1131,10 +1131,13 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
             if (json_response.contains("count") && json_response.contains("items")) {
                 int     offset        = 0;
                 int     friends_count = json_response.value("count").toInt();
-                QString list_id;
+                QString fields, list_id;
 
                 if (resp_request.contains("parameters") && resp_request["parameters"].toMap().contains("offset")) {
                     offset = (resp_request["parameters"].toMap())["offset"].toInt();
+                }
+                if (resp_request.contains("parameters") && resp_request["parameters"].toMap().contains("fields")) {
+                    fields = (resp_request["parameters"].toMap())["fields"].toString();
                 }
                 if (resp_request.contains("parameters") && resp_request["parameters"].toMap().contains("list_id")) {
                     list_id = (resp_request["parameters"].toMap())["list_id"].toString();
@@ -1178,6 +1181,11 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
                                     frnd["online"] = json_friend.value("online").toInt() ? true : false;
                                 } else {
                                     frnd["online"] = false;
+                                }
+                                if (json_friend.contains("screen_name")) {
+                                    frnd["screenName"] = json_friend.value("screen_name").toString();
+                                } else {
+                                    frnd["screenName"] = QString("id%1").arg(frnd["userId"].toString());
                                 }
                                 if (json_friend.contains("status")) {
                                     frnd["status"] = json_friend.value("status").toString();
@@ -1236,13 +1244,13 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
                 if (offset + json_items.count() < friends_count) {
                     QVariantMap request, parameters;
 
-                    if (list_id == "") {
-                        parameters["count"]  = MAX_FRIENDS_GET_COUNT;
-                        parameters["offset"] = offset + json_items.count();
-                        parameters["fields"] = "photo_100,photo_200_orig,online,last_seen,status";
-                    } else {
-                        parameters["count"]   = MAX_FRIENDS_GET_COUNT;
-                        parameters["offset"]  = offset + json_items.count();
+                    parameters["count"]  = MAX_FRIENDS_GET_COUNT;
+                    parameters["offset"] = offset + json_items.count();
+
+                    if (fields != "") {
+                        parameters["fields"] = fields;
+                    }
+                    if (list_id != "") {
                         parameters["list_id"] = list_id.toInt();
                     }
 
