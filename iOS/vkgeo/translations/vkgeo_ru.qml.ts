@@ -30,6 +30,10 @@
         <source>Quick search</source>
         <translation>Быстрый поиск</translation>
     </message>
+    <message>
+        <source>Invitation sent</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>LoginPage</name>
