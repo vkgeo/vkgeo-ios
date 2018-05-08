@@ -9,7 +9,7 @@
 
 #include "vkhelper.h"
 
-const QString VKHelper::DEFAULT_PHOTO_URL        ("https://vk.com/images/camera_50.png");
+const QString VKHelper::DEFAULT_PHOTO_URL        ("https://vk.com/images/camera_100.png");
 const QString VKHelper::DATA_NOTE_TITLE          ("VKGeo Data");
 const QString VKHelper::TRUSTED_FRIENDS_LIST_NAME("VKGeo Trusted Friends");
 const QString VKHelper::TRACKED_FRIENDS_LIST_NAME("VKGeo Tracked Friends");
@@ -495,8 +495,8 @@ void VKHelper::setAuthState(const int &state)
     if (Instance->AuthState == VKAuthState::StateAuthorized) {
         VKAccessToken *token = [VKSdk accessToken];
 
-        if (token != nil && token.localUser != nil && token.localUser.photo_50 != nil) {
-            Instance->PhotoUrl = QString::fromNSString(token.localUser.photo_50);
+        if (token != nil && token.localUser != nil && token.localUser.photo_100 != nil) {
+            Instance->PhotoUrl = QString::fromNSString(token.localUser.photo_100);
         } else {
             Instance->PhotoUrl = DEFAULT_PHOTO_URL;
         }
