@@ -120,6 +120,12 @@ Window {
         }
     }
 
+    function showInterstitial() {
+        if (!disableAds && AdMobHelper.interstitialReady) {
+            AdMobHelper.showInterstitial();
+        }
+    }
+
     Store {
         id: store
 
