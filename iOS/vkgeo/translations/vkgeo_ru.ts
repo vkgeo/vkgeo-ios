@@ -23,10 +23,6 @@
 <context>
     <name>FriendsSwipe</name>
     <message>
-        <source>I invite you to install the VKGeo app and join the community</source>
-        <translation type="vanished">Я приглашаю вас установить приложение VKGeo и присоединиться к сообществу</translation>
-    </message>
-    <message>
         <source>Quick search</source>
         <translation>Быстрый поиск</translation>
     </message>

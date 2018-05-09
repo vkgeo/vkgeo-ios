@@ -23,10 +23,6 @@
 <context>
     <name>FriendsSwipe</name>
     <message>
-        <source>I invite you to install the VKGeo app and join the community</source>
-        <translation type="vanished">Я приглашаю вас установить приложение VKGeo и присоединиться к сообществу</translation>
-    </message>
-    <message>
         <source>Quick search</source>
         <translation>Быстрый поиск</translation>
     </message>
@@ -36,15 +32,15 @@
     </message>
     <message>
         <source>I invite you to install the VKGeo app and join the community: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Я приглашаю вас установить приложение VKGeo и присоединиться к сообществу: %1</translation>
     </message>
     <message>
         <source>Invite friend</source>
-        <translation type="unfinished"></translation>
+        <translation>Пригласить друга</translation>
     </message>
     <message>
         <source>Do you want to send an invitation to this friend?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы действительно хотите отослать приглашение этому другу?</translation>
     </message>
 </context>
 <context>
