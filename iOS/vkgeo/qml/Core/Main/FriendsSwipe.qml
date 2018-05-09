@@ -1,6 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
+import QtQuick.Dialogs 1.2
 import QtGraphicalEffects 1.0
 
 import "../Misc"
@@ -106,7 +107,8 @@ Item {
     }
 
     function inviteUser(user_id) {
-        VKHelper.inviteUser(user_id, qsTr("I invite you to install the VKGeo app and join the community"));
+        VKHelper.sendMessage(user_id, qsTr("I invite you to install the VKGeo app and join the community: %1")
+                                          .arg("https://itunes.apple.com/app/id1381218973"));
 
         for (var i = 0; i < friendsList.length; i++) {
             var frnd = friendsList[i];
@@ -433,9 +435,25 @@ Item {
                 }
 
                 function inviteUser(user_id) {
-                    friendsSwipe.inviteUser(user_id);
+                    inviteMessageDialog.userId = user_id;
+
+                    inviteMessageDialog.open();
                 }
             }
+        }
+    }
+
+    MessageDialog {
+        id:              inviteMessageDialog
+        title:           qsTr("Invite user")
+        icon:            StandardIcon.Question
+        text:            qsTr("Do you want to send an invitation to this user?")
+        standardButtons: StandardButton.Yes | StandardButton.No
+
+        property string userId: ""
+
+        onYes: {
+            friendsSwipe.inviteUser(userId);
         }
     }
 

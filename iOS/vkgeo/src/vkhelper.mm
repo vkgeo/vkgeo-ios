@@ -14,7 +14,7 @@ const QString VKHelper::DATA_NOTE_TITLE          ("VKGeo Data");
 const QString VKHelper::TRUSTED_FRIENDS_LIST_NAME("VKGeo Trusted Friends");
 const QString VKHelper::TRACKED_FRIENDS_LIST_NAME("VKGeo Tracked Friends");
 
-static NSArray *AUTH_SCOPE = @[ @"friends", @"notes", @"offline" ];
+static NSArray *AUTH_SCOPE = @[ @"friends", @"notes", @"messages", @"offline" ];
 
 VKHelper *VKHelper::Instance = NULL;
 
@@ -469,17 +469,16 @@ void VKHelper::updateTrackedFriendsLocations(bool expedited)
     }
 }
 
-void VKHelper::inviteUser(QString user_id, QString request_text)
+void VKHelper::sendMessage(QString user_id, QString message)
 {
     if (Initialized) {
         QVariantMap request, parameters;
 
         parameters["user_id"] = user_id;
-        parameters["text"]    = request_text;
-        parameters["type"]    = "invite";
+        parameters["message"] = message;
 
-        request["method"]     = "apps.sendRequest";
-        request["context"]    = "inviteUser";
+        request["method"]     = "messages.send";
+        request["context"]    = "sendMessage";
         request["parameters"] = parameters;
 
         EnqueueRequest(request);
@@ -870,7 +869,7 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
             ContextTrackerAddRequest(request);
 
             return vk_request;
-        } else if (request["method"].toString() == "apps.sendRequest") {
+        } else if (request["method"].toString() == "messages.send") {
             VKRequest *vk_request = [VKRequest requestWithMethod:request["method"].toString().toNSString() parameters:vk_parameters];
 
             vk_request.completeBlock = ^(VKResponse *response) {
@@ -879,7 +878,7 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
 
                     ContextTrackerDelRequest(request);
 
-                    ProcessAppsSendRequestResponse(QString::fromNSString(response.responseString), request);
+                    ProcessMessagesSendResponse(QString::fromNSString(response.responseString), request);
                 }
             };
             vk_request.errorBlock = ^(NSError *error) {
@@ -891,7 +890,7 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
 
                     ContextTrackerDelRequest(request);
 
-                    ProcessAppsSendRequestError(request);
+                    ProcessMessagesSendError(request);
                 }
             };
 
@@ -1601,13 +1600,13 @@ void VKHelper::ProcessFriendsEditListError(QVariantMap err_request)
     }
 }
 
-void VKHelper::ProcessAppsSendRequestResponse(QString response, QVariantMap resp_request)
+void VKHelper::ProcessMessagesSendResponse(QString response, QVariantMap resp_request)
 {
     Q_UNUSED(response)
     Q_UNUSED(resp_request)
 }
 
-void VKHelper::ProcessAppsSendRequestError(QVariantMap err_request)
+void VKHelper::ProcessMessagesSendError(QVariantMap err_request)
 {
     Q_UNUSED(err_request)
 }
