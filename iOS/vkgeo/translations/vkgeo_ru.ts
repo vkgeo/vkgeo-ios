@@ -39,11 +39,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Invite user</source>
+        <source>Invite friend</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Do you want to send an invitation to this user?</source>
+        <source>Do you want to send an invitation to this friend?</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
