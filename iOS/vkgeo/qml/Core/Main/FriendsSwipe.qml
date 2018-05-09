@@ -133,6 +133,74 @@ Item {
         invitationToast.visible = true;
     }
 
+    Rectangle {
+        id:              invitationToast
+        anchors.top:     parent.top
+        anchors.left:    parent.left
+        anchors.right:   parent.right
+        anchors.margins: UtilScript.pt(4)
+        height:          UtilScript.pt(48)
+        z:               1
+        color:           "lightsteelblue"
+        radius:          UtilScript.pt(8)
+        visible:         false
+
+        onVisibleChanged: {
+            if (visible) {
+                invitationToastAnimation.start();
+            }
+        }
+
+        Text {
+            anchors.fill:        parent
+            anchors.margins:     UtilScript.pt(2)
+            text:                qsTr("Invitation sent")
+            color:               "white"
+            font.pointSize:      16
+            font.family:         "Helvetica"
+            font.bold:           true
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment:   Text.AlignVCenter
+            wrapMode:            Text.Wrap
+            fontSizeMode:        Text.Fit
+            minimumPointSize:    8
+        }
+
+        MouseArea {
+            anchors.fill: parent
+        }
+
+        SequentialAnimation {
+            id: invitationToastAnimation
+
+            NumberAnimation {
+                target:   invitationToast
+                property: "opacity"
+                from:     0.0
+                to:       1.0
+                duration: 250
+            }
+
+            PauseAnimation {
+                duration: 500
+            }
+
+            NumberAnimation {
+                target:   invitationToast
+                property: "opacity"
+                from:     1.0
+                to:       0.0
+                duration: 250
+            }
+
+            ScriptAction {
+                script: {
+                    invitationToast.visible = false;
+                }
+            }
+        }
+    }
+
     ColumnLayout {
         anchors.fill:      parent
         anchors.topMargin: UtilScript.pt(4)
@@ -160,24 +228,72 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 width:                    UtilScript.pt(64)
                 height:                   UtilScript.pt(64)
+                z:                        1
                 source:                   "qrc:/resources/images/main/refresh.png"
                 fillMode:                 Image.PreserveAspectFit
-                visible:                  false
+                rotation:                 calculateRotation(height, listViewOriginY, listViewContentY,
+                                                            refreshImageAnimation.running)
+                visible:                  listViewContentY < listViewOriginY
+
+                property bool timerStarted:     false
+                property real listViewOriginY:  friendsListView.originY
+                property real listViewContentY: friendsListView.contentY
+
+                onVisibleChanged: {
+                    if (!visible) {
+                        refreshImageAnimation.stop();
+                    }
+                }
+
+                onListViewContentYChanged: {
+                    if (listViewOriginY - listViewContentY > height) {
+                        if (!timerStarted) {
+                            timerStarted = true;
+
+                            refreshTimer.start();
+                        }
+                    } else {
+                        timerStarted = false;
+
+                        refreshTimer.stop();
+                    }
+                }
+
+                function calculateRotation(height, list_view_origin_y, list_view_content_y, animation_running) {
+                    if (animation_running) {
+                        return rotation;
+                    } else if (height > 0 && list_view_content_y < list_view_origin_y) {
+                        return 360 * ((list_view_origin_y - list_view_content_y) / height);
+                    } else {
+                        return 0;
+                    }
+                }
 
                 PropertyAnimation {
+                    id:       refreshImageAnimation
                     target:   refreshImage
                     property: "rotation"
                     from:     0
                     to:       360
                     duration: 500
                     loops:    Animation.Infinite
-                    running:  refreshImage.visible
+                }
+
+                Timer {
+                    id:       refreshTimer
+                    interval: 500
+
+                    onTriggered: {
+                        refreshImageAnimation.start();
+
+                        VKHelper.updateFriends();
+                    }
                 }
             }
 
             ListView {
+                id:           friendsListView
                 anchors.fill: parent
-                z:            1
                 orientation:  ListView.Vertical
                 clip:         true
 
@@ -308,24 +424,6 @@ Item {
                     policy: ScrollBar.AlwaysOn
                 }
 
-                property bool refreshStarted: false
-
-                onContentYChanged: {
-                    if (contentY < 0 - refreshImage.height) {
-                        if (!refreshStarted) {
-                            refreshStarted = true;
-
-                            refreshTimer.start();
-                        }
-                    } else {
-                        refreshImage.visible = false;
-
-                        refreshStarted = false;
-
-                        refreshTimer.stop();
-                    }
-                }
-
                 function openProfilePage(user_id) {
                     friendsSwipe.openProfilePage(user_id);
                 }
@@ -336,85 +434,6 @@ Item {
 
                 function inviteUser(user_id) {
                     friendsSwipe.inviteUser(user_id);
-                }
-
-                Timer {
-                    id:       refreshTimer
-                    interval: 500
-
-                    onTriggered: {
-                        refreshImage.visible = true;
-
-                        VKHelper.updateFriends();
-                    }
-                }
-            }
-        }
-    }
-
-    Rectangle {
-        id:              invitationToast
-        anchors.top:     parent.top
-        anchors.left:    parent.left
-        anchors.right:   parent.right
-        anchors.margins: UtilScript.pt(4)
-        height:          UtilScript.pt(48)
-        z:               1
-        color:           "lightsteelblue"
-        radius:          UtilScript.pt(8)
-        visible:         false
-
-        onVisibleChanged: {
-            if (visible) {
-                invitationToastAnimation.start();
-            }
-        }
-
-        Text {
-            anchors.fill:        parent
-            anchors.margins:     UtilScript.pt(2)
-            text:                qsTr("Invitation sent")
-            color:               "white"
-            font.pointSize:      16
-            font.family:         "Helvetica"
-            font.bold:           true
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment:   Text.AlignVCenter
-            wrapMode:            Text.Wrap
-            fontSizeMode:        Text.Fit
-            minimumPointSize:    8
-        }
-
-        MouseArea {
-            anchors.fill: parent
-        }
-
-        SequentialAnimation {
-            id: invitationToastAnimation
-
-            NumberAnimation {
-                target:   invitationToast
-                property: "opacity"
-                from:     0.0
-                to:       1.0
-                duration: 250
-            }
-
-            PauseAnimation {
-                duration: 500
-            }
-
-            NumberAnimation {
-                target:   invitationToast
-                property: "opacity"
-                from:     1.0
-                to:       0.0
-                duration: 250
-            }
-
-            ScriptAction {
-                script: {
-                    invitationToast.visible = false;
                 }
             }
         }
