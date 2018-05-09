@@ -106,7 +106,7 @@ Item {
         }
     }
 
-    function inviteUser(user_id) {
+    function inviteFriend(user_id) {
         VKHelper.sendMessage(user_id, qsTr("I invite you to install the VKGeo app and join the community: %1")
                                           .arg("https://itunes.apple.com/app/id1381218973"));
 
@@ -414,7 +414,7 @@ Item {
                                     if (locationAvailable) {
                                         friendDelegate.listView.locateFriendOnMap(userId);
                                     } else if (!invited) {
-                                        friendDelegate.listView.inviteUser(userId);
+                                        friendDelegate.listView.inviteFriend(userId);
                                     }
                                 }
                             }
@@ -434,7 +434,7 @@ Item {
                     friendsSwipe.locateFriendOnMap(user_id);
                 }
 
-                function inviteUser(user_id) {
+                function inviteFriend(user_id) {
                     inviteMessageDialog.userId = user_id;
 
                     inviteMessageDialog.open();
@@ -445,15 +445,15 @@ Item {
 
     MessageDialog {
         id:              inviteMessageDialog
-        title:           qsTr("Invite user")
+        title:           qsTr("Invite friend")
         icon:            StandardIcon.Question
-        text:            qsTr("Do you want to send an invitation to this user?")
+        text:            qsTr("Do you want to send an invitation to this friend?")
         standardButtons: StandardButton.Yes | StandardButton.No
 
         property string userId: ""
 
         onYes: {
-            friendsSwipe.inviteUser(userId);
+            friendsSwipe.inviteFriend(userId);
         }
     }
 
