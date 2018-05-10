@@ -21,7 +21,7 @@
     </message>
     <message>
         <source>Location updated at: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Последнее обновление местоположения: %1</translation>
     </message>
 </context>
 <context>
