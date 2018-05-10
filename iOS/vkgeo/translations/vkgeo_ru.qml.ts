@@ -19,6 +19,10 @@
         <source>Open profile</source>
         <translation>Открыть профиль</translation>
     </message>
+    <message>
+        <source>Location updated at: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FriendsSwipe</name>

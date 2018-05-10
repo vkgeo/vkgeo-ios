@@ -186,8 +186,8 @@ Page {
             Text {
                 leftPadding:         UtilScript.pt(16)
                 rightPadding:        UtilScript.pt(16)
-                text:                "Location updated at: %1".arg((new Date(friendProfilePage.updateTime * 1000))
-                                                                        .toLocaleString())
+                text:                qsTr("Location updated at: %1").arg((new Date(friendProfilePage.updateTime * 1000))
+                                                                              .toLocaleString())
                 color:               "black"
                 font.pointSize:      16
                 font.family:         "Helvetica"
