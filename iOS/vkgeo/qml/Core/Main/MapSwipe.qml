@@ -128,7 +128,7 @@ Item {
         property var trackedMapItem:        null
 
         plugin: Plugin {
-            name: "osm"
+            name: "esri"
         }
 
         onBearingChanged: {
