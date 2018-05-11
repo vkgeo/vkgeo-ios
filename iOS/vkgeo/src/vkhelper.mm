@@ -14,7 +14,7 @@ const QString VKHelper::DATA_NOTE_TITLE          ("VKGeo Data");
 const QString VKHelper::TRUSTED_FRIENDS_LIST_NAME("VKGeo Trusted Friends");
 const QString VKHelper::TRACKED_FRIENDS_LIST_NAME("VKGeo Tracked Friends");
 
-static NSArray *AUTH_SCOPE = @[ @"friends", @"notes", @"messages", @"offline" ];
+static NSArray *AUTH_SCOPE = @[ @"friends", @"notes", @"messages", @"groups", @"offline" ];
 
 VKHelper *VKHelper::Instance = NULL;
 
@@ -502,6 +502,21 @@ void VKHelper::sendInvitation(QString user_id, QString text)
     }
 }
 
+void VKHelper::joinGroup(QString group_id)
+{
+    if (Initialized) {
+        QVariantMap request, parameters;
+
+        parameters["group_id"] = group_id.toInt();
+
+        request["method"]     = "groups.join";
+        request["context"]    = "joinGroup";
+        request["parameters"] = parameters;
+
+        EnqueueRequest(request);
+    }
+}
+
 void VKHelper::setAuthState(const int &state)
 {
     Instance->AuthState = state;
@@ -938,6 +953,36 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
                     ContextTrackerDelRequest(request);
 
                     ProcessAppsSendRequestError(request);
+                }
+            };
+
+            VKRequestTracker[vk_request] = true;
+
+            ContextTrackerAddRequest(request);
+
+            return vk_request;
+        } else if (request["method"].toString() == "groups.join") {
+            VKRequest *vk_request = [VKRequest requestWithMethod:request["method"].toString().toNSString() parameters:vk_parameters];
+
+            vk_request.completeBlock = ^(VKResponse *response) {
+                if (VKRequestTracker.contains(vk_request)) {
+                    VKRequestTracker.remove(vk_request);
+
+                    ContextTrackerDelRequest(request);
+
+                    ProcessGroupsJoinResponse(QString::fromNSString(response.responseString), request);
+                }
+            };
+            vk_request.errorBlock = ^(NSError *error) {
+                qWarning() << QString("ProcessRequest() : %1 request failed : %2").arg(QString::fromNSString(vk_request.methodName))
+                                                                                  .arg(QString::fromNSString([error localizedDescription]));
+
+                if (VKRequestTracker.contains(vk_request)) {
+                    VKRequestTracker.remove(vk_request);
+
+                    ContextTrackerDelRequest(request);
+
+                    ProcessGroupsJoinError(request);
                 }
             };
 
@@ -1665,6 +1710,17 @@ void VKHelper::ProcessAppsSendRequestResponse(QString response, QVariantMap resp
 }
 
 void VKHelper::ProcessAppsSendRequestError(QVariantMap err_request)
+{
+    Q_UNUSED(err_request)
+}
+
+void VKHelper::ProcessGroupsJoinResponse(QString response, QVariantMap resp_request)
+{
+    Q_UNUSED(response)
+    Q_UNUSED(resp_request)
+}
+
+void VKHelper::ProcessGroupsJoinError(QVariantMap err_request)
 {
     Q_UNUSED(err_request)
 }

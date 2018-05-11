@@ -91,6 +91,8 @@ public:
     Q_INVOKABLE void sendMessage(QString user_id, QString message);
     Q_INVOKABLE void sendInvitation(QString user_id, QString text);
 
+    Q_INVOKABLE void joinGroup(QString group_id);
+
     static void setAuthState(const int &state);
 
 signals:
@@ -145,6 +147,9 @@ private:
 
     void ProcessAppsSendRequestResponse(QString response, QVariantMap resp_request);
     void ProcessAppsSendRequestError(QVariantMap err_request);
+
+    void ProcessGroupsJoinResponse(QString response, QVariantMap resp_request);
+    void ProcessGroupsJoinError(QVariantMap err_request);
 
     bool                         Initialized;
     int                          AuthState, MaxTrustedFriendsCount, MaxTrackedFriendsCount;

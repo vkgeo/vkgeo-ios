@@ -134,7 +134,7 @@ Item {
         invitationToast.visible = true;
     }
 
-    Rectangle {
+    Toast {
         id:              invitationToast
         anchors.top:     parent.top
         anchors.left:    parent.left
@@ -142,64 +142,7 @@ Item {
         anchors.margins: UtilScript.pt(4)
         height:          UtilScript.pt(48)
         z:               1
-        color:           "lightsteelblue"
-        radius:          UtilScript.pt(8)
-        visible:         false
-
-        onVisibleChanged: {
-            if (visible) {
-                invitationToastAnimation.start();
-            }
-        }
-
-        Text {
-            anchors.fill:        parent
-            anchors.margins:     UtilScript.pt(2)
-            text:                qsTr("Invitation sent")
-            color:               "white"
-            font.pointSize:      16
-            font.family:         "Helvetica"
-            font.bold:           true
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment:   Text.AlignVCenter
-            wrapMode:            Text.Wrap
-            fontSizeMode:        Text.Fit
-            minimumPointSize:    8
-        }
-
-        MouseArea {
-            anchors.fill: parent
-        }
-
-        SequentialAnimation {
-            id: invitationToastAnimation
-
-            NumberAnimation {
-                target:   invitationToast
-                property: "opacity"
-                from:     0.0
-                to:       1.0
-                duration: 250
-            }
-
-            PauseAnimation {
-                duration: 500
-            }
-
-            NumberAnimation {
-                target:   invitationToast
-                property: "opacity"
-                from:     1.0
-                to:       0.0
-                duration: 250
-            }
-
-            ScriptAction {
-                script: {
-                    invitationToast.visible = false;
-                }
-            }
-        }
+        text:            qsTr("Invitation sent")
     }
 
     ColumnLayout {

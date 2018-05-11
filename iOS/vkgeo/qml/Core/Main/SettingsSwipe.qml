@@ -1,6 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
+import QtQuick.Dialogs 1.2
 
 import "../Misc"
 
@@ -8,6 +9,17 @@ import "../../Util.js" as UtilScript
 
 Item {
     id: settingsSwipe
+
+    Toast {
+        id:              joinGroupToast
+        anchors.top:     parent.top
+        anchors.left:    parent.left
+        anchors.right:   parent.right
+        anchors.margins: UtilScript.pt(4)
+        height:          UtilScript.pt(48)
+        z:               1
+        text:            qsTr("Group membership request sent")
+    }
 
     Flickable {
         id:                   settingsFlickable
@@ -174,6 +186,12 @@ Item {
                 }
             }
 
+            ToolSeparator {
+                orientation:      Qt.Horizontal
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignVCenter
+            }
+
             VKButton {
                 width:            UtilScript.pt(280)
                 height:           UtilScript.pt(64)
@@ -190,6 +208,34 @@ Item {
             VKButton {
                 width:            UtilScript.pt(280)
                 height:           UtilScript.pt(64)
+                text:             qsTr("Join VKGeo group")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                onClicked: {
+                    joinVKGeoGroupMessageDialog.open();
+                }
+            }
+
+            VKButton {
+                width:            UtilScript.pt(280)
+                height:           UtilScript.pt(64)
+                text:             qsTr("Join VKGames group")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                onClicked: {
+                    joinVKGamesGroupMessageDialog.open();
+                }
+            }
+
+            ToolSeparator {
+                orientation:      Qt.Horizontal
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignVCenter
+            }
+
+            VKButton {
+                width:            UtilScript.pt(280)
+                height:           UtilScript.pt(64)
                 text:             qsTr("Log out of VK")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
@@ -197,6 +243,34 @@ Item {
                     VKHelper.logout();
                 }
             }
+        }
+    }
+
+    MessageDialog {
+        id:              joinVKGeoGroupMessageDialog
+        title:           qsTr("Join group")
+        icon:            StandardIcon.Question
+        text:            qsTr("Do you want to join the VKGeo group?")
+        standardButtons: StandardButton.Yes | StandardButton.No
+
+        onYes: {
+            VKHelper.joinGroup("166101702");
+
+            joinGroupToast.visible = true;
+        }
+    }
+
+    MessageDialog {
+        id:              joinVKGamesGroupMessageDialog
+        title:           qsTr("Join group")
+        icon:            StandardIcon.Question
+        text:            qsTr("Do you want to join the VKGames group?")
+        standardButtons: StandardButton.Yes | StandardButton.No
+
+        onYes: {
+            VKHelper.joinGroup("78616012");
+
+            joinGroupToast.visible = true;
         }
     }
 }
