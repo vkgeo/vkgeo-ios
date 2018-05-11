@@ -89,6 +89,7 @@ public:
     Q_INVOKABLE void updateTrackedFriendsLocations(bool expedited);
 
     Q_INVOKABLE void sendMessage(QString user_id, QString message);
+    Q_INVOKABLE void sendInvitation(QString user_id, QString text);
 
     static void setAuthState(const int &state);
 
@@ -141,6 +142,9 @@ private:
 
     void ProcessMessagesSendResponse(QString response, QVariantMap resp_request);
     void ProcessMessagesSendError(QVariantMap err_request);
+
+    void ProcessAppsSendRequestResponse(QString response, QVariantMap resp_request);
+    void ProcessAppsSendRequestError(QVariantMap err_request);
 
     bool                         Initialized;
     int                          AuthState, MaxTrustedFriendsCount, MaxTrackedFriendsCount;

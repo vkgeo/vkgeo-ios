@@ -485,6 +485,23 @@ void VKHelper::sendMessage(QString user_id, QString message)
     }
 }
 
+void VKHelper::sendInvitation(QString user_id, QString text)
+{
+    if (Initialized) {
+        QVariantMap request, parameters;
+
+        parameters["user_id"] = user_id;
+        parameters["text"]    = text;
+        parameters["type"]    = "invite";
+
+        request["method"]     = "apps.sendRequest";
+        request["context"]    = "sendInvitation";
+        request["parameters"] = parameters;
+
+        EnqueueRequest(request);
+    }
+}
+
 void VKHelper::setAuthState(const int &state)
 {
     Instance->AuthState = state;
@@ -891,6 +908,36 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
                     ContextTrackerDelRequest(request);
 
                     ProcessMessagesSendError(request);
+                }
+            };
+
+            VKRequestTracker[vk_request] = true;
+
+            ContextTrackerAddRequest(request);
+
+            return vk_request;
+        } else if (request["method"].toString() == "apps.sendRequest") {
+            VKRequest *vk_request = [VKRequest requestWithMethod:request["method"].toString().toNSString() parameters:vk_parameters];
+
+            vk_request.completeBlock = ^(VKResponse *response) {
+                if (VKRequestTracker.contains(vk_request)) {
+                    VKRequestTracker.remove(vk_request);
+
+                    ContextTrackerDelRequest(request);
+
+                    ProcessAppsSendRequestResponse(QString::fromNSString(response.responseString), request);
+                }
+            };
+            vk_request.errorBlock = ^(NSError *error) {
+                qWarning() << QString("ProcessRequest() : %1 request failed : %2").arg(QString::fromNSString(vk_request.methodName))
+                                                                                  .arg(QString::fromNSString([error localizedDescription]));
+
+                if (VKRequestTracker.contains(vk_request)) {
+                    VKRequestTracker.remove(vk_request);
+
+                    ContextTrackerDelRequest(request);
+
+                    ProcessAppsSendRequestError(request);
                 }
             };
 
@@ -1607,6 +1654,17 @@ void VKHelper::ProcessMessagesSendResponse(QString response, QVariantMap resp_re
 }
 
 void VKHelper::ProcessMessagesSendError(QVariantMap err_request)
+{
+    Q_UNUSED(err_request)
+}
+
+void VKHelper::ProcessAppsSendRequestResponse(QString response, QVariantMap resp_request)
+{
+    Q_UNUSED(response)
+    Q_UNUSED(resp_request)
+}
+
+void VKHelper::ProcessAppsSendRequestError(QVariantMap err_request)
 {
     Q_UNUSED(err_request)
 }
