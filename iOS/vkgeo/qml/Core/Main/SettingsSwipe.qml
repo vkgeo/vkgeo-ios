@@ -236,6 +236,32 @@ Item {
             VKButton {
                 width:            UtilScript.pt(280)
                 height:           UtilScript.pt(64)
+                text:             qsTr("View my VK profile")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                onClicked: {
+                    var component = Qt.createComponent("../ProfilePage.qml");
+
+                    if (component.status === Component.Ready) {
+                        var profile_page = mainStackView.push(component);
+
+                        profile_page.userId            = VKHelper.userId;
+                        profile_page.online            = false;
+                        profile_page.locationAvailable = false;
+                        profile_page.firstName         = VKHelper.firstName;
+                        profile_page.lastName          = VKHelper.lastName;
+                        profile_page.bigPhotoUrl       = VKHelper.bigPhotoUrl;
+                        profile_page.screenName        = "id%1".arg(VKHelper.userId);
+                        profile_page.status            = "";
+                    } else {
+                        console.log(component.errorString());
+                    }
+                }
+            }
+
+            VKButton {
+                width:            UtilScript.pt(280)
+                height:           UtilScript.pt(64)
                 text:             qsTr("Log out of VK")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 

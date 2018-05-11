@@ -37,7 +37,11 @@ class VKHelper : public QObject
 
     Q_PROPERTY(int     authState    READ authState    NOTIFY authStateChanged)
     Q_PROPERTY(int     friendsCount READ friendsCount NOTIFY friendsCountChanged)
+    Q_PROPERTY(QString userId       READ userId       NOTIFY userIdChanged)
+    Q_PROPERTY(QString firstName    READ firstName    NOTIFY firstNameChanged)
+    Q_PROPERTY(QString lastName     READ lastName     NOTIFY lastNameChanged)
     Q_PROPERTY(QString photoUrl     READ photoUrl     NOTIFY photoUrlChanged)
+    Q_PROPERTY(QString bigPhotoUrl  READ bigPhotoUrl  NOTIFY bigPhotoUrlChanged)
 
     Q_PROPERTY(int maxTrustedFriendsCount READ maxTrustedFriendsCount WRITE setMaxTrustedFriendsCount NOTIFY maxTrustedFriendsCountChanged)
     Q_PROPERTY(int maxTrackedFriendsCount READ maxTrackedFriendsCount WRITE setMaxTrackedFriendsCount NOTIFY maxTrackedFriendsCountChanged)
@@ -63,7 +67,11 @@ public:
 
     int authState() const;
     int friendsCount() const;
+    QString userId() const;
+    QString firstName() const;
+    QString lastName() const;
     QString photoUrl() const;
+    QString bigPhotoUrl() const;
 
     int maxTrustedFriendsCount() const;
     void setMaxTrustedFriendsCount(const int &count);
@@ -98,7 +106,11 @@ public:
 signals:
     void authStateChanged(int authState);
     void friendsCountChanged(int friendsCount);
+    void userIdChanged(QString userId);
+    void firstNameChanged(QString firstName);
+    void lastNameChanged(QString lastName);
     void photoUrlChanged(QString photoUrl);
+    void bigPhotoUrlChanged(QString bigPhotoUrl);
     void maxTrustedFriendsCountChanged(int maxTrustedFriendsCount);
     void maxTrackedFriendsCountChanged(int maxTrackedFriendsCount);
     void friendsUpdated();
@@ -154,7 +166,8 @@ private:
     bool                         Initialized;
     int                          AuthState, MaxTrustedFriendsCount, MaxTrackedFriendsCount;
     qint64                       LastReportLocationTime, LastUpdateTrackedFriendsLocationsTime;
-    QString                      PhotoUrl, TrustedFriendsListId, TrackedFriendsListId;
+    QString                      UserId, FirstName, LastName, PhotoUrl, BigPhotoUrl,
+                                 TrustedFriendsListId, TrackedFriendsListId;
     QQueue<QVariantMap>          RequestQueue;
     QTimer                       RequestQueueTimer, ReportLocationTimer;
     QMap<QString, int>           ContextTracker;

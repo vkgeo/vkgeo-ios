@@ -8,10 +8,10 @@ import "Misc"
 import "../Util.js" as UtilScript
 
 Page {
-    id: friendProfilePage
+    id: profilePage
 
     header: Rectangle {
-        height: Math.max(friendProfilePage.safeAreaTopMargin, friendProfilePage.bannerViewHeight) +
+        height: Math.max(profilePage.safeAreaTopMargin, profilePage.bannerViewHeight) +
                 headerControlsLayout.height
         color:  "lightsteelblue"
 
@@ -33,7 +33,7 @@ Page {
             }
 
             Text {
-                text:                qsTr("Friend profile")
+                text:                qsTr("Profile info")
                 color:               "white"
                 font.pointSize:      16
                 font.family:         "Helvetica"
@@ -61,7 +61,7 @@ Page {
     }
 
     footer: Rectangle {
-        height: friendProfilePage.safeAreaBottomMargin
+        height: profilePage.safeAreaBottomMargin
         color:  "lightsteelblue"
     }
 
@@ -89,7 +89,7 @@ Page {
         }
     }
 
-    signal locateFriendOnMap(string user_id)
+    signal locateOnMap(string user_id)
 
     Flickable {
         id:                   profileFlickable
@@ -122,7 +122,7 @@ Page {
                     source: Image {
                         width:    opacityMask.width
                         height:   opacityMask.height
-                        source:   friendProfilePage.bigPhotoUrl
+                        source:   profilePage.bigPhotoUrl
                         fillMode: Image.PreserveAspectCrop
                         visible:  false
                     }
@@ -144,7 +144,7 @@ Page {
                     height:   UtilScript.pt(16)
                     source:   "qrc:/resources/images/main/avatar_online_label.png"
                     fillMode: Image.PreserveAspectFit
-                    visible:  friendProfilePage.online
+                    visible:  profilePage.online
 
                     property real angle: Math.PI / 4
                 }
@@ -153,7 +153,7 @@ Page {
             Text {
                 leftPadding:         UtilScript.pt(16)
                 rightPadding:        UtilScript.pt(16)
-                text:                "%1 %2".arg(friendProfilePage.firstName).arg(friendProfilePage.lastName)
+                text:                "%1 %2".arg(profilePage.firstName).arg(profilePage.lastName)
                 color:               "black"
                 font.pointSize:      24
                 font.family:         "Helvetica"
@@ -170,7 +170,7 @@ Page {
             Text {
                 leftPadding:         UtilScript.pt(16)
                 rightPadding:        UtilScript.pt(16)
-                text:                friendProfilePage.status
+                text:                profilePage.status
                 color:               "black"
                 font.pointSize:      16
                 font.family:         "Helvetica"
@@ -179,6 +179,7 @@ Page {
                 wrapMode:            Text.Wrap
                 fontSizeMode:        Text.Fit
                 minimumPointSize:    8
+                visible:             profilePage.status !== ""
                 Layout.fillWidth:    true
                 Layout.alignment:    Qt.AlignVCenter
             }
@@ -186,7 +187,7 @@ Page {
             Text {
                 leftPadding:         UtilScript.pt(16)
                 rightPadding:        UtilScript.pt(16)
-                text:                qsTr("Location updated at: %1").arg((new Date(friendProfilePage.updateTime * 1000))
+                text:                qsTr("Location updated at: %1").arg((new Date(profilePage.updateTime * 1000))
                                                                               .toLocaleString())
                 color:               "black"
                 font.pointSize:      16
@@ -197,7 +198,7 @@ Page {
                 wrapMode:            Text.Wrap
                 fontSizeMode:        Text.Fit
                 minimumPointSize:    8
-                visible:             friendProfilePage.locationAvailable
+                visible:             profilePage.locationAvailable
                 Layout.fillWidth:    true
                 Layout.alignment:    Qt.AlignVCenter
             }
@@ -206,11 +207,11 @@ Page {
                 width:            UtilScript.pt(280)
                 height:           UtilScript.pt(64)
                 text:             qsTr("Locate on map")
-                visible:          friendProfilePage.locationAvailable
+                visible:          profilePage.locationAvailable
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 onClicked: {
-                    locateFriendOnMap(friendProfilePage.userId);
+                    locateOnMap(profilePage.userId);
 
                     mainStackView.pop();
                 }
@@ -223,8 +224,8 @@ Page {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 onClicked: {
-                    if (!Qt.openUrlExternally("vk://vk.com/%1".arg(friendProfilePage.screenName))) {
-                        Qt.openUrlExternally("https://m.vk.com/%1".arg(friendProfilePage.screenName));
+                    if (!Qt.openUrlExternally("vk://vk.com/%1".arg(profilePage.screenName))) {
+                        Qt.openUrlExternally("https://m.vk.com/%1".arg(profilePage.screenName));
                     }
                 }
             }

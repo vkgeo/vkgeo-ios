@@ -180,6 +180,7 @@ VKHelper::VKHelper(QObject *parent) : QObject(parent)
     LastReportLocationTime                = 0;
     LastUpdateTrackedFriendsLocationsTime = 0;
     PhotoUrl                              = DEFAULT_PHOTO_URL;
+    BigPhotoUrl                           = DEFAULT_PHOTO_URL;
     Instance                              = this;
     VKDelegateInstance                    = NULL;
 }
@@ -201,9 +202,29 @@ int VKHelper::friendsCount() const
     return FriendsData.count();
 }
 
+QString VKHelper::userId() const
+{
+    return UserId;
+}
+
+QString VKHelper::firstName() const
+{
+    return FirstName;
+}
+
+QString VKHelper::lastName() const
+{
+    return LastName;
+}
+
 QString VKHelper::photoUrl() const
 {
     return PhotoUrl;
+}
+
+QString VKHelper::bigPhotoUrl() const
+{
+    return BigPhotoUrl;
 }
 
 int VKHelper::maxTrustedFriendsCount() const
@@ -254,11 +275,19 @@ void VKHelper::cleanup()
     if (Initialized) {
         LastReportLocationTime                = 0;
         LastUpdateTrackedFriendsLocationsTime = 0;
+        UserId                                = "";
+        FirstName                             = "";
+        LastName                              = "";
         PhotoUrl                              = DEFAULT_PHOTO_URL;
+        BigPhotoUrl                           = DEFAULT_PHOTO_URL;
         TrustedFriendsListId                  = "";
         TrackedFriendsListId                  = "";
 
+        emit userIdChanged(UserId);
+        emit firstNameChanged(FirstName);
+        emit lastNameChanged(LastName);
         emit photoUrlChanged(PhotoUrl);
+        emit bigPhotoUrlChanged(BigPhotoUrl);
 
         while (!RequestQueue.isEmpty()) {
             QVariantMap request = RequestQueue.dequeue();
@@ -309,7 +338,7 @@ void VKHelper::updateFriends()
         FriendsDataTmp.clear();
 
         parameters["count"]  = MAX_FRIENDS_GET_COUNT;
-        parameters["fields"] = "photo_100,photo_200_orig,online,screen_name,last_seen,status";
+        parameters["fields"] = "photo_100,photo_200,online,screen_name,last_seen,status";
 
         request["method"]     = "friends.get";
         request["context"]    = "updateFriends";
@@ -526,6 +555,30 @@ void VKHelper::setAuthState(const int &state)
     if (Instance->AuthState == VKAuthState::StateAuthorized) {
         VKAccessToken *token = [VKSdk accessToken];
 
+        if (token != nil && token.localUser != nil && token.localUser.id != nil) {
+            Instance->UserId = QString::fromNSString([token.localUser.id stringValue]);
+        } else {
+            Instance->UserId = "";
+        }
+
+        emit Instance->userIdChanged(Instance->UserId);
+
+        if (token != nil && token.localUser != nil && token.localUser.first_name != nil) {
+            Instance->FirstName = QString::fromNSString(token.localUser.first_name);
+        } else {
+            Instance->FirstName = "";
+        }
+
+        emit Instance->firstNameChanged(Instance->FirstName);
+
+        if (token != nil && token.localUser != nil && token.localUser.last_name != nil) {
+            Instance->LastName = QString::fromNSString(token.localUser.last_name);
+        } else {
+            Instance->LastName = "";
+        }
+
+        emit Instance->lastNameChanged(Instance->LastName);
+
         if (token != nil && token.localUser != nil && token.localUser.photo_100 != nil) {
             Instance->PhotoUrl = QString::fromNSString(token.localUser.photo_100);
         } else {
@@ -533,6 +586,14 @@ void VKHelper::setAuthState(const int &state)
         }
 
         emit Instance->photoUrlChanged(Instance->PhotoUrl);
+
+        if (token != nil && token.localUser != nil && token.localUser.photo_200 != nil) {
+            Instance->BigPhotoUrl = QString::fromNSString(token.localUser.photo_200);
+        } else {
+            Instance->BigPhotoUrl = DEFAULT_PHOTO_URL;
+        }
+
+        emit Instance->bigPhotoUrlChanged(Instance->BigPhotoUrl);
     } else if (Instance->AuthState == VKAuthState::StateNotAuthorized) {
         Instance->cleanup();
     }
@@ -1263,8 +1324,8 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
                                 } else {
                                     frnd["photoUrl"] = DEFAULT_PHOTO_URL;
                                 }
-                                if (json_friend.contains("photo_200_orig")) {
-                                    frnd["bigPhotoUrl"] = json_friend.value("photo_200_orig").toString();
+                                if (json_friend.contains("photo_200")) {
+                                    frnd["bigPhotoUrl"] = json_friend.value("photo_200").toString();
                                 } else {
                                     frnd["bigPhotoUrl"] = DEFAULT_PHOTO_URL;
                                 }

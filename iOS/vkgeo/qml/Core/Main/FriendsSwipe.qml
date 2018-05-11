@@ -81,7 +81,7 @@ Item {
             var frnd = friendsListModel.get(i);
 
             if (user_id === frnd.userId) {
-                var component = Qt.createComponent("../FriendProfilePage.qml");
+                var component = Qt.createComponent("../ProfilePage.qml");
 
                 if (component.status === Component.Ready) {
                     var profile_page = mainStackView.push(component);
@@ -96,7 +96,7 @@ Item {
                     profile_page.screenName        = frnd.screenName;
                     profile_page.status            = frnd.status;
 
-                    profile_page.locateFriendOnMap.connect(friendsSwipe.locateFriendOnMap);
+                    profile_page.locateOnMap.connect(friendsSwipe.locateFriendOnMap);
                 } else {
                     console.log(component.errorString());
                 }
