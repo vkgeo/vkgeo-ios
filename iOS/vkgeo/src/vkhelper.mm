@@ -456,7 +456,7 @@ void VKHelper::updateTrackedFriendsLocations(bool expedited)
                     QVariantMap request, parameters;
 
                     parameters["count"]   = MAX_NOTES_GET_COUNT;
-                    parameters["user_id"] = key;
+                    parameters["user_id"] = key.toInt();
 
                     request["method"]     = "notes.get";
                     request["context"]    = "updateTrackedFriendsLocations";
@@ -474,7 +474,7 @@ void VKHelper::sendMessage(QString user_id, QString message)
     if (Initialized) {
         QVariantMap request, parameters;
 
-        parameters["user_id"] = user_id;
+        parameters["user_id"] = user_id.toInt();
         parameters["message"] = message;
 
         request["method"]     = "messages.send";
@@ -490,7 +490,7 @@ void VKHelper::sendInvitation(QString user_id, QString text)
     if (Initialized) {
         QVariantMap request, parameters;
 
-        parameters["user_id"] = user_id;
+        parameters["user_id"] = user_id.toInt();
         parameters["text"]    = text;
         parameters["type"]    = "invite";
 
@@ -1016,7 +1016,7 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
                         for (int i = 0; i < notes_to_delete.length(); i++) {
                             QVariantMap request, parameters;
 
-                            parameters["note_id"] = notes_to_delete[i];
+                            parameters["note_id"] = notes_to_delete[i].toInt();
 
                             request["method"]     = "notes.delete";
                             request["context"]    = resp_request["context"].toString();
@@ -1117,7 +1117,7 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
 
                             parameters["count"]   = MAX_NOTES_GET_COUNT;
                             parameters["offset"]  = offset + json_items.count();
-                            parameters["user_id"] = user_id;
+                            parameters["user_id"] = user_id.toInt();
 
                             request["method"]     = "notes.get";
                             request["context"]    = resp_request["context"].toString();
