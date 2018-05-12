@@ -5,23 +5,23 @@
     <name>FriendProfilePage</name>
     <message>
         <source>Friend profile</source>
-        <translation>Профиль друга</translation>
+        <translation type="vanished">Профиль друга</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Закрыть</translation>
+        <translation type="vanished">Закрыть</translation>
     </message>
     <message>
         <source>Locate on map</source>
-        <translation>Показать на карте</translation>
+        <translation type="vanished">Показать на карте</translation>
     </message>
     <message>
         <source>Open profile</source>
-        <translation>Открыть профиль</translation>
+        <translation type="vanished">Открыть профиль</translation>
     </message>
     <message>
         <source>Location updated at: %1</source>
-        <translation>Последнее обновление местоположения: %1</translation>
+        <translation type="vanished">Последнее обновление местоположения: %1</translation>
     </message>
 </context>
 <context>
@@ -36,7 +36,7 @@
     </message>
     <message>
         <source>I invite you to install the VKGeo app and join the community: %1</source>
-        <translation>Я приглашаю вас установить приложение VKGeo и присоединиться к сообществу: %1</translation>
+        <translation type="vanished">Я приглашаю вас установить приложение VKGeo и присоединиться к сообществу: %1</translation>
     </message>
     <message>
         <source>Invite friend</source>
@@ -45,6 +45,10 @@
     <message>
         <source>Do you want to send an invitation to this friend?</source>
         <translation>Вы действительно хотите отослать приглашение этому другу?</translation>
+    </message>
+    <message>
+        <source>I invite you to install the VKGeo app and join the community</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -60,6 +64,29 @@
     <message>
         <source>https://vkgeo.sourceforge.io/en/privacy.php</source>
         <translation>https://vkgeo.sourceforge.io/ru/privacy.php</translation>
+    </message>
+</context>
+<context>
+    <name>ProfilePage</name>
+    <message>
+        <source>Profile info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Закрыть</translation>
+    </message>
+    <message>
+        <source>Location updated at: %1</source>
+        <translation type="unfinished">Последнее обновление местоположения: %1</translation>
+    </message>
+    <message>
+        <source>Locate on map</source>
+        <translation type="unfinished">Показать на карте</translation>
+    </message>
+    <message>
+        <source>Open profile</source>
+        <translation type="unfinished">Открыть профиль</translation>
     </message>
 </context>
 <context>
@@ -107,6 +134,34 @@
     <message>
         <source>Log out of VK</source>
         <translation>Выход из ВКонтакте</translation>
+    </message>
+    <message>
+        <source>Group membership request sent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Join VKGeo group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Join VKGames group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>View my VK profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Join group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you want to join the VKGeo group?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you want to join the VKGames group?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
