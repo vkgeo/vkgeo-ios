@@ -2,29 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ru_RU">
 <context>
-    <name>FriendProfilePage</name>
-    <message>
-        <source>Friend profile</source>
-        <translation type="vanished">Профиль друга</translation>
-    </message>
-    <message>
-        <source>Close</source>
-        <translation type="vanished">Закрыть</translation>
-    </message>
-    <message>
-        <source>Locate on map</source>
-        <translation type="vanished">Показать на карте</translation>
-    </message>
-    <message>
-        <source>Open profile</source>
-        <translation type="vanished">Открыть профиль</translation>
-    </message>
-    <message>
-        <source>Location updated at: %1</source>
-        <translation type="vanished">Последнее обновление местоположения: %1</translation>
-    </message>
-</context>
-<context>
     <name>FriendsSwipe</name>
     <message>
         <source>Quick search</source>
@@ -33,10 +10,6 @@
     <message>
         <source>Invitation sent</source>
         <translation>Приглашение отправлено</translation>
-    </message>
-    <message>
-        <source>I invite you to install the VKGeo app and join the community: %1</source>
-        <translation type="vanished">Я приглашаю вас установить приложение VKGeo и присоединиться к сообществу: %1</translation>
     </message>
     <message>
         <source>Invite friend</source>
@@ -48,7 +21,7 @@
     </message>
     <message>
         <source>I invite you to install the VKGeo app and join the community</source>
-        <translation type="unfinished"></translation>
+        <translation>Я приглашаю вас установить приложение VKGeo и присоединиться к сообществу</translation>
     </message>
 </context>
 <context>
@@ -70,23 +43,23 @@
     <name>ProfilePage</name>
     <message>
         <source>Profile info</source>
-        <translation type="unfinished"></translation>
+        <translation>Информация профиля</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation type="unfinished">Закрыть</translation>
+        <translation>Закрыть</translation>
     </message>
     <message>
         <source>Location updated at: %1</source>
-        <translation type="unfinished">Последнее обновление местоположения: %1</translation>
+        <translation>Последнее обновление местоположения: %1</translation>
     </message>
     <message>
         <source>Locate on map</source>
-        <translation type="unfinished">Показать на карте</translation>
+        <translation>Показать на карте</translation>
     </message>
     <message>
         <source>Open profile</source>
-        <translation type="unfinished">Открыть профиль</translation>
+        <translation>Открыть профиль</translation>
     </message>
 </context>
 <context>
@@ -137,31 +110,31 @@
     </message>
     <message>
         <source>Group membership request sent</source>
-        <translation type="unfinished"></translation>
+        <translation>Запрос на вступление в группу отправлен</translation>
     </message>
     <message>
         <source>Join VKGeo group</source>
-        <translation type="unfinished"></translation>
+        <translation>Вступить в группу VKGeo</translation>
     </message>
     <message>
         <source>Join VKGames group</source>
-        <translation type="unfinished"></translation>
+        <translation>Вступить в группу Игры ВКонтакте</translation>
     </message>
     <message>
         <source>View my VK profile</source>
-        <translation type="unfinished"></translation>
+        <translation>Посмотреть мой профиль ВКонтакте</translation>
     </message>
     <message>
         <source>Join group</source>
-        <translation type="unfinished"></translation>
+        <translation>Вступить в группу</translation>
     </message>
     <message>
         <source>Do you want to join the VKGeo group?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы действительно хотите вступить в группу VKGeo?</translation>
     </message>
     <message>
         <source>Do you want to join the VKGames group?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы действительно хотите вступить в группу Игры ВКонтакте?</translation>
     </message>
 </context>
 <context>
