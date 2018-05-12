@@ -270,6 +270,8 @@ Item {
             map.myMapItem.userId   = "";
             map.myMapItem.photoUrl = Qt.binding(function() { return VKHelper.photoUrl; });
 
+            map.myMapItem.openProfilePage.connect(openProfilePage);
+
             map.addMapItem(map.myMapItem);
         } else {
             console.log(component.errorString());

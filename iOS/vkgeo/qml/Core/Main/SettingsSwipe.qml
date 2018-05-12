@@ -243,16 +243,16 @@ Item {
                     var component = Qt.createComponent("../ProfilePage.qml");
 
                     if (component.status === Component.Ready) {
-                        var profile_page = mainStackView.push(component);
+                        var my_profile_page = mainStackView.push(component);
 
-                        profile_page.userId            = VKHelper.userId;
-                        profile_page.online            = false;
-                        profile_page.locationAvailable = false;
-                        profile_page.firstName         = VKHelper.firstName;
-                        profile_page.lastName          = VKHelper.lastName;
-                        profile_page.bigPhotoUrl       = VKHelper.bigPhotoUrl;
-                        profile_page.screenName        = "id%1".arg(VKHelper.userId);
-                        profile_page.status            = "";
+                        my_profile_page.userId            = VKHelper.userId;
+                        my_profile_page.online            = false;
+                        my_profile_page.locationAvailable = false;
+                        my_profile_page.firstName         = VKHelper.firstName;
+                        my_profile_page.lastName          = VKHelper.lastName;
+                        my_profile_page.bigPhotoUrl       = VKHelper.bigPhotoUrl;
+                        my_profile_page.screenName        = "id%1".arg(VKHelper.userId);
+                        my_profile_page.status            = "";
                     } else {
                         console.log(component.errorString());
                     }

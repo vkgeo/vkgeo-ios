@@ -77,32 +77,45 @@ Item {
     }
 
     function openProfilePage(user_id) {
-        for (var i = 0; i < friendsListModel.count; i++) {
-            var frnd = friendsListModel.get(i);
+        var component = Qt.createComponent("../ProfilePage.qml");
 
-            if (user_id === frnd.userId) {
-                var component = Qt.createComponent("../ProfilePage.qml");
+        if (component.status === Component.Ready) {
+            if (user_id === "") {
+                var my_profile_page = mainStackView.push(component);
 
-                if (component.status === Component.Ready) {
-                    var profile_page = mainStackView.push(component);
+                my_profile_page.userId            = VKHelper.userId;
+                my_profile_page.online            = false;
+                my_profile_page.locationAvailable = false;
+                my_profile_page.firstName         = VKHelper.firstName;
+                my_profile_page.lastName          = VKHelper.lastName;
+                my_profile_page.bigPhotoUrl       = VKHelper.bigPhotoUrl;
+                my_profile_page.screenName        = "id%1".arg(VKHelper.userId);
+                my_profile_page.status            = "";
+            } else {
+                for (var i = 0; i < friendsListModel.count; i++) {
+                    var frnd = friendsListModel.get(i);
 
-                    profile_page.userId            = frnd.userId;
-                    profile_page.online            = frnd.online;
-                    profile_page.locationAvailable = frnd.locationAvailable;
-                    profile_page.updateTime        = frnd.updateTime;
-                    profile_page.firstName         = frnd.firstName;
-                    profile_page.lastName          = frnd.lastName;
-                    profile_page.bigPhotoUrl       = frnd.bigPhotoUrl;
-                    profile_page.screenName        = frnd.screenName;
-                    profile_page.status            = frnd.status;
+                    if (user_id === frnd.userId) {
+                        var profile_page = mainStackView.push(component);
 
-                    profile_page.locateOnMap.connect(friendsSwipe.locateFriendOnMap);
-                } else {
-                    console.log(component.errorString());
+                        profile_page.userId            = frnd.userId;
+                        profile_page.online            = frnd.online;
+                        profile_page.locationAvailable = frnd.locationAvailable;
+                        profile_page.updateTime        = frnd.updateTime;
+                        profile_page.firstName         = frnd.firstName;
+                        profile_page.lastName          = frnd.lastName;
+                        profile_page.bigPhotoUrl       = frnd.bigPhotoUrl;
+                        profile_page.screenName        = frnd.screenName;
+                        profile_page.status            = frnd.status;
+
+                        profile_page.locateOnMap.connect(friendsSwipe.locateFriendOnMap);
+
+                        break;
+                    }
                 }
-
-                break;
             }
+        } else {
+            console.log(component.errorString());
         }
     }
 
