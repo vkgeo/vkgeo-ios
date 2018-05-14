@@ -216,17 +216,6 @@ Item {
                 }
             }
 
-            VKButton {
-                width:            UtilScript.pt(280)
-                height:           UtilScript.pt(64)
-                text:             qsTr("Join VKGames group")
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-
-                onClicked: {
-                    joinVKGamesGroupMessageDialog.open();
-                }
-            }
-
             ToolSeparator {
                 orientation:      Qt.Horizontal
                 Layout.fillWidth: true
@@ -281,20 +270,6 @@ Item {
 
         onYes: {
             VKHelper.joinGroup("166101702");
-
-            joinGroupToast.visible = true;
-        }
-    }
-
-    MessageDialog {
-        id:              joinVKGamesGroupMessageDialog
-        title:           qsTr("Join group")
-        icon:            StandardIcon.Question
-        text:            qsTr("Do you want to join the VKGames group?")
-        standardButtons: StandardButton.Yes | StandardButton.No
-
-        onYes: {
-            VKHelper.joinGroup("78616012");
 
             joinGroupToast.visible = true;
         }

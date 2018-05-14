@@ -120,7 +120,8 @@ Item {
     }
 
     function inviteFriend(user_id) {
-        VKHelper.sendInvitation(user_id, qsTr("I invite you to install the VKGeo app and join the community"));
+        VKHelper.sendMessage(user_id, qsTr("I invite you to install the VKGeo app and join the community: %1")
+                                          .arg("https://itunes.apple.com/app/id1381218973"));
 
         for (var i = 0; i < friendsList.length; i++) {
             var frnd = friendsList[i];
