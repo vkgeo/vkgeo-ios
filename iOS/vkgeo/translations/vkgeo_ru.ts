@@ -21,7 +21,11 @@
     </message>
     <message>
         <source>I invite you to install the VKGeo app and join the community</source>
-        <translation>Я приглашаю вас установить приложение VKGeo и присоединиться к сообществу</translation>
+        <translation type="vanished">Я приглашаю вас установить приложение VKGeo и присоединиться к сообществу</translation>
+    </message>
+    <message>
+        <source>I invite you to install the VKGeo app and join the community: %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -118,7 +122,7 @@
     </message>
     <message>
         <source>Join VKGames group</source>
-        <translation>Вступить в группу Игры ВКонтакте</translation>
+        <translation type="vanished">Вступить в группу Игры ВКонтакте</translation>
     </message>
     <message>
         <source>View my VK profile</source>
@@ -134,7 +138,7 @@
     </message>
     <message>
         <source>Do you want to join the VKGames group?</source>
-        <translation>Вы действительно хотите вступить в группу Игры ВКонтакте?</translation>
+        <translation type="vanished">Вы действительно хотите вступить в группу Игры ВКонтакте?</translation>
     </message>
 </context>
 <context>
