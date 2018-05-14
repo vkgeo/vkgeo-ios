@@ -21,7 +21,7 @@
     </message>
     <message>
         <source>I invite you to install the VKGeo app and join the community: %1</source>
-        <translation>Я приглашаю вас установить приложение VKGeo и присоединиться к сообществу: %1</translation>
+        <translation>Я приглашаю Вас установить приложение VKGeo и присоединиться к сообществу: %1</translation>
     </message>
 </context>
 <context>
