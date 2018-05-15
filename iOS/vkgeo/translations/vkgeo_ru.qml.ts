@@ -23,6 +23,14 @@
         <source>I invite you to install the VKGeo app and join the community: %1</source>
         <translation>Я приглашаю Вас установить приложение VKGeo и присоединиться к сообществу: %1</translation>
     </message>
+    <message>
+        <source>New friends nearby</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 is nearby</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>LoginPage</name>
@@ -37,6 +45,17 @@
     <message>
         <source>https://vkgeo.sourceforge.io/en/privacy.php</source>
         <translation>https://vkgeo.sourceforge.io/ru/privacy.php</translation>
+    </message>
+</context>
+<context>
+    <name>MapSwipe</name>
+    <message>
+        <source>Update location data</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you want to update location data in your VK profile now?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -127,6 +146,10 @@
     <message>
         <source>Do you want to join the VKGeo group?</source>
         <translation>Вы действительно хотите вступить в группу VKGeo?</translation>
+    </message>
+    <message>
+        <source>http://vkgeo.sourceforge.io/</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
