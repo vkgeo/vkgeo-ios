@@ -25,11 +25,11 @@
     </message>
     <message>
         <source>New friends nearby</source>
-        <translation type="unfinished"></translation>
+        <translation>Новые друзья поблизости</translation>
     </message>
     <message>
         <source>%1 is nearby</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 сейчас поблизости</translation>
     </message>
 </context>
 <context>
@@ -51,11 +51,11 @@
     <name>MapSwipe</name>
     <message>
         <source>Update location data</source>
-        <translation type="unfinished"></translation>
+        <translation>Обновить данные о местоположении</translation>
     </message>
     <message>
         <source>Do you want to update location data in your VK profile now?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы действительно хотите сейчас обновить данные о местоположении в вашем профиле ВКонтакте?</translation>
     </message>
 </context>
 <context>
@@ -149,7 +149,7 @@
     </message>
     <message>
         <source>http://vkgeo.sourceforge.io/</source>
-        <translation type="unfinished"></translation>
+        <translation>vkgeo_app</translation>
     </message>
 </context>
 <context>
