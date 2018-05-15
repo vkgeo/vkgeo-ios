@@ -1,4 +1,5 @@
 import QtQuick 2.9
+import QtQuick.Dialogs 1.2
 import QtGraphicalEffects 1.0
 import QtPositioning 5.8
 import QtLocation 5.9
@@ -240,6 +241,27 @@ Item {
     }
 
     Image {
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom:           parent.bottom
+        anchors.bottomMargin:     UtilScript.pt(32)
+        z:                        1
+        width:                    UtilScript.pt(48)
+        height:                   UtilScript.pt(48)
+        source:                   enabled ? "qrc:/resources/images/main/button_update.png" :
+                                            "qrc:/resources/images/main/button_update_disabled.png"
+        fillMode:                 Image.PreserveAspectFit
+        enabled:                  map.myMapItem !== null && map.myMapItem.visible
+
+        MouseArea {
+            anchors.fill: parent
+
+            onClicked: {
+                updateMessageDialog.open();
+            }
+        }
+    }
+
+    Image {
         anchors.right:        parent.right
         anchors.bottom:       parent.bottom
         anchors.rightMargin:  UtilScript.pt(8)
@@ -258,6 +280,18 @@ Item {
             onClicked: {
                 map.trackMapItem(map.myMapItem);
             }
+        }
+    }
+
+    MessageDialog {
+        id:              updateMessageDialog
+        title:           qsTr("Update location")
+        icon:            StandardIcon.Question
+        text:            qsTr("Do you want to update your current location now?")
+        standardButtons: StandardButton.Yes | StandardButton.No
+
+        onYes: {
+            VKHelper.reportLocation();
         }
     }
 

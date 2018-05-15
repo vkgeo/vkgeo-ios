@@ -367,6 +367,11 @@ void VKHelper::updateLocation(qreal latitude, qreal longitude)
     emit locationUpdated();
 }
 
+void VKHelper::reportLocation()
+{
+    ReportLocation(true);
+}
+
 void VKHelper::updateFriends()
 {
     if (Initialized && !ContextHaveActiveRequests("updateFriends")) {
@@ -683,42 +688,48 @@ void VKHelper::RequestQueueTimerTimeout()
 
 void VKHelper::ReportLocationTimerTimeout()
 {
+    ReportLocation(false);
+}
+
+void VKHelper::ReportLocation(bool expedited)
+{
     if (!ContextHaveActiveRequests("reportLocation")) {
         if (LastLocationInfo.contains("updated")  && LastLocationInfo.contains("update_time") &&
             LastLocationInfo.contains("latitude") && LastLocationInfo.contains("longitude")) {
             if (AuthState == VKAuthState::StateAuthorized) {
-                if (LastLocationInfo["updated"].toBool() &&
-                    QDateTime::currentSecsSinceEpoch() > LastReportLocationTime + REPORT_LOCATION_INTERVAL) {
-                    LastReportLocationTime = QDateTime::currentSecsSinceEpoch();
+                if (LastLocationInfo["updated"].toBool()) {
+                    if (expedited || QDateTime::currentSecsSinceEpoch() > LastReportLocationTime + REPORT_LOCATION_INTERVAL) {
+                        LastReportLocationTime = QDateTime::currentSecsSinceEpoch();
 
-                    QVariantMap request, user_data, parameters;
+                        QVariantMap request, user_data, parameters;
 
-                    user_data["update_time"] = LastLocationInfo["update_time"].toLongLong();
-                    user_data["latitude"]    = LastLocationInfo["latitude"].toReal();
-                    user_data["longitude"]   = LastLocationInfo["longitude"].toReal();
+                        user_data["update_time"] = LastLocationInfo["update_time"].toLongLong();
+                        user_data["latitude"]    = LastLocationInfo["latitude"].toReal();
+                        user_data["longitude"]   = LastLocationInfo["longitude"].toReal();
 
-                    QString user_data_string = QString("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(user_data)
-                                                                                         .toJson(QJsonDocument::Compact)
-                                                                                         .toBase64()));
+                        QString user_data_string = QString("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(user_data)
+                                                                                             .toJson(QJsonDocument::Compact)
+                                                                                             .toBase64()));
 
-                    if (TrustedFriendsListId == "") {
-                        request["method"]    = "friends.getLists";
-                        request["context"]   = "reportLocation";
-                        request["user_data"] = user_data_string;
-                    } else {
-                        parameters["count"] = MAX_NOTES_GET_COUNT;
+                        if (TrustedFriendsListId == "") {
+                            request["method"]    = "friends.getLists";
+                            request["context"]   = "reportLocation";
+                            request["user_data"] = user_data_string;
+                        } else {
+                            parameters["count"] = MAX_NOTES_GET_COUNT;
 
-                        request["method"]     = "notes.get";
-                        request["context"]    = "reportLocation";
-                        request["user_data"]  = user_data_string;
-                        request["parameters"] = parameters;
+                            request["method"]     = "notes.get";
+                            request["context"]    = "reportLocation";
+                            request["user_data"]  = user_data_string;
+                            request["parameters"] = parameters;
+                        }
+
+                        EnqueueRequest(request);
+
+                        LastLocationInfo["updated"] = false;
+
+                        emit locationReported();
                     }
-
-                    EnqueueRequest(request);
-
-                    LastLocationInfo["updated"] = false;
-
-                    emit locationReported();
                 }
             }
         }

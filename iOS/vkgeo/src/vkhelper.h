@@ -96,6 +96,7 @@ public:
     Q_INVOKABLE void logout();
 
     Q_INVOKABLE void updateLocation(qreal latitude, qreal longitude);
+    Q_INVOKABLE void reportLocation();
 
     Q_INVOKABLE void updateFriends();
     Q_INVOKABLE QVariantMap getFriends();
@@ -133,6 +134,8 @@ private slots:
     void ReportLocationTimerTimeout();
 
 private:
+    void ReportLocation(bool expedited);
+
     void ContextTrackerAddRequest(QVariantMap request);
     void ContextTrackerDelRequest(QVariantMap request);
 
