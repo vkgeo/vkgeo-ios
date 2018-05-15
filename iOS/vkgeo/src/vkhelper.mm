@@ -323,11 +323,14 @@ void VKHelper::logout()
     }
 }
 
-void VKHelper::reportLocation(qreal latitude, qreal longitude)
+void VKHelper::updateLocation(qreal latitude, qreal longitude)
 {
     LastLocationInfo["update_time"] = QDateTime::currentSecsSinceEpoch();
     LastLocationInfo["latitude"]    = latitude;
     LastLocationInfo["longitude"]   = longitude;
+
+    emit locationUpdated(LastLocationInfo["update_time"].toLongLong(), LastLocationInfo["latitude"].toReal(),
+                                                                       LastLocationInfo["longitude"].toReal());
 }
 
 void VKHelper::updateFriends()

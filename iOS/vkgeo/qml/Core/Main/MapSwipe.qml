@@ -10,10 +10,10 @@ Item {
 
     signal openProfilePage(string user_id)
 
-    function updateMyLocation(coordinate) {
+    function updateMyLocation(update_time, latitude, longitude) {
         if (map.myMapItem !== null) {
-            map.myMapItem.coordinate = coordinate;
-            map.myMapItem.updateTime = (new Date()).getTime() / 1000;
+            map.myMapItem.coordinate = QtPositioning.coordinate(latitude, longitude);
+            map.myMapItem.updateTime = update_time;
 
             if (!map.wasTouched && map.trackedMapItem === null) {
                 map.centerOnMyMapItemOnce();
@@ -277,6 +277,7 @@ Item {
             console.log(component.errorString());
         }
 
+        VKHelper.locationUpdated.connect(updateMyLocation);
         VKHelper.friendsUpdated.connect(updateMapItems);
         VKHelper.trackedFriendLocationUpdated.connect(updateMapItemLocation);
     }

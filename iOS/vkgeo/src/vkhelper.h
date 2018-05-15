@@ -85,7 +85,7 @@ public:
     Q_INVOKABLE void login();
     Q_INVOKABLE void logout();
 
-    Q_INVOKABLE void reportLocation(qreal latitude, qreal longitude);
+    Q_INVOKABLE void updateLocation(qreal latitude, qreal longitude);
 
     Q_INVOKABLE void updateFriends();
     Q_INVOKABLE QVariantMap getFriends();
@@ -113,6 +113,7 @@ signals:
     void bigPhotoUrlChanged(QString bigPhotoUrl);
     void maxTrustedFriendsCountChanged(int maxTrustedFriendsCount);
     void maxTrackedFriendsCountChanged(int maxTrackedFriendsCount);
+    void locationUpdated(qint64 updateTime, qreal latitude, qreal longitude);
     void friendsUpdated();
     void trackedFriendLocationUpdated(QString id, qint64 updateTime, qreal latitude, qreal longitude);
 
