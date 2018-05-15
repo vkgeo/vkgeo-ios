@@ -248,6 +248,7 @@ Window {
         updateFeatures();
 
         AdMobHelper.initialize();
+        NotificationHelper.initialize();
         VKHelper.initialize();
 
         mainStackView.push(mainPage);

@@ -7,6 +7,7 @@
 #include "admobhelper.h"
 #include "storehelper.h"
 #include "uihelper.h"
+#include "notificationhelper.h"
 #include "vkhelpershared.h"
 
 VKHelper *VKHelperShared = NULL;
@@ -27,6 +28,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty(QStringLiteral("AdMobHelper"), new AdMobHelper(&app));
     engine.rootContext()->setContextProperty(QStringLiteral("StoreHelper"), new StoreHelper(&app));
     engine.rootContext()->setContextProperty(QStringLiteral("UIHelper"), new UIHelper(&app));
+    engine.rootContext()->setContextProperty(QStringLiteral("NotificationHelper"), new NotificationHelper(&app));
 
     if (VKHelperShared != NULL) {
         VKHelperShared->setParent(&app);

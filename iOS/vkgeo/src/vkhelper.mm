@@ -192,6 +192,40 @@ VKHelper::~VKHelper()
     }
 }
 
+bool VKHelper::locationValid() const
+{
+    return LastLocationInfo.contains("update_time") &&
+           LastLocationInfo.contains("latitude") &&
+           LastLocationInfo.contains("longitude");
+}
+
+qint64 VKHelper::locationUpdateTime() const
+{
+    if (LastLocationInfo.contains("update_time")) {
+        return LastLocationInfo["update_time"].toLongLong();
+    } else {
+        return 0;
+    }
+}
+
+qreal VKHelper::locationLatitude() const
+{
+    if (LastLocationInfo.contains("latitude")) {
+        return LastLocationInfo["latitude"].toReal();
+    } else {
+        return 0.0;
+    }
+}
+
+qreal VKHelper::locationLongitude() const
+{
+    if (LastLocationInfo.contains("longitude")) {
+        return LastLocationInfo["longitude"].toReal();
+    } else {
+        return 0.0;
+    }
+}
+
 int VKHelper::authState() const
 {
     return AuthState;
@@ -325,12 +359,12 @@ void VKHelper::logout()
 
 void VKHelper::updateLocation(qreal latitude, qreal longitude)
 {
+    LastLocationInfo["updated"]     = true;
     LastLocationInfo["update_time"] = QDateTime::currentSecsSinceEpoch();
     LastLocationInfo["latitude"]    = latitude;
     LastLocationInfo["longitude"]   = longitude;
 
-    emit locationUpdated(LastLocationInfo["update_time"].toLongLong(), LastLocationInfo["latitude"].toReal(),
-                                                                       LastLocationInfo["longitude"].toReal());
+    emit locationUpdated();
 }
 
 void VKHelper::updateFriends()
@@ -650,10 +684,11 @@ void VKHelper::RequestQueueTimerTimeout()
 void VKHelper::ReportLocationTimerTimeout()
 {
     if (!ContextHaveActiveRequests("reportLocation")) {
-        if (LastLocationInfo.contains("update_time") && LastLocationInfo.contains("latitude") &&
-                                                        LastLocationInfo.contains("longitude")) {
+        if (LastLocationInfo.contains("updated")  && LastLocationInfo.contains("update_time") &&
+            LastLocationInfo.contains("latitude") && LastLocationInfo.contains("longitude")) {
             if (AuthState == VKAuthState::StateAuthorized) {
-                if (QDateTime::currentSecsSinceEpoch() > LastReportLocationTime + REPORT_LOCATION_INTERVAL) {
+                if (LastLocationInfo["updated"].toBool() &&
+                    QDateTime::currentSecsSinceEpoch() > LastReportLocationTime + REPORT_LOCATION_INTERVAL) {
                     LastReportLocationTime = QDateTime::currentSecsSinceEpoch();
 
                     QVariantMap request, user_data, parameters;
@@ -681,7 +716,9 @@ void VKHelper::ReportLocationTimerTimeout()
 
                     EnqueueRequest(request);
 
-                    LastLocationInfo = QVariantMap();
+                    LastLocationInfo["updated"] = false;
+
+                    emit locationReported();
                 }
             }
         }

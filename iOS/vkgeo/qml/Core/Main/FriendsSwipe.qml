@@ -2,6 +2,7 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.2
+import QtPositioning 5.8
 import QtGraphicalEffects 1.0
 
 import "../Misc"
@@ -11,7 +12,8 @@ import "../../Util.js" as UtilScript
 Item {
     id: friendsSwipe
 
-    property var friendsList: []
+    property int nearbyDistance: 500
+    property var friendsList:    []
 
     signal locateFriendOnMap(string user_id)
 
@@ -22,6 +24,7 @@ Item {
             var frnd = friendsList[i];
 
             frnd.invited           = false;
+            frnd.nearby            = false;
             frnd.locationAvailable = false;
             frnd.updateTime        = 0;
             frnd.latitude          = 0;
@@ -55,6 +58,23 @@ Item {
                 frnd.updateTime        = update_time;
                 frnd.latitude          = latitude;
                 frnd.longitude         = longitude;
+
+                if (VKHelper.locationValid) {
+                    var my_coordinate = QtPositioning.coordinate(VKHelper.locationLatitude, VKHelper.locationLongitude);
+
+                    if (my_coordinate.distanceTo(QtPositioning.coordinate(frnd.latitude, frnd.longitude)) < nearbyDistance) {
+                        if (!frnd.nearby) {
+                            frnd.nearby = true;
+
+                            NotificationHelper.showNotification("FRIEND_NEARBY", qsTr("Friend nearby"),
+                                                                                 qsTr("%1 is now nearby")
+                                                                                     .arg("%1 %2".arg(frnd.firstName)
+                                                                                                 .arg(frnd.lastName)));
+                        }
+                    } else {
+                        frnd.nearby = false;
+                    }
+                }
 
                 friendsList[i] = frnd;
 

@@ -10,10 +10,10 @@ Item {
 
     signal openProfilePage(string user_id)
 
-    function updateMyLocation(update_time, latitude, longitude) {
-        if (map.myMapItem !== null) {
-            map.myMapItem.coordinate = QtPositioning.coordinate(latitude, longitude);
-            map.myMapItem.updateTime = update_time;
+    function updateMyLocation() {
+        if (VKHelper.locationValid && map.myMapItem !== null) {
+            map.myMapItem.coordinate = QtPositioning.coordinate(VKHelper.locationLatitude, VKHelper.locationLongitude);
+            map.myMapItem.updateTime = VKHelper.locationUpdateTime;
 
             if (!map.wasTouched && map.trackedMapItem === null) {
                 map.centerOnMyMapItemOnce();

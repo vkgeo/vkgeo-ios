@@ -35,6 +35,11 @@ class VKHelper : public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(bool   locationValid      READ locationValid)
+    Q_PROPERTY(qint64 locationUpdateTime READ locationUpdateTime)
+    Q_PROPERTY(qreal  locationLatitude   READ locationLatitude)
+    Q_PROPERTY(qreal  locationLongitude  READ locationLongitude)
+
     Q_PROPERTY(int     authState    READ authState    NOTIFY authStateChanged)
     Q_PROPERTY(int     friendsCount READ friendsCount NOTIFY friendsCountChanged)
     Q_PROPERTY(QString userId       READ userId       NOTIFY userIdChanged)
@@ -64,6 +69,11 @@ public:
 
     explicit VKHelper(QObject *parent = 0);
     virtual ~VKHelper();
+
+    bool locationValid() const;
+    qint64 locationUpdateTime() const;
+    qreal locationLatitude() const;
+    qreal locationLongitude() const;
 
     int authState() const;
     int friendsCount() const;
@@ -113,7 +123,8 @@ signals:
     void bigPhotoUrlChanged(QString bigPhotoUrl);
     void maxTrustedFriendsCountChanged(int maxTrustedFriendsCount);
     void maxTrackedFriendsCountChanged(int maxTrackedFriendsCount);
-    void locationUpdated(qint64 updateTime, qreal latitude, qreal longitude);
+    void locationUpdated();
+    void locationReported();
     void friendsUpdated();
     void trackedFriendLocationUpdated(QString id, qint64 updateTime, qreal latitude, qreal longitude);
 

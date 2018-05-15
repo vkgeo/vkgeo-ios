@@ -1,9 +1,6 @@
-#import <Foundation/Foundation.h>
 #import <UIKit/UIWindow.h>
 #import <UIKit/UIApplication.h>
 #import <UIKit/UIViewController.h>
-
-#include <QtCore/QDir>
 
 #include "uihelper.h"
 

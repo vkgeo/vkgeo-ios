@@ -164,6 +164,7 @@ Page {
     }
 
     Component.onCompleted: {
+        VKHelper.locationReported.connect(updateTrackedFriendsLocations);
         VKHelper.friendsUpdated.connect(updateTrackedFriendsLocations);
     }
 }

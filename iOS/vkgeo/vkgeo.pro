@@ -10,12 +10,14 @@ OBJECTIVE_SOURCES += \
     src/admobhelper.mm \
     src/storehelper.mm \
     src/uihelper.mm \
+    src/notificationhelper.mm \
     src/vkhelper.mm
 
 HEADERS += \
     src/admobhelper.h \
     src/storehelper.h \
     src/uihelper.h \
+    src/notificationhelper.h \
     src/vkhelper.h \
     src/vkhelpershared.h
 
@@ -50,7 +52,8 @@ ios {
             -framework MessageUI \
             -framework SafariServices \
             -framework StoreKit \
-            -framework SystemConfiguration
+            -framework SystemConfiguration \
+            -framework UserNotifications
 
     VK_SDK_FRAMEWORK.files = ios/Frameworks/VKSdkFramework.framework
     VK_SDK_FRAMEWORK.path = Frameworks
