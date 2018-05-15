@@ -199,8 +199,12 @@ Item {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 onClicked: {
-                    if (!Qt.openUrlExternally("vk://vk.com/vkgeo_app")) {
-                        Qt.openUrlExternally("https://m.vk.com/vkgeo_app");
+                    var support_url = qsTr("http://vkgeo.sourceforge.io/");
+
+                    if (support_url.startsWith("http://") || support_url.startsWith("https://")) {
+                        Qt.openUrlExternally(support_url);
+                    } else if (!Qt.openUrlExternally("vk://vk.com/%1".arg(support_url))) {
+                        Qt.openUrlExternally("https://m.vk.com/%1".arg(support_url));
                     }
                 }
             }
