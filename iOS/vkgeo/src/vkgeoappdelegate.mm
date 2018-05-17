@@ -10,7 +10,10 @@
 
 #include "vkhelpershared.h"
 
-static const QString VK_APP_ID("6459902");
+static const CLLocationDistance LOCATION_DISTANCE_FILTER = 100.0;
+static const QString            VK_APP_ID("6459902");
+
+static CLLocationManager *LocationManager = nil;
 
 @interface QIOSApplicationDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate>
 @end
@@ -19,10 +22,6 @@ static const QString VK_APP_ID("6459902");
 @end
 
 @implementation QIOSApplicationDelegate (VKGeoAppDelegate)
-
-static const CLLocationDistance LOCATION_DISTANCE_FILTER = 100.0;
-
-static CLLocationManager *LocationManager = nil;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {

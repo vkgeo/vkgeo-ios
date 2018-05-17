@@ -22,13 +22,12 @@ AdMobHelper *AdMobHelper::Instance = NULL;
 - (void)dealloc;
 - (void)loadAd;
 
-@property (nonatomic, retain) GADBannerView *BannerView;
-
 @end
 
 @implementation BannerViewDelegate
-
-@synthesize BannerView;
+{
+    GADBannerView *BannerView;
+}
 
 - (id)init
 {
@@ -90,7 +89,7 @@ AdMobHelper *AdMobHelper::Instance = NULL;
         request.testDevices = @[ AdMobHelper::ADMOB_TEST_DEVICE_ID.toNSString() ];
     }
 
-    [self.BannerView loadRequest:request];
+    [BannerView loadRequest:request];
 }
 
 - (void)adViewDidReceiveAd:(GADBannerView *)adView
@@ -132,13 +131,12 @@ AdMobHelper *AdMobHelper::Instance = NULL;
 - (void)show;
 - (BOOL)isReady;
 
-@property (nonatomic, retain) GADInterstitial *Interstitial;
-
 @end
 
 @implementation InterstitialDelegate
-
-@synthesize Interstitial;
+{
+    GADInterstitial *Interstitial;
+}
 
 - (id)init
 {
@@ -162,13 +160,13 @@ AdMobHelper *AdMobHelper::Instance = NULL;
 
 - (void)loadAd
 {
-    if (self.Interstitial != nil) {
-        [self.Interstitial release];
+    if (Interstitial != nil) {
+        [Interstitial release];
     }
 
-    self.Interstitial = [[GADInterstitial alloc] initWithAdUnitID:AdMobHelper::ADMOB_INTERSTITIAL_UNIT_ID.toNSString()];
+    Interstitial = [[GADInterstitial alloc] initWithAdUnitID:AdMobHelper::ADMOB_INTERSTITIAL_UNIT_ID.toNSString()];
 
-    self.Interstitial.delegate = self;
+    Interstitial.delegate = self;
 
     GADRequest *request = [GADRequest request];
 
@@ -176,12 +174,12 @@ AdMobHelper *AdMobHelper::Instance = NULL;
         request.testDevices = @[ AdMobHelper::ADMOB_TEST_DEVICE_ID.toNSString() ];
     }
 
-    [self.Interstitial loadRequest:request];
+    [Interstitial loadRequest:request];
 }
 
 - (void)show
 {
-    if (self.Interstitial != nil && self.Interstitial.isReady) {
+    if (Interstitial != nil && Interstitial.isReady) {
         UIViewController * __block root_view_controller = nil;
 
         [[[UIApplication sharedApplication] windows] enumerateObjectsUsingBlock:^(UIWindow * _Nonnull window, NSUInteger, BOOL * _Nonnull stop) {
@@ -190,14 +188,14 @@ AdMobHelper *AdMobHelper::Instance = NULL;
             *stop = (root_view_controller != nil);
         }];
 
-        [self.Interstitial presentFromRootViewController:root_view_controller];
+        [Interstitial presentFromRootViewController:root_view_controller];
     }
 }
 
 - (BOOL)isReady
 {
-    if (self.Interstitial != nil) {
-        return self.Interstitial.isReady;
+    if (Interstitial != nil) {
+        return Interstitial.isReady;
     } else {
         return NO;
     }

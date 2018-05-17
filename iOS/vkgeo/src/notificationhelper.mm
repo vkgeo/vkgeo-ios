@@ -38,7 +38,7 @@ void NotificationHelper::showNotification(QString id, QString title, QString bod
     if (Initialized) {
         [[UNUserNotificationCenter currentNotificationCenter] getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings *settings) {
             if (settings.authorizationStatus == UNAuthorizationStatusAuthorized) {
-                UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
+                UNMutableNotificationContent *content = [[[UNMutableNotificationContent alloc] init] autorelease];
 
                 content.title = title.toNSString();
                 content.body  = body.toNSString();
