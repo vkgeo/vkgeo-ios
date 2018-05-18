@@ -266,7 +266,7 @@ int VKHelper::maxTrustedFriendsCount() const
     return MaxTrustedFriendsCount;
 }
 
-void VKHelper::setMaxTrustedFriendsCount(const int &count)
+void VKHelper::setMaxTrustedFriendsCount(int count)
 {
     MaxTrustedFriendsCount = count;
 
@@ -278,7 +278,7 @@ int VKHelper::maxTrackedFriendsCount() const
     return MaxTrackedFriendsCount;
 }
 
-void VKHelper::setMaxTrackedFriendsCount(const int &count)
+void VKHelper::setMaxTrackedFriendsCount(int count)
 {
     MaxTrackedFriendsCount = count;
 
@@ -588,7 +588,7 @@ void VKHelper::joinGroup(QString group_id)
     }
 }
 
-void VKHelper::setAuthState(const int &state)
+void VKHelper::setAuthState(int state)
 {
     Instance->AuthState = state;
 

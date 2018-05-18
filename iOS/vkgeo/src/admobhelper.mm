@@ -337,14 +337,14 @@ void AdMobHelper::showInterstitial()
     }
 }
 
-void AdMobHelper::setInterstitialActive(const bool &active)
+void AdMobHelper::setInterstitialActive(bool active)
 {
     Instance->InterstitialActive = active;
 
     emit Instance->interstitialActiveChanged(Instance->InterstitialActive);
 }
 
-void AdMobHelper::setBannerViewHeight(const int &height)
+void AdMobHelper::setBannerViewHeight(int height)
 {
     Instance->BannerViewHeight = height;
 

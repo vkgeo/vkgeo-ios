@@ -84,10 +84,10 @@ public:
     QString bigPhotoUrl() const;
 
     int maxTrustedFriendsCount() const;
-    void setMaxTrustedFriendsCount(const int &count);
+    void setMaxTrustedFriendsCount(int count);
 
     int maxTrackedFriendsCount() const;
-    void setMaxTrackedFriendsCount(const int &count);
+    void setMaxTrackedFriendsCount(int count);
 
     Q_INVOKABLE void initialize();
     Q_INVOKABLE void cleanup();
@@ -112,7 +112,7 @@ public:
 
     Q_INVOKABLE void joinGroup(QString group_id);
 
-    static void setAuthState(const int &state);
+    static void setAuthState(int state);
 
 signals:
     void authStateChanged(int authState);

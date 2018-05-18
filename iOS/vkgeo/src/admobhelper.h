@@ -35,8 +35,8 @@ public:
     Q_INVOKABLE void hideBannerView();
     Q_INVOKABLE void showInterstitial();
 
-    static void setInterstitialActive(const bool &active);
-    static void setBannerViewHeight(const int &height);
+    static void setInterstitialActive(bool active);
+    static void setBannerViewHeight(int height);
 
 signals:
     void interstitialActiveChanged(bool interstitialActive);
