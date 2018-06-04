@@ -130,6 +130,11 @@ Item {
 
         plugin: Plugin {
             name: "osm"
+
+            PluginParameter {
+                name:  "osm.mapping.highdpi_tiles"
+                value: "true"
+            }
         }
 
         onBearingChanged: {
