@@ -132,6 +132,11 @@ Item {
             name: "osm"
 
             PluginParameter {
+                name:  "osm.useragent"
+                value: "VKGeo"
+            }
+
+            PluginParameter {
                 name:  "osm.mapping.highdpi_tiles"
                 value: "true"
             }
