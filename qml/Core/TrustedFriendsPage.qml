@@ -179,6 +179,7 @@ Page {
                 id:           friendDelegate
                 width:        listView.width
                 height:       UtilScript.pt(80)
+                color:        "white"
                 clip:         true
                 border.width: UtilScript.pt(1)
                 border.color: "lightsteelblue"
