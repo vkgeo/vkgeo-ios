@@ -1162,7 +1162,7 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
                         request["context"]    = resp_request["context"].toString();
                         request["user_data"]  = resp_request["user_data"].toString();
 
-                        if (notes_to_delete.count() != 0) {
+                        if (notes_to_delete.count() > 0) {
                             request["notes_to_delete"] = notes_to_delete.join(",");
                         }
 
@@ -1170,7 +1170,7 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
 
                         EnqueueRequest(request);
                     } else {
-                        for (int i = 0; i < notes_to_delete.length(); i++) {
+                        for (int i = 0; i < notes_to_delete.count(); i++) {
                             QVariantMap request, parameters;
 
                             parameters["note_id"] = notes_to_delete[i].toInt();
