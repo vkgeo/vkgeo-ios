@@ -140,8 +140,7 @@ Item {
     }
 
     function inviteFriend(user_id) {
-        VKHelper.sendMessage(user_id, qsTr("I invite you to install the VKGeo app and join the community: %1")
-                                          .arg("https://itunes.apple.com/app/id1381218973"));
+        VKHelper.sendMessage(user_id, qsTr("I invite you to install the VKGeo Friends on Map app and join the community: http://vkgeo.sourceforge.io/"));
 
         for (var i = 0; i < friendsList.length; i++) {
             var frnd = friendsList[i];
@@ -359,39 +358,44 @@ Item {
                             Layout.fillHeight:   true
                         }
 
-                        Image {
+                        Rectangle {
                             width:            UtilScript.pt(48)
                             height:           UtilScript.pt(48)
-                            source:           buttonToShow(locationAvailable, trusted, tracked, invited)
-                            fillMode:         Image.PreserveAspectFit
+                            color:            "transparent"
                             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
-                            function buttonToShow(location_available, trusted, tracked, invited) {
-                                if (location_available) {
-                                    return "qrc:/resources/images/main/button_show_on_map.png";
-                                } else if (trusted || tracked) {
-                                    if (invited) {
-                                        return "qrc:/resources/images/main/button_invite_tracked_done.png";
+                            Image {
+                                anchors.fill: parent
+                                source:       buttonToShow(locationAvailable, trusted, tracked, invited)
+                                fillMode:     Image.PreserveAspectFit
+
+                                function buttonToShow(location_available, trusted, tracked, invited) {
+                                    if (location_available) {
+                                        return "qrc:/resources/images/main/button_show_on_map.png";
+                                    } else if (trusted || tracked) {
+                                        if (invited) {
+                                            return "qrc:/resources/images/main/button_invite_tracked_done.png";
+                                        } else {
+                                            return "qrc:/resources/images/main/button_invite_tracked.png";
+                                        }
                                     } else {
-                                        return "qrc:/resources/images/main/button_invite_tracked.png";
-                                    }
-                                } else {
-                                    if (invited) {
-                                        return "qrc:/resources/images/main/button_invite_other_done.png";
-                                    } else {
-                                        return "qrc:/resources/images/main/button_invite_other.png";
+                                        if (invited) {
+                                            return "qrc:/resources/images/main/button_invite_other_done.png";
+                                        } else {
+                                            return "qrc:/resources/images/main/button_invite_other.png";
+                                        }
                                     }
                                 }
-                            }
 
-                            MouseArea {
-                                anchors.fill: parent
+                                MouseArea {
+                                    anchors.fill: parent
 
-                                onClicked: {
-                                    if (locationAvailable) {
-                                        friendDelegate.listView.locateFriendOnMap(userId);
-                                    } else if (!invited) {
-                                        friendDelegate.listView.inviteFriend(userId);
+                                    onClicked: {
+                                        if (locationAvailable) {
+                                            friendDelegate.listView.locateFriendOnMap(userId);
+                                        } else if (!invited) {
+                                            friendDelegate.listView.inviteFriend(userId);
+                                        }
                                     }
                                 }
                             }
