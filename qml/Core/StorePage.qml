@@ -71,8 +71,8 @@ Page {
     StackView.onStatusChanged: {
         if (StackView.status === StackView.Activating ||
             StackView.status === StackView.Active) {
-            safeAreaTopMargin    = UIHelper.safeAreaTopMargin();
-            safeAreaBottomMargin = UIHelper.safeAreaBottomMargin();
+            safeAreaTopMargin    = UIHelper.getSafeAreaTopMargin();
+            safeAreaBottomMargin = UIHelper.getSafeAreaBottomMargin();
         }
     }
 

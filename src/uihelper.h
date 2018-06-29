@@ -11,8 +11,8 @@ public:
     explicit UIHelper(QObject *parent = 0);
     virtual ~UIHelper();
 
-    Q_INVOKABLE int safeAreaTopMargin();
-    Q_INVOKABLE int safeAreaBottomMargin();
+    Q_INVOKABLE int getSafeAreaTopMargin();
+    Q_INVOKABLE int getSafeAreaBottomMargin();
 };
 
 #endif // UIHELPER_H

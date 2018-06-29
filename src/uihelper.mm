@@ -12,7 +12,7 @@ UIHelper::~UIHelper()
 {
 }
 
-int UIHelper::safeAreaTopMargin()
+int UIHelper::getSafeAreaTopMargin()
 {
     UIViewController * __block root_view_controller = nil;
 
@@ -32,7 +32,7 @@ int UIHelper::safeAreaTopMargin()
     }
 }
 
-int UIHelper::safeAreaBottomMargin()
+int UIHelper::getSafeAreaBottomMargin()
 {
     UIViewController * __block root_view_controller = nil;
 
