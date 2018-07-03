@@ -20,10 +20,6 @@
         <translation>Вы действительно хотите отослать приглашение этому другу?</translation>
     </message>
     <message>
-        <source>I invite you to install the VKGeo app and join the community: %1</source>
-        <translation type="vanished">Я приглашаю Вас установить приложение VKGeo и присоединиться к сообществу: %1</translation>
-    </message>
-    <message>
         <source>New friends nearby</source>
         <translation>Новые друзья поблизости</translation>
     </message>
@@ -33,7 +29,7 @@
     </message>
     <message>
         <source>I invite you to install the VKGeo Friends on Map app and join the community: http://vkgeo.sourceforge.io/</source>
-        <translation type="unfinished"></translation>
+        <translation>Я приглашаю Вас установить приложение VKGeo Друзья на Карте и присоединиться к сообществу: http://vk.com/vkgeo_app</translation>
     </message>
 </context>
 <context>
@@ -136,10 +132,6 @@
         <translation>Запрос на вступление в группу отправлен</translation>
     </message>
     <message>
-        <source>Join VKGeo group</source>
-        <translation type="vanished">Вступить в группу VKGeo</translation>
-    </message>
-    <message>
         <source>View my VK profile</source>
         <translation>Посмотреть мой профиль ВКонтакте</translation>
     </message>
@@ -148,20 +140,16 @@
         <translation>Вступить в группу</translation>
     </message>
     <message>
-        <source>Do you want to join the VKGeo group?</source>
-        <translation type="vanished">Вы действительно хотите вступить в группу VKGeo?</translation>
-    </message>
-    <message>
         <source>http://vkgeo.sourceforge.io/</source>
         <translation>vkgeo_app</translation>
     </message>
     <message>
         <source>Join VKGeo Friends on Map group</source>
-        <translation type="unfinished"></translation>
+        <translation>Вступить в группу VKGeo Друзья на Карте</translation>
     </message>
     <message>
         <source>Do you want to join the VKGeo Friends on Map group?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы действительно хотите вступить в группу VKGeo Друзья на Карте?</translation>
     </message>
 </context>
 <context>
