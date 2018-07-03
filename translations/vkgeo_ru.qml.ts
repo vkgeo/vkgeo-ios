@@ -21,7 +21,7 @@
     </message>
     <message>
         <source>I invite you to install the VKGeo app and join the community: %1</source>
-        <translation>Я приглашаю Вас установить приложение VKGeo и присоединиться к сообществу: %1</translation>
+        <translation type="vanished">Я приглашаю Вас установить приложение VKGeo и присоединиться к сообществу: %1</translation>
     </message>
     <message>
         <source>New friends nearby</source>
@@ -30,6 +30,10 @@
     <message>
         <source>%1 is nearby</source>
         <translation>%1 сейчас поблизости</translation>
+    </message>
+    <message>
+        <source>I invite you to install the VKGeo Friends on Map app and join the community: http://vkgeo.sourceforge.io/</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -133,7 +137,7 @@
     </message>
     <message>
         <source>Join VKGeo group</source>
-        <translation>Вступить в группу VKGeo</translation>
+        <translation type="vanished">Вступить в группу VKGeo</translation>
     </message>
     <message>
         <source>View my VK profile</source>
@@ -145,11 +149,19 @@
     </message>
     <message>
         <source>Do you want to join the VKGeo group?</source>
-        <translation>Вы действительно хотите вступить в группу VKGeo?</translation>
+        <translation type="vanished">Вы действительно хотите вступить в группу VKGeo?</translation>
     </message>
     <message>
         <source>http://vkgeo.sourceforge.io/</source>
         <translation>vkgeo_app</translation>
+    </message>
+    <message>
+        <source>Join VKGeo Friends on Map group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you want to join the VKGeo Friends on Map group?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
