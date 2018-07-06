@@ -290,12 +290,12 @@ void VKHelper::initialize()
     if (!Initialized) {
         VKDelegateInstance = [[VKDelegate alloc] init];
 
-        connect(&RequestQueueTimer, SIGNAL(timeout()), this, SLOT(RequestQueueTimerTimeout()));
+        connect(&RequestQueueTimer, &QTimer::timeout, this, &VKHelper::RequestQueueTimerTimeout);
 
         RequestQueueTimer.setInterval(REQUEST_QUEUE_TIMER_INTERVAL);
         RequestQueueTimer.start();
 
-        connect(&ReportLocationTimer, SIGNAL(timeout()), this, SLOT(ReportLocationTimerTimeout()));
+        connect(&ReportLocationTimer, &QTimer::timeout, this, &VKHelper::ReportLocationTimerTimeout);
 
         ReportLocationTimer.setInterval(REPORT_LOCATION_TIMER_INTERVAL);
         ReportLocationTimer.start();
