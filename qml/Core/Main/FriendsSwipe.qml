@@ -66,10 +66,10 @@ Item {
                         if (!frnd.nearby) {
                             frnd.nearby = true;
 
-                            NotificationHelper.showNotification("FRIENDS_NEARBY", qsTr("New friends nearby"),
-                                                                                  qsTr("%1 is nearby")
-                                                                                      .arg("%1 %2".arg(frnd.firstName)
-                                                                                                  .arg(frnd.lastName)));
+                            NotificationHelper.showNotification("FRIENDS_NEARBY_NOTIFICATION_%1".arg(frnd.userId), qsTr("New friends nearby"),
+                                                                                                                   qsTr("%1 is nearby")
+                                                                                                                       .arg("%1 %2".arg(frnd.firstName)
+                                                                                                                                   .arg(frnd.lastName)));
                         }
                     } else {
                         frnd.nearby = false;
