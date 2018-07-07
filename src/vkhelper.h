@@ -114,6 +114,10 @@ public:
 
     static void setAuthState(int state);
 
+private slots:
+    void requestQueueTimerTimeout();
+    void reportLocationTimerTimeout();
+
 signals:
     void authStateChanged(int authState);
     void friendsCountChanged(int friendsCount);
@@ -128,10 +132,6 @@ signals:
     void locationReported();
     void friendsUpdated();
     void trackedFriendLocationUpdated(QString id, qint64 updateTime, qreal latitude, qreal longitude);
-
-private slots:
-    void RequestQueueTimerTimeout();
-    void ReportLocationTimerTimeout();
 
 private:
     void ReportLocation(bool expedited);

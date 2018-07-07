@@ -290,12 +290,12 @@ void VKHelper::initialize()
     if (!Initialized) {
         VKDelegateInstance = [[VKDelegate alloc] init];
 
-        connect(&RequestQueueTimer, &QTimer::timeout, this, &VKHelper::RequestQueueTimerTimeout);
+        connect(&RequestQueueTimer, &QTimer::timeout, this, &VKHelper::requestQueueTimerTimeout);
 
         RequestQueueTimer.setInterval(REQUEST_QUEUE_TIMER_INTERVAL);
         RequestQueueTimer.start();
 
-        connect(&ReportLocationTimer, &QTimer::timeout, this, &VKHelper::ReportLocationTimerTimeout);
+        connect(&ReportLocationTimer, &QTimer::timeout, this, &VKHelper::reportLocationTimerTimeout);
 
         ReportLocationTimer.setInterval(REPORT_LOCATION_TIMER_INTERVAL);
         ReportLocationTimer.start();
@@ -641,7 +641,7 @@ void VKHelper::setAuthState(int state)
     }
 }
 
-void VKHelper::RequestQueueTimerTimeout()
+void VKHelper::requestQueueTimerTimeout()
 {
     if (!RequestQueue.isEmpty()) {
         NSMutableArray *vk_request_array = [NSMutableArray arrayWithCapacity:MAX_BATCH_SIZE];
@@ -686,7 +686,7 @@ void VKHelper::RequestQueueTimerTimeout()
     }
 }
 
-void VKHelper::ReportLocationTimerTimeout()
+void VKHelper::reportLocationTimerTimeout()
 {
     ReportLocation(false);
 }
