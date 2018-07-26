@@ -21,6 +21,8 @@ int main(int argc, char *argv[])
         app.installTranslator(&translator);
     }
 
+    VKHelperShared = new VKHelper(&app);
+
     qmlRegisterType<VKAuthState>("VKHelper", 1, 0, "VKAuthState");
 
     QQmlApplicationEngine engine;
@@ -29,12 +31,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty(QStringLiteral("StoreHelper"), new StoreHelper(&app));
     engine.rootContext()->setContextProperty(QStringLiteral("UIHelper"), new UIHelper(&app));
     engine.rootContext()->setContextProperty(QStringLiteral("NotificationHelper"), new NotificationHelper(&app));
-
-    if (VKHelperShared != NULL) {
-        VKHelperShared->setParent(&app);
-
-        engine.rootContext()->setContextProperty(QStringLiteral("VKHelper"), VKHelperShared);
-    }
+    engine.rootContext()->setContextProperty(QStringLiteral("VKHelper"), VKHelperShared);
 
     engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
 

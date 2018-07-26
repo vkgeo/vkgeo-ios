@@ -30,8 +30,6 @@ static CLLocationManager *LocationManager = nil;
 
     [VKSdk initializeWithAppId:VK_APP_ID.toNSString()];
 
-    VKHelperShared = new VKHelper();
-
     LocationManager = [[CLLocationManager alloc] init];
 
     LocationManager.allowsBackgroundLocationUpdates    = YES;
