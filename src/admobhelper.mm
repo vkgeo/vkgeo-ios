@@ -245,32 +245,29 @@ AdMobHelper *AdMobHelper::Instance = NULL;
 
 AdMobHelper::AdMobHelper(QObject *parent) : QObject(parent)
 {
-    Initialized                  = false;
+    [GADMobileAds configureWithApplicationID:ADMOB_APP_ID.toNSString()];
+
     InterstitialActive           = false;
     BannerViewHeight             = 0;
     Instance                     = this;
     BannerViewDelegateInstance   = NULL;
-    InterstitialDelegateInstance = NULL;
+    InterstitialDelegateInstance = [[InterstitialDelegate alloc] init];
+
+    [InterstitialDelegateInstance loadAd];
 }
 
 AdMobHelper::~AdMobHelper()
 {
-    if (Initialized) {
-        if (BannerViewDelegateInstance != NULL && BannerViewDelegateInstance != nil) {
-            [BannerViewDelegateInstance release];
-        }
-
-        [InterstitialDelegateInstance release];
+    if (BannerViewDelegateInstance != NULL && BannerViewDelegateInstance != nil) {
+        [BannerViewDelegateInstance release];
     }
+
+    [InterstitialDelegateInstance release];
 }
 
 bool AdMobHelper::interstitialReady() const
 {
-    if (Initialized) {
-        return [InterstitialDelegateInstance isReady];
-    } else {
-        return false;
-    }
+    return [InterstitialDelegateInstance isReady];
 }
 
 bool AdMobHelper::interstitialActive() const
@@ -283,58 +280,39 @@ int AdMobHelper::bannerViewHeight() const
     return BannerViewHeight;
 }
 
-void AdMobHelper::initialize()
-{
-    if (!Initialized) {
-        [GADMobileAds configureWithApplicationID:ADMOB_APP_ID.toNSString()];
-
-        InterstitialDelegateInstance = [[InterstitialDelegate alloc] init];
-
-        [InterstitialDelegateInstance loadAd];
-
-        Initialized = true;
-    }
-}
-
 void AdMobHelper::showBannerView()
 {
-    if (Initialized) {
-        if (BannerViewDelegateInstance != NULL && BannerViewDelegateInstance != nil) {
-            [BannerViewDelegateInstance release];
+    if (BannerViewDelegateInstance != NULL && BannerViewDelegateInstance != nil) {
+        [BannerViewDelegateInstance release];
 
-            BannerViewHeight = 0;
+        BannerViewHeight = 0;
 
-            emit bannerViewHeightChanged(BannerViewHeight);
+        emit bannerViewHeightChanged(BannerViewHeight);
 
-            BannerViewDelegateInstance = nil;
-        }
-
-        BannerViewDelegateInstance = [[BannerViewDelegate alloc] init];
-
-        [BannerViewDelegateInstance loadAd];
+        BannerViewDelegateInstance = nil;
     }
+
+    BannerViewDelegateInstance = [[BannerViewDelegate alloc] init];
+
+    [BannerViewDelegateInstance loadAd];
 }
 
 void AdMobHelper::hideBannerView()
 {
-    if (Initialized) {
-        if (BannerViewDelegateInstance != NULL && BannerViewDelegateInstance != nil) {
-            [BannerViewDelegateInstance release];
+    if (BannerViewDelegateInstance != NULL && BannerViewDelegateInstance != nil) {
+        [BannerViewDelegateInstance release];
 
-            BannerViewHeight = 0;
+        BannerViewHeight = 0;
 
-            emit bannerViewHeightChanged(BannerViewHeight);
+        emit bannerViewHeightChanged(BannerViewHeight);
 
-            BannerViewDelegateInstance = nil;
-        }
+        BannerViewDelegateInstance = nil;
     }
 }
 
 void AdMobHelper::showInterstitial()
 {
-    if (Initialized) {
-        [InterstitialDelegateInstance show];
-    }
+    [InterstitialDelegateInstance show];
 }
 
 void AdMobHelper::setInterstitialActive(bool active)

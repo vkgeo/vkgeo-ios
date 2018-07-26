@@ -30,7 +30,6 @@ public:
     bool interstitialActive() const;
     int  bannerViewHeight() const;
 
-    Q_INVOKABLE void initialize();
     Q_INVOKABLE void showBannerView();
     Q_INVOKABLE void hideBannerView();
     Q_INVOKABLE void showInterstitial();
@@ -43,7 +42,7 @@ signals:
     void bannerViewHeightChanged(int bannerViewHeight);
 
 private:
-    bool                  Initialized, InterstitialActive;
+    bool                  InterstitialActive;
     int                   BannerViewHeight;
     static AdMobHelper   *Instance;
 #ifdef __OBJC__
