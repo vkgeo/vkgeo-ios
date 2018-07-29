@@ -5,6 +5,7 @@
 #import <VKSdkFramework/VKSdkFramework.h>
 #endif
 
+#include <QtCore/QtGlobal>
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QQueue>
