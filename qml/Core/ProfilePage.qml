@@ -73,6 +73,8 @@ Page {
     property int bannerViewHeight:     AdMobHelper.bannerViewHeight
 
     property real updateTime:          0.0
+    property real latitude:            0.0
+    property real longitude:           0.0
 
     property string userId:            ""
     property string firstName:         ""
@@ -214,6 +216,20 @@ Page {
                     locateOnMap(profilePage.userId);
 
                     mainStackView.pop();
+                }
+            }
+
+            VKButton {
+                width:            UtilScript.pt(280)
+                height:           UtilScript.pt(64)
+                text:             qsTr("Get directions")
+                visible:          profilePage.locationAvailable && VKHelper.locationValid
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                onClicked: {
+                    Qt.openUrlExternally("https://maps.apple.com/maps?saddr=%1&daddr=%2"
+                                         .arg(encodeURIComponent(VKHelper.locationLatitude + "," + VKHelper.locationLongitude))
+                                         .arg(encodeURIComponent(profilePage.latitude      + "," + profilePage.longitude)));
                 }
             }
 
