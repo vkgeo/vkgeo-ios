@@ -227,7 +227,7 @@ Page {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 onClicked: {
-                    Qt.openUrlExternally("https://maps.apple.com/maps?saddr=%1&daddr=%2"
+                    Qt.openUrlExternally("https://maps.apple.com/?saddr=%1&daddr=%2"
                                          .arg(encodeURIComponent(VKHelper.locationLatitude + "," + VKHelper.locationLongitude))
                                          .arg(encodeURIComponent(profilePage.latitude      + "," + profilePage.longitude)));
                 }
