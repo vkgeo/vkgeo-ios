@@ -80,6 +80,10 @@
         <source>Open profile</source>
         <translation>Открыть профиль</translation>
     </message>
+    <message>
+        <source>Get directions</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsSwipe</name>
