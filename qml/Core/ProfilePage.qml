@@ -223,13 +223,12 @@ Page {
                 width:            UtilScript.pt(280)
                 height:           UtilScript.pt(64)
                 text:             qsTr("Get directions")
-                visible:          profilePage.locationAvailable && VKHelper.locationValid
+                visible:          profilePage.locationAvailable
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 onClicked: {
-                    Qt.openUrlExternally("https://maps.apple.com/?saddr=%1&daddr=%2"
-                                         .arg(encodeURIComponent(VKHelper.locationLatitude + "," + VKHelper.locationLongitude))
-                                         .arg(encodeURIComponent(profilePage.latitude      + "," + profilePage.longitude)));
+                    Qt.openUrlExternally("https://maps.apple.com/?daddr=%2"
+                                         .arg(encodeURIComponent(profilePage.latitude + "," + profilePage.longitude)));
                 }
             }
 
