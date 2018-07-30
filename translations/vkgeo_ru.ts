@@ -82,7 +82,7 @@
     </message>
     <message>
         <source>Get directions</source>
-        <translation type="unfinished"></translation>
+        <translation>Построить маршрут</translation>
     </message>
 </context>
 <context>
