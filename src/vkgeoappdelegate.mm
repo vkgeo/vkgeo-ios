@@ -29,7 +29,7 @@ static qint64 elapsedNanos()
     struct timespec elapsed_time;
 
     if (clock_gettime(CLOCK_MONOTONIC_RAW, &elapsed_time) == 0) {
-        return elapsed_time.tv_sec * 1000000000 + elapsed_time.tv_nsec;
+        return (qint64)elapsed_time.tv_sec * 1000000000 + elapsed_time.tv_nsec;
     } else {
         return 0;
     }
