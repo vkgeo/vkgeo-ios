@@ -4,16 +4,36 @@
 
 #import <VKSdkFramework/VKSdkFramework.h>
 
+#include <time.h>
+
 #include <QtCore/QtGlobal>
 #include <QtCore/QString>
 #include <QtCore/QDebug>
 
 #include "vkhelpershared.h"
 
-static const CLLocationDistance LOCATION_DISTANCE_FILTER = 100.0;
+static const qint64             LOCATION_UPDATE_CTR_TIMEOUT          = 900;
+static const NSTimeInterval     DESIRED_ACCURACY_ADJUSTMENT_INTERVAL = 60.0;
+static const CLLocationDistance LOCATION_DISTANCE_FILTER             = 100.0,
+                                LOCATION_UPDATE_CTR_DISTANCE         = 500.0;
 static const QString            VK_APP_ID("6459902");
 
-static CLLocationManager *LocationManager = nil;
+static bool               CenterLocationChanged           = false;
+static qint64             CenterLocationChangeHandleNanos = 0;
+static CLLocation        *CurrentLocation                 = nil,
+                         *CenterLocation                  = nil;
+static CLLocationManager *LocationManager                 = nil;
+
+static qint64 elapsedNanos()
+{
+    struct timespec elapsed_time;
+
+    if (clock_gettime(CLOCK_MONOTONIC_RAW, &elapsed_time) == 0) {
+        return elapsed_time.tv_sec * 1000000000 + elapsed_time.tv_nsec;
+    } else {
+        return 0;
+    }
+}
 
 @interface QIOSApplicationDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate>
 @end
@@ -49,6 +69,8 @@ static CLLocationManager *LocationManager = nil;
         }
     }
 
+    [self performSelector:@selector(adjustDesiredAccuracy) withObject:nil afterDelay:DESIRED_ACCURACY_ADJUSTMENT_INTERVAL];
+
     return YES;
 }
 
@@ -68,8 +90,25 @@ static CLLocationManager *LocationManager = nil;
     if (locations != nil && locations.lastObject != nil) {
         CLLocation *location = locations.lastObject;
 
-        if (VKHelperShared != NULL) {
-            VKHelperShared->updateLocation(location.coordinate.latitude, location.coordinate.longitude);
+        if (CurrentLocation == nil || [CurrentLocation distanceFromLocation:location] > location.horizontalAccuracy) {
+            if (CurrentLocation != nil) {
+                [CurrentLocation release];
+            }
+
+            CurrentLocation = [location retain];
+
+            if (VKHelperShared != NULL) {
+                VKHelperShared->updateLocation(CurrentLocation.coordinate.latitude, CurrentLocation.coordinate.longitude);
+            }
+
+            if (CenterLocation == nil || [CenterLocation distanceFromLocation:CurrentLocation] > LOCATION_UPDATE_CTR_DISTANCE) {
+                if (CenterLocation != nil) {
+                    [CenterLocation release];
+                }
+
+                CenterLocation        = [CurrentLocation retain];
+                CenterLocationChanged = true;
+            }
         }
     }
 }
@@ -100,6 +139,20 @@ static CLLocationManager *LocationManager = nil;
         [LocationManager stopUpdatingLocation];
         [LocationManager stopMonitoringSignificantLocationChanges];
     }
+}
+
+- (void)adjustDesiredAccuracy
+{
+    if (CenterLocationChanged) {
+        LocationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
+
+        CenterLocationChanged           = false;
+        CenterLocationChangeHandleNanos = elapsedNanos();
+    } else if (elapsedNanos() - CenterLocationChangeHandleNanos > LOCATION_UPDATE_CTR_TIMEOUT * 1000000000) {
+        LocationManager.desiredAccuracy = kCLLocationAccuracyKilometer;
+    }
+
+    [self performSelector:@selector(adjustDesiredAccuracy) withObject:nil afterDelay:DESIRED_ACCURACY_ADJUSTMENT_INTERVAL];
 }
 
 @end
