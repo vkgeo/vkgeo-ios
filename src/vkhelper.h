@@ -139,7 +139,7 @@ private:
     void ContextTrackerAddRequest(QVariantMap request);
     void ContextTrackerDelRequest(QVariantMap request);
 
-    bool ContextHaveActiveRequests(QString context);
+    bool ContextHasActiveRequests(QString context);
 
     void       EnqueueRequest(QVariantMap request);
 #ifdef __OBJC__
