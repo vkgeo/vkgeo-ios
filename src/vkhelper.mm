@@ -16,7 +16,7 @@ const QString VKHelper::TRACKED_FRIENDS_LIST_NAME("VKGeo Tracked Friends");
 
 static NSArray *AUTH_SCOPE = @[ @"friends", @"notes", @"messages", @"groups", @"offline" ];
 
-VKHelper *VKHelper::Instance = NULL;
+VKHelper *VKHelper::Instance = nullptr;
 
 @interface VKDelegate : NSObject<VKSdkDelegate, VKSdkUIDelegate>
 
@@ -173,25 +173,26 @@ bool compareFriends(const QVariant &friend_1, const QVariant &friend_2)
 
 VKHelper::VKHelper(QObject *parent) : QObject(parent)
 {
-    AuthState                             = VKAuthState::StateUnknown;
-    MaxTrustedFriendsCount                = DEFAULT_MAX_TRUSTED_FRIENDS_COUNT;
-    MaxTrackedFriendsCount                = DEFAULT_MAX_TRACKED_FRIENDS_COUNT;
-    LastReportLocationTime                = 0;
-    LastUpdateTrackedFriendsLocationsTime = 0;
-    PhotoUrl                              = DEFAULT_PHOTO_URL;
-    BigPhotoUrl                           = DEFAULT_PHOTO_URL;
-    Instance                              = this;
-    VKDelegateInstance                    = [[VKDelegate alloc] init];
+    CurrentDataUpdated               = false;
+    AuthState                        = VKAuthState::StateUnknown;
+    MaxTrustedFriendsCount           = DEFAULT_MAX_TRUSTED_FRIENDS_COUNT;
+    MaxTrackedFriendsCount           = DEFAULT_MAX_TRACKED_FRIENDS_COUNT;
+    LastSendDataTime                 = 0;
+    LastUpdateTrackedFriendsDataTime = 0;
+    PhotoUrl                         = DEFAULT_PHOTO_URL;
+    BigPhotoUrl                      = DEFAULT_PHOTO_URL;
+    Instance                         = this;
+    VKDelegateInstance               = [[VKDelegate alloc] init];
 
     connect(&RequestQueueTimer, &QTimer::timeout, this, &VKHelper::requestQueueTimerTimeout);
 
     RequestQueueTimer.setInterval(REQUEST_QUEUE_TIMER_INTERVAL);
     RequestQueueTimer.start();
 
-    connect(&ReportLocationTimer, &QTimer::timeout, this, &VKHelper::reportLocationTimerTimeout);
+    connect(&SendDataTimer, &QTimer::timeout, this, &VKHelper::sendDataTimerTimeout);
 
-    ReportLocationTimer.setInterval(REPORT_LOCATION_TIMER_INTERVAL);
-    ReportLocationTimer.start();
+    SendDataTimer.setInterval(SEND_DATA_TIMER_INTERVAL);
+    SendDataTimer.start();
 }
 
 VKHelper::~VKHelper()
@@ -201,15 +202,15 @@ VKHelper::~VKHelper()
 
 bool VKHelper::locationValid() const
 {
-    return LastLocationInfo.contains("update_time") &&
-           LastLocationInfo.contains("latitude") &&
-           LastLocationInfo.contains("longitude");
+    return CurrentData.contains("update_time") &&
+           CurrentData.contains("latitude") &&
+           CurrentData.contains("longitude");
 }
 
 qint64 VKHelper::locationUpdateTime() const
 {
-    if (LastLocationInfo.contains("update_time")) {
-        return LastLocationInfo["update_time"].toLongLong();
+    if (CurrentData.contains("update_time")) {
+        return CurrentData["update_time"].toLongLong();
     } else {
         return 0;
     }
@@ -217,8 +218,8 @@ qint64 VKHelper::locationUpdateTime() const
 
 qreal VKHelper::locationLatitude() const
 {
-    if (LastLocationInfo.contains("latitude")) {
-        return LastLocationInfo["latitude"].toReal();
+    if (CurrentData.contains("latitude")) {
+        return CurrentData["latitude"].toDouble();
     } else {
         return 0.0;
     }
@@ -226,8 +227,8 @@ qreal VKHelper::locationLatitude() const
 
 qreal VKHelper::locationLongitude() const
 {
-    if (LastLocationInfo.contains("longitude")) {
-        return LastLocationInfo["longitude"].toReal();
+    if (CurrentData.contains("longitude")) {
+        return CurrentData["longitude"].toDouble();
     } else {
         return 0.0;
     }
@@ -294,15 +295,15 @@ void VKHelper::setMaxTrackedFriendsCount(int count)
 
 void VKHelper::cleanup()
 {
-    LastReportLocationTime                = 0;
-    LastUpdateTrackedFriendsLocationsTime = 0;
-    UserId                                = "";
-    FirstName                             = "";
-    LastName                              = "";
-    PhotoUrl                              = DEFAULT_PHOTO_URL;
-    BigPhotoUrl                           = DEFAULT_PHOTO_URL;
-    TrustedFriendsListId                  = "";
-    TrackedFriendsListId                  = "";
+    LastSendDataTime                 = 0;
+    LastUpdateTrackedFriendsDataTime = 0;
+    UserId                           = "";
+    FirstName                        = "";
+    LastName                         = "";
+    PhotoUrl                         = DEFAULT_PHOTO_URL;
+    BigPhotoUrl                      = DEFAULT_PHOTO_URL;
+    TrustedFriendsListId             = "";
+    TrackedFriendsListId             = "";
 
     emit userIdChanged(UserId);
     emit firstNameChanged(FirstName);
@@ -341,17 +342,27 @@ void VKHelper::logout()
 
 void VKHelper::updateLocation(qreal latitude, qreal longitude)
 {
-    LastLocationInfo["updated"]     = true;
-    LastLocationInfo["update_time"] = QDateTime::currentSecsSinceEpoch();
-    LastLocationInfo["latitude"]    = latitude;
-    LastLocationInfo["longitude"]   = longitude;
+    CurrentDataUpdated         = true;
+    CurrentData["update_time"] = QDateTime::currentSecsSinceEpoch();
+    CurrentData["latitude"]    = latitude;
+    CurrentData["longitude"]   = longitude;
 
     emit locationUpdated();
 }
 
-void VKHelper::reportLocation()
+void VKHelper::updateBatteryStatus(QString status, int level)
 {
-    ReportLocation(true);
+    CurrentDataUpdated            = true;
+    CurrentData["update_time"]    = QDateTime::currentSecsSinceEpoch();
+    CurrentData["battery_status"] = status;
+    CurrentData["battery_level"]  = level;
+
+    emit batteryStatusUpdated();
+}
+
+void VKHelper::sendData()
+{
+    SendData(true);
 }
 
 void VKHelper::updateFriends()
@@ -487,10 +498,10 @@ void VKHelper::updateTrackedFriendsList(QVariantList tracked_friends_list)
     }
 }
 
-void VKHelper::updateTrackedFriendsLocations(bool expedited)
+void VKHelper::updateTrackedFriendsData(bool expedited)
 {
-    if (expedited || QDateTime::currentSecsSinceEpoch() > LastUpdateTrackedFriendsLocationsTime + UPDATE_TRACKED_FRIENDS_LOCATIONS_INTERVAL) {
-        LastUpdateTrackedFriendsLocationsTime = QDateTime::currentSecsSinceEpoch();
+    if (expedited || QDateTime::currentSecsSinceEpoch() > LastUpdateTrackedFriendsDataTime + UPDATE_TRACKED_FRIENDS_DATA_INTERVAL) {
+        LastUpdateTrackedFriendsDataTime = QDateTime::currentSecsSinceEpoch();
 
         foreach (QString key, FriendsData.keys()) {
             QVariantMap frnd = FriendsData[key].toMap();
@@ -500,10 +511,11 @@ void VKHelper::updateTrackedFriendsLocations(bool expedited)
                 QVariantMap request, parameters;
 
                 parameters["count"]   = MAX_NOTES_GET_COUNT;
+                parameters["sort"]    = 0;
                 parameters["user_id"] = key.toLongLong();
 
                 request["method"]     = "notes.get";
-                request["context"]    = "updateTrackedFriendsLocations";
+                request["context"]    = "updateTrackedFriendsData";
                 request["parameters"] = parameters;
 
                 EnqueueRequest(request);
@@ -652,50 +664,44 @@ void VKHelper::requestQueueTimerTimeout()
     }
 }
 
-void VKHelper::reportLocationTimerTimeout()
+void VKHelper::sendDataTimerTimeout()
 {
-    ReportLocation(false);
+    SendData(false);
 }
 
-void VKHelper::ReportLocation(bool expedited)
+void VKHelper::SendData(bool expedited)
 {
-    if (!ContextHasActiveRequests("reportLocation")) {
-        if (LastLocationInfo.contains("updated")  && LastLocationInfo.contains("update_time") &&
-            LastLocationInfo.contains("latitude") && LastLocationInfo.contains("longitude")) {
-            if (AuthState == VKAuthState::StateAuthorized) {
-                if (LastLocationInfo["updated"].toBool()) {
-                    if (expedited || QDateTime::currentSecsSinceEpoch() > LastReportLocationTime + REPORT_LOCATION_INTERVAL) {
-                        LastReportLocationTime = QDateTime::currentSecsSinceEpoch();
+    if (!ContextHasActiveRequests("sendData")) {
+        if (AuthState == VKAuthState::StateAuthorized) {
+            if (CurrentDataUpdated) {
+                if (expedited || QDateTime::currentSecsSinceEpoch() > LastSendDataTime + SEND_DATA_INTERVAL) {
+                    LastSendDataTime = QDateTime::currentSecsSinceEpoch();
 
-                        QVariantMap request, user_data, parameters;
+                    QVariantMap request, parameters;
 
-                        user_data["update_time"] = LastLocationInfo["update_time"].toLongLong();
-                        user_data["latitude"]    = LastLocationInfo["latitude"].toReal();
-                        user_data["longitude"]   = LastLocationInfo["longitude"].toReal();
+                    QString user_data_string = QString("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(CurrentData)
+                                                                                         .toJson(QJsonDocument::Compact)
+                                                                                         .toBase64()));
 
-                        QString user_data_string = QString("{{{%1}}}").arg(QString::fromUtf8(QJsonDocument::fromVariant(user_data)
-                                                                                             .toJson(QJsonDocument::Compact)
-                                                                                             .toBase64()));
+                    if (TrustedFriendsListId == "") {
+                        request["method"]    = "friends.getLists";
+                        request["context"]   = "sendData";
+                        request["user_data"] = user_data_string;
+                    } else {
+                        parameters["count"] = MAX_NOTES_GET_COUNT;
+                        parameters["sort"]  = 0;
 
-                        if (TrustedFriendsListId == "") {
-                            request["method"]    = "friends.getLists";
-                            request["context"]   = "reportLocation";
-                            request["user_data"] = user_data_string;
-                        } else {
-                            parameters["count"] = MAX_NOTES_GET_COUNT;
-
-                            request["method"]     = "notes.get";
-                            request["context"]    = "reportLocation";
-                            request["user_data"]  = user_data_string;
-                            request["parameters"] = parameters;
-                        }
-
-                        EnqueueRequest(request);
-
-                        LastLocationInfo["updated"] = false;
-
-                        emit locationReported();
+                        request["method"]     = "notes.get";
+                        request["context"]    = "sendData";
+                        request["user_data"]  = user_data_string;
+                        request["parameters"] = parameters;
                     }
+
+                    EnqueueRequest(request);
+
+                    CurrentDataUpdated = false;
+
+                    emit dataSent();
                 }
             }
         }
@@ -1083,7 +1089,7 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
 
 void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_request)
 {
-    if (resp_request["context"].toString() == "reportLocation") {
+    if (resp_request["context"].toString() == "sendData") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
 
         if (!json_document.isNull() && json_document.object().contains("response")) {
@@ -1118,11 +1124,12 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
                 }
 
                 if (resp_request.contains("user_data")) {
-                    if (offset + json_items.count() < notes_count) {
-                        QVariantMap request, parameters;
+                    QVariantMap request, parameters;
 
+                    if (offset + json_items.count() < notes_count) {
                         parameters["count"]  = MAX_NOTES_GET_COUNT;
                         parameters["offset"] = offset + json_items.count();
+                        parameters["sort"]   = 0;
 
                         request["method"]     = "notes.get";
                         request["context"]    = resp_request["context"].toString();
@@ -1133,23 +1140,7 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
                         }
 
                         request["parameters"] = parameters;
-
-                        EnqueueRequest(request);
                     } else {
-                        for (int i = 0; i < notes_to_delete.count(); i++) {
-                            QVariantMap request, parameters;
-
-                            parameters["note_id"] = notes_to_delete[i].toLongLong();
-
-                            request["method"]     = "notes.delete";
-                            request["context"]    = resp_request["context"].toString();
-                            request["parameters"] = parameters;
-
-                            EnqueueRequest(request);
-                        }
-
-                        QVariantMap request, parameters;
-
                         parameters["title"]           = DATA_NOTE_TITLE;
                         parameters["text"]            = resp_request["user_data"].toString();
                         parameters["privacy_comment"] = "nobody";
@@ -1162,10 +1153,15 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
 
                         request["method"]     = "notes.add";
                         request["context"]    = resp_request["context"].toString();
-                        request["parameters"] = parameters;
 
-                        EnqueueRequest(request);
+                        if (notes_to_delete.count() > 0) {
+                            request["notes_to_delete"] = notes_to_delete.join(",");
+                        }
+
+                        request["parameters"] = parameters;
                     }
+
+                    EnqueueRequest(request);
                 } else {
                     qWarning() << "ProcessNotesGetResponse() : invalid request";
                 }
@@ -1175,7 +1171,7 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
         } else {
             qWarning() << "ProcessNotesGetResponse() : invalid json";
         }
-    } else if (resp_request["context"].toString() == "updateTrackedFriendsLocations") {
+    } else if (resp_request["context"].toString() == "updateTrackedFriendsData") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
 
         if (!json_document.isNull() && json_document.object().contains("response")) {
@@ -1213,14 +1209,7 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
 
                                     QVariantMap user_data = QJsonDocument::fromJson(QByteArray::fromBase64(note_base64.toUtf8())).toVariant().toMap();
 
-                                    if (user_data.contains("update_time") && user_data.contains("latitude") &&
-                                                                             user_data.contains("longitude")) {
-                                        emit trackedFriendLocationUpdated(user_id, user_data["update_time"].toLongLong(),
-                                                                                   user_data["latitude"].toReal(),
-                                                                                   user_data["longitude"].toReal());
-                                    } else {
-                                        qWarning() << "ProcessNotesGetResponse() : invalid user data";
-                                    }
+                                    emit trackedFriendDataUpdated(user_id, QJsonDocument::fromJson(QByteArray::fromBase64(note_base64.toUtf8())).toVariant().toMap());
                                 } else {
                                     qWarning() << "ProcessNotesGetResponse() : invalid user data";
                                 }
@@ -1240,6 +1229,7 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
 
                             parameters["count"]   = MAX_NOTES_GET_COUNT;
                             parameters["offset"]  = offset + json_items.count();
+                            parameters["sort"]    = 0;
                             parameters["user_id"] = user_id.toLongLong();
 
                             request["method"]     = "notes.get";
@@ -1270,7 +1260,26 @@ void VKHelper::ProcessNotesGetError(QVariantMap err_request)
 void VKHelper::ProcessNotesAddResponse(QString response, QVariantMap resp_request)
 {
     Q_UNUSED(response)
-    Q_UNUSED(resp_request)
+
+    if (resp_request["context"].toString() == "sendData") {
+        QStringList notes_to_delete;
+
+        if (resp_request.contains("notes_to_delete")) {
+            notes_to_delete = resp_request["notes_to_delete"].toString().split(",");
+        }
+
+        for (int i = 0; i < notes_to_delete.count(); i++) {
+            QVariantMap request, parameters;
+
+            parameters["note_id"] = notes_to_delete[i].toLongLong();
+
+            request["method"]     = "notes.delete";
+            request["context"]    = resp_request["context"].toString();
+            request["parameters"] = parameters;
+
+            EnqueueRequest(request);
+        }
+    }
 }
 
 void VKHelper::ProcessNotesAddError(QVariantMap err_request)
@@ -1466,7 +1475,7 @@ void VKHelper::ProcessFriendsGetError(QVariantMap err_request)
 
 void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp_request)
 {
-    if (resp_request["context"].toString() == "reportLocation") {
+    if (resp_request["context"].toString() == "sendData") {
         QJsonDocument json_document = QJsonDocument::fromJson(response.toUtf8());
 
         if (!json_document.isNull() && json_document.object().contains("response")) {
@@ -1504,6 +1513,7 @@ void VKHelper::ProcessFriendsGetListsResponse(QString response, QVariantMap resp
                     QVariantMap request, parameters;
 
                     parameters["count"] = MAX_NOTES_GET_COUNT;
+                    parameters["sort"]  = 0;
 
                     request["method"]     = "notes.get";
                     request["context"]    = resp_request["context"].toString();

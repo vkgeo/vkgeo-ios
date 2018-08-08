@@ -2,6 +2,9 @@
 #import <UIKit/UIApplication.h>
 #import <UIKit/UIViewController.h>
 
+#include <QtCore/QtGlobal>
+#include <QtCore/QtMath>
+
 #include "uihelper.h"
 
 UIHelper::UIHelper(QObject *parent) : QObject(parent)
@@ -23,10 +26,10 @@ int UIHelper::getSafeAreaTopMargin()
     }];
 
     if (@available(iOS 11, *)) {
-        CGSize status_bar_size   = [[UIApplication sharedApplication] statusBarFrame].size;
-        int    status_bar_height = MIN(status_bar_size.width, status_bar_size.height);
+        CGSize  status_bar_size   = [[UIApplication sharedApplication] statusBarFrame].size;
+        CGFloat status_bar_height = qMin(status_bar_size.width, status_bar_size.height);
 
-        return root_view_controller.view.safeAreaInsets.top - status_bar_height;
+        return qFloor(root_view_controller.view.safeAreaInsets.top - status_bar_height);
     } else {
         assert(0);
     }
@@ -43,8 +46,13 @@ int UIHelper::getSafeAreaBottomMargin()
     }];
 
     if (@available(iOS 11, *)) {
-        return root_view_controller.view.safeAreaInsets.bottom;
+        return qFloor(root_view_controller.view.safeAreaInsets.bottom);
     } else {
         assert(0);
     }
+}
+
+QString UIHelper::getAppSettingsUrl()
+{
+    return QString::fromNSString(UIApplicationOpenSettingsURLString);
 }

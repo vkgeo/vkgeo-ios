@@ -172,6 +172,17 @@ Item {
             VKButton {
                 width:            UtilScript.pt(280)
                 height:           UtilScript.pt(64)
+                text:             qsTr("Additional settings")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                onClicked: {
+                    Qt.openUrlExternally(UIHelper.getAppSettingsUrl());
+                }
+            }
+
+            VKButton {
+                width:            UtilScript.pt(280)
+                height:           UtilScript.pt(64)
                 text:             qsTr("Store")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
@@ -240,12 +251,14 @@ Item {
 
                         my_profile_page.userId            = VKHelper.userId;
                         my_profile_page.online            = false;
+                        my_profile_page.dataAvailable     = false;
                         my_profile_page.locationAvailable = false;
                         my_profile_page.firstName         = VKHelper.firstName;
                         my_profile_page.lastName          = VKHelper.lastName;
                         my_profile_page.bigPhotoUrl       = VKHelper.bigPhotoUrl;
                         my_profile_page.screenName        = "id%1".arg(VKHelper.userId);
                         my_profile_page.status            = "";
+                        my_profile_page.batteryStatus     = "";
                     } else {
                         console.log(component.errorString());
                     }

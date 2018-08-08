@@ -66,11 +66,13 @@ Page {
     }
 
     property bool online:              false
+    property bool dataAvailable:       false
     property bool locationAvailable:   false
 
     property int safeAreaTopMargin:    0
     property int safeAreaBottomMargin: 0
     property int bannerViewHeight:     AdMobHelper.bannerViewHeight
+    property int batteryLevel:         0
 
     property real updateTime:          0.0
     property real latitude:            0.0
@@ -82,6 +84,7 @@ Page {
     property string bigPhotoUrl:       ""
     property string screenName:        ""
     property string status:            ""
+    property string batteryStatus:     ""
 
     StackView.onStatusChanged: {
         if (StackView.status === StackView.Activating ||
@@ -148,7 +151,56 @@ Page {
                     fillMode: Image.PreserveAspectFit
                     visible:  profilePage.online
 
+                    property real angle: -Math.PI / 4
+                }
+
+                Image {
+                    x:        opacityMask.width  / 2 + opacityMask.width  / 2 * Math.sin(angle) - width  / 2
+                    y:        opacityMask.height / 2 + opacityMask.height / 2 * Math.cos(angle) - height / 2
+                    z:        1
+                    width:    UtilScript.pt(16)
+                    height:   UtilScript.pt(24)
+                    source:   imageToShow(profilePage.batteryStatus, profilePage.batteryLevel)
+                    fillMode: Image.PreserveAspectFit
+                    visible:  imageVisible(profilePage.batteryStatus)
+
                     property real angle: Math.PI / 4
+
+                    function imageToShow(battery_status, battery_level) {
+                        if (battery_level < 25) {
+                            if (battery_status === "CHARGING") {
+                                return "qrc:/resources/images/profile/avatar_battery_25_charging_label.png";
+                            } else {
+                                return "qrc:/resources/images/profile/avatar_battery_25_label.png";
+                            }
+                        } else if (battery_level < 50) {
+                            if (battery_status === "CHARGING") {
+                                return "qrc:/resources/images/profile/avatar_battery_50_charging_label.png";
+                            } else {
+                                return "qrc:/resources/images/profile/avatar_battery_50_label.png";
+                            }
+                        } else if (battery_level < 75) {
+                            if (battery_status === "CHARGING") {
+                                return "qrc:/resources/images/profile/avatar_battery_75_charging_label.png";
+                            } else {
+                                return "qrc:/resources/images/profile/avatar_battery_75_label.png";
+                            }
+                        } else {
+                            if (battery_status === "CHARGING") {
+                                return "qrc:/resources/images/profile/avatar_battery_100_charging_label.png";
+                            } else {
+                                return "qrc:/resources/images/profile/avatar_battery_100_label.png";
+                            }
+                        }
+                    }
+
+                    function imageVisible(battery_status) {
+                        if (battery_status === "CHARGING" || battery_status === "DISCHARGING") {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
                 }
             }
 
@@ -189,8 +241,8 @@ Page {
             Text {
                 leftPadding:         UtilScript.pt(16)
                 rightPadding:        UtilScript.pt(16)
-                text:                qsTr("Location updated at: %1").arg((new Date(profilePage.updateTime * 1000))
-                                                                              .toLocaleString())
+                text:                qsTr("Last update at: %1").arg((new Date(profilePage.updateTime * 1000))
+                                                                         .toLocaleString())
                 color:               "black"
                 font.pointSize:      16
                 font.family:         "Helvetica"
@@ -200,7 +252,7 @@ Page {
                 wrapMode:            Text.Wrap
                 fontSizeMode:        Text.Fit
                 minimumPointSize:    8
-                visible:             profilePage.locationAvailable
+                visible:             profilePage.dataAvailable
                 Layout.fillWidth:    true
                 Layout.alignment:    Qt.AlignVCenter
             }

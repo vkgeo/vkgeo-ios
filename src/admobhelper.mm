@@ -14,7 +14,7 @@ const QString AdMobHelper::ADMOB_BANNERVIEW_UNIT_ID  ("ca-app-pub-24550888550156
 const QString AdMobHelper::ADMOB_INTERSTITIAL_UNIT_ID("ca-app-pub-2455088855015693/6215026625");
 const QString AdMobHelper::ADMOB_TEST_DEVICE_ID      ("");
 
-AdMobHelper *AdMobHelper::Instance = NULL;
+AdMobHelper *AdMobHelper::Instance = nullptr;
 
 @interface BannerViewDelegate : NSObject<GADBannerViewDelegate>
 
@@ -250,7 +250,7 @@ AdMobHelper::AdMobHelper(QObject *parent) : QObject(parent)
     InterstitialActive           = false;
     BannerViewHeight             = 0;
     Instance                     = this;
-    BannerViewDelegateInstance   = NULL;
+    BannerViewDelegateInstance   = nullptr;
     InterstitialDelegateInstance = [[InterstitialDelegate alloc] init];
 
     [InterstitialDelegateInstance loadAd];
@@ -258,7 +258,7 @@ AdMobHelper::AdMobHelper(QObject *parent) : QObject(parent)
 
 AdMobHelper::~AdMobHelper()
 {
-    if (BannerViewDelegateInstance != NULL && BannerViewDelegateInstance != nil) {
+    if (BannerViewDelegateInstance != nullptr && BannerViewDelegateInstance != nil) {
         [BannerViewDelegateInstance release];
     }
 
@@ -282,7 +282,7 @@ int AdMobHelper::bannerViewHeight() const
 
 void AdMobHelper::showBannerView()
 {
-    if (BannerViewDelegateInstance != NULL && BannerViewDelegateInstance != nil) {
+    if (BannerViewDelegateInstance != nullptr && BannerViewDelegateInstance != nil) {
         [BannerViewDelegateInstance release];
 
         BannerViewHeight = 0;
@@ -299,7 +299,7 @@ void AdMobHelper::showBannerView()
 
 void AdMobHelper::hideBannerView()
 {
-    if (BannerViewDelegateInstance != NULL && BannerViewDelegateInstance != nil) {
+    if (BannerViewDelegateInstance != nullptr && BannerViewDelegateInstance != nil) {
         [BannerViewDelegateInstance release];
 
         BannerViewHeight = 0;

@@ -16,6 +16,7 @@ Window {
     property bool increaseTrackingLimits: false
 
     property int vkAuthState:             VKHelper.authState
+
     property var loginPage:               null
 
     onDisableAdsChanged: {

@@ -23,7 +23,7 @@ public:
                          ADMOB_INTERSTITIAL_UNIT_ID,
                          ADMOB_TEST_DEVICE_ID;
 
-    explicit AdMobHelper(QObject *parent = 0);
+    explicit AdMobHelper(QObject *parent = nullptr);
     virtual ~AdMobHelper();
 
     bool interstitialReady() const;

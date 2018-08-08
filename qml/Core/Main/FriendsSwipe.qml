@@ -25,10 +25,13 @@ Item {
 
             frnd.invited           = false;
             frnd.nearby            = false;
-            frnd.locationAvailable = false;
+            frnd.dataAvailable     = false;
             frnd.updateTime        = 0;
+            frnd.locationAvailable = false;
             frnd.latitude          = 0;
             frnd.longitude         = 0;
+            frnd.batteryStatus     = "";
+            frnd.batteryLevel      = 0;
 
             friendsList[i] = frnd;
         }
@@ -49,30 +52,47 @@ Item {
         }
     }
 
-    function trackedFriendLocationAvailable(user_id, update_time, latitude, longitude) {
+    function trackedFriendDataAvailable(user_id, data) {
         for (var i = 0; i < friendsList.length; i++) {
             var frnd = friendsList[i];
 
             if (user_id === frnd.userId) {
-                frnd.locationAvailable = true;
-                frnd.updateTime        = update_time;
-                frnd.latitude          = latitude;
-                frnd.longitude         = longitude;
+                if (data.hasOwnProperty("update_time") && typeof data.update_time === "number"
+                                                       && !isNaN(data.update_time) && isFinite(data.update_time)) {
+                    frnd.dataAvailable = true;
+                    frnd.updateTime    = data.update_time;
 
-                if (VKHelper.locationValid) {
-                    var my_coordinate = QtPositioning.coordinate(VKHelper.locationLatitude, VKHelper.locationLongitude);
+                    if (data.hasOwnProperty("latitude")  && typeof data.latitude === "number"
+                                                         && !isNaN(data.latitude) && isFinite(data.latitude) &&
+                        data.hasOwnProperty("longitude") && typeof data.longitude === "number"
+                                                         && !isNaN(data.longitude) && isFinite(data.longitude)) {
+                        frnd.locationAvailable = true;
+                        frnd.latitude          = data.latitude;
+                        frnd.longitude         = data.longitude;
 
-                    if (my_coordinate.distanceTo(QtPositioning.coordinate(frnd.latitude, frnd.longitude)) < nearbyDistance) {
-                        if (!frnd.nearby) {
-                            frnd.nearby = true;
+                        if (VKHelper.locationValid) {
+                            var my_coordinate = QtPositioning.coordinate(VKHelper.locationLatitude, VKHelper.locationLongitude);
 
-                            NotificationHelper.showNotification("FRIENDS_NEARBY_NOTIFICATION_%1".arg(frnd.userId), qsTr("New friends nearby"),
-                                                                                                                   qsTr("%1 is nearby")
-                                                                                                                       .arg("%1 %2".arg(frnd.firstName)
-                                                                                                                                   .arg(frnd.lastName)));
+                            if (my_coordinate.distanceTo(QtPositioning.coordinate(frnd.latitude, frnd.longitude)) < nearbyDistance) {
+                                if (!frnd.nearby) {
+                                    frnd.nearby = true;
+
+                                    NotificationHelper.showNotification("FRIENDS_NEARBY_NOTIFICATION_%1".arg(frnd.userId), qsTr("New friends nearby"),
+                                                                                                                           qsTr("%1 is nearby")
+                                                                                                                               .arg("%1 %2".arg(frnd.firstName)
+                                                                                                                                           .arg(frnd.lastName)));
+                                }
+                            } else {
+                                frnd.nearby = false;
+                            }
                         }
-                    } else {
-                        frnd.nearby = false;
+                    }
+
+                    if (data.hasOwnProperty("battery_status") && typeof data.battery_status === "string" &&
+                        data.hasOwnProperty("battery_level")  && typeof data.battery_level  === "number"
+                                                              && !isNaN(data.battery_level) && isFinite(data.battery_level)) {
+                        frnd.batteryStatus = data.battery_status;
+                        frnd.batteryLevel  = data.battery_level;
                     }
                 }
 
@@ -86,10 +106,27 @@ Item {
             var model_frnd = friendsListModel.get(j);
 
             if (user_id === model_frnd.userId) {
-                friendsListModel.set(j, { "locationAvailable" : true,
-                                          "updateTime"        : update_time,
-                                          "latitude"          : latitude,
-                                          "longitude"         : longitude });
+                if (data.hasOwnProperty("update_time") && typeof data.update_time === "number"
+                                                       && !isNaN(data.update_time) && isFinite(data.update_time)) {
+                    friendsListModel.set(j, { "dataAvailable" : true,
+                                              "updateTime"    : data.update_time });
+
+                    if (data.hasOwnProperty("latitude")  && typeof data.latitude === "number"
+                                                         && !isNaN(data.latitude) && isFinite(data.latitude) &&
+                        data.hasOwnProperty("longitude") && typeof data.longitude === "number"
+                                                         && !isNaN(data.longitude) && isFinite(data.longitude)) {
+                        friendsListModel.set(j, { "locationAvailable" : true,
+                                                  "latitude"          : data.latitude,
+                                                  "longitude"         : data.longitude });
+                    }
+
+                    if (data.hasOwnProperty("battery_status") && typeof data.battery_status === "string" &&
+                        data.hasOwnProperty("battery_level")  && typeof data.battery_level  === "number"
+                                                              && !isNaN(data.battery_level) && isFinite(data.battery_level)) {
+                        friendsListModel.set(j, { "batteryStatus" : data.battery_status,
+                                                  "batteryLevel"  : data.battery_level });
+                    }
+                }
 
                 break;
             }
@@ -105,12 +142,14 @@ Item {
 
                 my_profile_page.userId            = VKHelper.userId;
                 my_profile_page.online            = false;
+                my_profile_page.dataAvailable     = false;
                 my_profile_page.locationAvailable = false;
                 my_profile_page.firstName         = VKHelper.firstName;
                 my_profile_page.lastName          = VKHelper.lastName;
                 my_profile_page.bigPhotoUrl       = VKHelper.bigPhotoUrl;
                 my_profile_page.screenName        = "id%1".arg(VKHelper.userId);
                 my_profile_page.status            = "";
+                my_profile_page.batteryStatus     = "";
             } else {
                 for (var i = 0; i < friendsListModel.count; i++) {
                     var frnd = friendsListModel.get(i);
@@ -120,7 +159,9 @@ Item {
 
                         profile_page.userId            = frnd.userId;
                         profile_page.online            = frnd.online;
+                        profile_page.dataAvailable     = frnd.dataAvailable;
                         profile_page.locationAvailable = frnd.locationAvailable;
+                        profile_page.batteryLevel      = frnd.batteryLevel;
                         profile_page.updateTime        = frnd.updateTime;
                         profile_page.latitude          = frnd.latitude;
                         profile_page.longitude         = frnd.longitude;
@@ -129,6 +170,7 @@ Item {
                         profile_page.bigPhotoUrl       = frnd.bigPhotoUrl;
                         profile_page.screenName        = frnd.screenName;
                         profile_page.status            = frnd.status;
+                        profile_page.batteryStatus     = frnd.batteryStatus;
 
                         profile_page.locateOnMap.connect(friendsSwipe.locateFriendOnMap);
 
@@ -335,7 +377,7 @@ Item {
                                 fillMode: Image.PreserveAspectFit
                                 visible:  online
 
-                                property real angle: Math.PI / 4
+                                property real angle: -Math.PI / 4
                             }
 
                             MouseArea {
@@ -443,6 +485,6 @@ Item {
 
     Component.onCompleted: {
         VKHelper.friendsUpdated.connect(updateFriends);
-        VKHelper.trackedFriendLocationUpdated.connect(trackedFriendLocationAvailable);
+        VKHelper.trackedFriendDataUpdated.connect(trackedFriendDataAvailable);
     }
 }

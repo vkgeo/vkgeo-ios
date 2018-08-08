@@ -9,6 +9,7 @@ OBJECTIVE_SOURCES += \
     src/vkgeoappdelegate.mm \
     src/admobhelper.mm \
     src/storehelper.mm \
+    src/batteryhelper.mm \
     src/uihelper.mm \
     src/notificationhelper.mm \
     src/vkhelper.mm
@@ -16,6 +17,7 @@ OBJECTIVE_SOURCES += \
 HEADERS += \
     src/admobhelper.h \
     src/storehelper.h \
+    src/batteryhelper.h \
     src/uihelper.h \
     src/notificationhelper.h \
     src/vkhelper.h \
