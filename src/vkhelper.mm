@@ -766,7 +766,7 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
         if (request.contains("parameters")) {
             QVariantMap parameters = request["parameters"].toMap();
 
-            vk_parameters = [NSMutableDictionary dictionaryWithCapacity:parameters.count()];
+            vk_parameters = [NSMutableDictionary dictionaryWithCapacity:static_cast<NSUInteger>(parameters.count())];
 
             foreach (QString key, parameters.keys()) {
                 vk_parameters[key.toNSString()] = parameters[key].toString().toNSString();

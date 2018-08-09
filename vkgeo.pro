@@ -38,6 +38,9 @@ QML_IMPORT_PATH =
 QML_DESIGNER_IMPORT_PATH =
 
 ios {
+    INCLUDEPATH += $$PWD/ios/frameworks
+    DEPENDPATH += $$PWD/ios/frameworks
+
     LIBS += -F $$PWD/ios/frameworks \
             -framework GoogleMobileAds \
             -framework VKSdkFramework \

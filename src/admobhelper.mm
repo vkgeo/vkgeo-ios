@@ -5,6 +5,8 @@
 #import <GoogleMobileAds/GADInterstitial.h>
 #import <GoogleMobileAds/GADInterstitialDelegate.h>
 
+#include <QtCore/QtGlobal>
+#include <QtCore/QtMath>
 #include <QtCore/QDebug>
 
 #include "admobhelper.h"
@@ -60,11 +62,11 @@ AdMobHelper *AdMobHelper::Instance = nullptr;
                 [BannerView.topAnchor     constraintEqualToAnchor:guide.topAnchor]
             ]];
 
-            CGSize status_bar_size   = [[UIApplication sharedApplication] statusBarFrame].size;
-            int    status_bar_height = MIN(status_bar_size.width, status_bar_size.height);
+            CGSize  status_bar_size   = [[UIApplication sharedApplication] statusBarFrame].size;
+            CGFloat status_bar_height = qMin(status_bar_size.width, status_bar_size.height);
 
-            AdMobHelper::setBannerViewHeight(BannerView.frame.size.height + root_view_controller.view.safeAreaInsets.top
-                                                                          - status_bar_height);
+            AdMobHelper::setBannerViewHeight(qFloor(BannerView.frame.size.height + root_view_controller.view.safeAreaInsets.top
+                                                                                 - status_bar_height));
         } else {
             assert(0);
         }
