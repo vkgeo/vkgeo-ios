@@ -16,7 +16,8 @@ static const qint64             LOCATION_UPDATE_CTR_TIMEOUT          = 900;
 static const NSTimeInterval     DESIRED_ACCURACY_ADJUSTMENT_INTERVAL = 60.0;
 static const CLLocationDistance LOCATION_DISTANCE_FILTER             = 100.0,
                                 LOCATION_UPDATE_CTR_DISTANCE         = 500.0;
-static const QString            VK_APP_ID("6459902");
+static const QString            VK_APP_ID("6459902"),
+                                VK_API_V("5.80");
 
 static bool               CenterLocationChanged           = false;
 static qint64             CenterLocationChangeHandleNanos = 0;
@@ -48,7 +49,7 @@ static qint64 elapsedNanos()
     Q_UNUSED(application)
     Q_UNUSED(launchOptions)
 
-    [VKSdk initializeWithAppId:VK_APP_ID.toNSString()];
+    [VKSdk initializeWithAppId:VK_APP_ID.toNSString() apiVersion:VK_API_V.toNSString()];
 
     LocationManager = [[CLLocationManager alloc] init];
 
