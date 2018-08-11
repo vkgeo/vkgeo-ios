@@ -69,10 +69,6 @@
         <translation>Закрыть</translation>
     </message>
     <message>
-        <source>Location updated at: %1</source>
-        <translation type="vanished">Последнее обновление местоположения: %1</translation>
-    </message>
-    <message>
         <source>Locate on map</source>
         <translation>Показать на карте</translation>
     </message>
@@ -86,7 +82,7 @@
     </message>
     <message>
         <source>Last update at: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Последнее обновление: %1</translation>
     </message>
 </context>
 <context>
@@ -161,7 +157,7 @@
     </message>
     <message>
         <source>Additional settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Дополнительные настройки</translation>
     </message>
 </context>
 <context>
