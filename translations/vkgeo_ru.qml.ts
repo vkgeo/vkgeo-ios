@@ -70,7 +70,7 @@
     </message>
     <message>
         <source>Location updated at: %1</source>
-        <translation>Последнее обновление местоположения: %1</translation>
+        <translation type="vanished">Последнее обновление местоположения: %1</translation>
     </message>
     <message>
         <source>Locate on map</source>
@@ -83,6 +83,10 @@
     <message>
         <source>Get directions</source>
         <translation>Построить маршрут</translation>
+    </message>
+    <message>
+        <source>Last update at: %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -154,6 +158,10 @@
     <message>
         <source>Do you want to join the VKGeo Friends on Map group?</source>
         <translation>Вы действительно хотите вступить в группу VKGeo Друзья на Карте?</translation>
+    </message>
+    <message>
+        <source>Additional settings</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
