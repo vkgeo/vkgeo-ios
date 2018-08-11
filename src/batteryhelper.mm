@@ -29,5 +29,11 @@ QString BatteryHelper::getBatteryStatus()
 
 int BatteryHelper::getBatteryLevel()
 {
-    return qFloor(static_cast<qreal>([[UIDevice currentDevice] batteryLevel]));
+    qreal battery_level = static_cast<qreal>([[UIDevice currentDevice] batteryLevel]);
+
+    if (battery_level > 0.0) {
+        return qFloor(battery_level * 100);
+    } else {
+        return 0;
+    }
 }
