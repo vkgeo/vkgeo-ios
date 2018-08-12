@@ -10,6 +10,7 @@
 #include <QtCore/QString>
 #include <QtCore/QDebug>
 
+#include "batteryhelpershared.h"
 #include "vkhelpershared.h"
 
 static const qint64             LOCATION_UPDATE_CTR_TIMEOUT          = 900;
@@ -100,6 +101,10 @@ static qint64 elapsedNanos()
 
             if (VKHelperShared != nullptr) {
                 VKHelperShared->updateLocation(CurrentLocation.coordinate.latitude, CurrentLocation.coordinate.longitude);
+
+                if (BatteryHelperShared != nullptr) {
+                    VKHelperShared->updateBatteryStatus(BatteryHelperShared->getBatteryStatus(), BatteryHelperShared->getBatteryLevel());
+                }
             }
 
             if (CenterLocation == nil || [CenterLocation distanceFromLocation:CurrentLocation] > LOCATION_UPDATE_CTR_DISTANCE) {

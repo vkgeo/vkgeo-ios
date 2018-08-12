@@ -18,6 +18,7 @@ HEADERS += \
     src/admobhelper.h \
     src/storehelper.h \
     src/batteryhelper.h \
+    src/batteryhelpershared.h \
     src/uihelper.h \
     src/notificationhelper.h \
     src/vkhelper.h \
