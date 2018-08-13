@@ -182,6 +182,7 @@ private:
     void ProcessGroupsJoinResponse(QString response, QVariantMap resp_request);
     void ProcessGroupsJoinError(QVariantMap err_request);
 
+    bool                         CurrentDataUpdated;
     int                          AuthState, MaxTrustedFriendsCount, MaxTrackedFriendsCount;
     qint64                       LastSendDataTime, LastUpdateTrackedFriendsDataTime;
     QString                      UserId, FirstName, LastName, PhotoUrl, BigPhotoUrl,
