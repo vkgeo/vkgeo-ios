@@ -1132,7 +1132,7 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
                 if (resp_request.contains("user_data")) {
                     QVariantMap request, parameters;
 
-                    if (offset + json_items.count() < notes_count) {
+                    if (json_items.count() > 0 && offset + json_items.count() < notes_count) {
                         parameters["count"]  = MAX_NOTES_GET_COUNT;
                         parameters["offset"] = offset + json_items.count();
                         parameters["sort"]   = 0;
@@ -1230,7 +1230,7 @@ void VKHelper::ProcessNotesGetResponse(QString response, QVariantMap resp_reques
 
                 if (!data_note_found) {
                     if (user_id != "") {
-                        if (offset + json_items.count() < notes_count) {
+                        if (json_items.count() > 0 && offset + json_items.count() < notes_count) {
                             QVariantMap request, parameters;
 
                             parameters["count"]   = MAX_NOTES_GET_COUNT;
@@ -1425,7 +1425,7 @@ void VKHelper::ProcessFriendsGetResponse(QString response, QVariantMap resp_requ
                     qWarning() << "ProcessFriendsGetResponse() : unknown list id";
                 }
 
-                if (offset + json_items.count() < friends_count) {
+                if (json_items.count() > 0 && offset + json_items.count() < friends_count) {
                     QVariantMap request, parameters;
 
                     parameters["count"]  = MAX_FRIENDS_GET_COUNT;
