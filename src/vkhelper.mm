@@ -347,7 +347,7 @@ void VKHelper::updateLocation(qreal latitude, qreal longitude)
 
     emit locationUpdated();
 
-    SendData(false);
+    QTimer::singleShot(SEND_DATA_ON_UPDATE_DELAY, this, &VKHelper::sendDataOnUpdateSingleShot);
 }
 
 void VKHelper::updateBatteryStatus(QString status, int level)
@@ -358,7 +358,7 @@ void VKHelper::updateBatteryStatus(QString status, int level)
 
     emit batteryStatusUpdated();
 
-    SendData(false);
+    QTimer::singleShot(SEND_DATA_ON_UPDATE_DELAY, this, &VKHelper::sendDataOnUpdateSingleShot);
 }
 
 void VKHelper::sendData()
@@ -618,6 +618,11 @@ void VKHelper::setAuthState(int state)
     } else if (Instance->AuthState == VKAuthState::StateNotAuthorized) {
         Instance->cleanup();
     }
+}
+
+void VKHelper::sendDataOnUpdateSingleShot()
+{
+    SendData(false);
 }
 
 void VKHelper::requestQueueTimerTimeout()
