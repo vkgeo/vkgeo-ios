@@ -56,7 +56,7 @@ public:
     static const int DEFAULT_MAX_TRUSTED_FRIENDS_COUNT    = 5,
                      DEFAULT_MAX_TRACKED_FRIENDS_COUNT    = 5,
                      REQUEST_QUEUE_TIMER_INTERVAL         = 1000,
-                     SEND_DATA_TIMER_INTERVAL             = 1000,
+                     SEND_DATA_TIMER_INTERVAL             = 60000,
                      SEND_DATA_INTERVAL                   = 300,
                      UPDATE_TRACKED_FRIENDS_DATA_INTERVAL = 60,
                      MAX_BATCH_SIZE                       = 25,
@@ -180,7 +180,6 @@ private:
     void ProcessGroupsJoinResponse(QString response, QVariantMap resp_request);
     void ProcessGroupsJoinError(QVariantMap err_request);
 
-    bool                         CurrentDataUpdated;
     int                          AuthState, MaxTrustedFriendsCount, MaxTrackedFriendsCount;
     qint64                       LastSendDataTime, LastUpdateTrackedFriendsDataTime;
     QString                      UserId, FirstName, LastName, PhotoUrl, BigPhotoUrl,
