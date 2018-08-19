@@ -179,6 +179,7 @@ VKHelper::VKHelper(QObject *parent) : QObject(parent)
     MaxTrackedFriendsCount           = DEFAULT_MAX_TRACKED_FRIENDS_COUNT;
     LastSendDataTime                 = 0;
     LastUpdateTrackedFriendsDataTime = 0;
+    NextRequestQueueTimerTimeout     = 0;
     PhotoUrl                         = DEFAULT_PHOTO_URL;
     BigPhotoUrl                      = DEFAULT_PHOTO_URL;
     Instance                         = this;
@@ -295,6 +296,7 @@ void VKHelper::cleanup()
 {
     LastSendDataTime                 = 0;
     LastUpdateTrackedFriendsDataTime = 0;
+    NextRequestQueueTimerTimeout     = QDateTime::currentMSecsSinceEpoch() + REQUEST_QUEUE_TIMER_INTERVAL;
     UserId                           = "";
     FirstName                        = "";
     LastName                         = "";
@@ -504,7 +506,9 @@ void VKHelper::updateTrackedFriendsList(QVariantList tracked_friends_list)
 
 void VKHelper::updateTrackedFriendsData(bool expedited)
 {
-    if (expedited || QDateTime::currentSecsSinceEpoch() > LastUpdateTrackedFriendsDataTime + UPDATE_TRACKED_FRIENDS_DATA_INTERVAL) {
+    qint64 elapsed = QDateTime::currentSecsSinceEpoch() - LastUpdateTrackedFriendsDataTime;
+
+    if (expedited || elapsed < 0 || elapsed > UPDATE_TRACKED_FRIENDS_DATA_INTERVAL) {
         LastUpdateTrackedFriendsDataTime = QDateTime::currentSecsSinceEpoch();
 
         foreach (QString key, FriendsData.keys()) {
@@ -673,7 +677,11 @@ void VKHelper::requestQueueTimerTimeout()
     }
 
     if (RequestQueue.isEmpty()) {
+        NextRequestQueueTimerTimeout = QDateTime::currentMSecsSinceEpoch() + REQUEST_QUEUE_TIMER_INTERVAL;
+
         RequestQueueTimer.stop();
+    } else {
+        RequestQueueTimer.setInterval(REQUEST_QUEUE_TIMER_INTERVAL);
     }
 }
 
@@ -685,8 +693,11 @@ void VKHelper::sendDataTimerTimeout()
 void VKHelper::SendData(bool expedited)
 {
     if (CurrentDataUpdated) {
-        if (!ContextHasActiveRequests("sendData") && AuthState == VKAuthState::StateAuthorized &&
-            (expedited || QDateTime::currentSecsSinceEpoch() > LastSendDataTime + SEND_DATA_INTERVAL)) {
+        qint64 elapsed = QDateTime::currentSecsSinceEpoch() - LastSendDataTime;
+
+        if (!ContextHasActiveRequests("sendData") &&
+            AuthState == VKAuthState::StateAuthorized &&
+            (expedited || elapsed < 0 || elapsed > SEND_DATA_INTERVAL)) {
             LastSendDataTime = QDateTime::currentSecsSinceEpoch();
 
             QVariantMap request, parameters;
@@ -772,6 +783,9 @@ void VKHelper::EnqueueRequest(QVariantMap request)
     ContextTrackerAddRequest(request);
 
     if (!RequestQueueTimer.isActive()) {
+        RequestQueueTimer.setInterval(static_cast<int>(qMax(static_cast<qint64>(0),
+                                                       qMin(NextRequestQueueTimerTimeout - QDateTime::currentMSecsSinceEpoch(),
+                                                            static_cast<qint64>(REQUEST_QUEUE_TIMER_INTERVAL)))));
         RequestQueueTimer.start();
     }
 }

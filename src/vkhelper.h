@@ -184,11 +184,12 @@ private:
 
     bool                         CurrentDataUpdated;
     int                          AuthState, MaxTrustedFriendsCount, MaxTrackedFriendsCount;
-    qint64                       LastSendDataTime, LastUpdateTrackedFriendsDataTime;
+    qint64                       LastSendDataTime, LastUpdateTrackedFriendsDataTime,
+                                 NextRequestQueueTimerTimeout;
     QString                      UserId, FirstName, LastName, PhotoUrl, BigPhotoUrl,
                                  TrustedFriendsListId, TrackedFriendsListId;
-    QQueue<QVariantMap>          RequestQueue;
     QTimer                       RequestQueueTimer, SendDataTimer;
+    QQueue<QVariantMap>          RequestQueue;
     QMap<QString, int>           ContextTracker;
 #ifdef __OBJC__
     QMap<VKRequest *, bool>      VKRequestTracker;
