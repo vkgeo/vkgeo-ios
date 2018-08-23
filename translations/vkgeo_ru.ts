@@ -28,8 +28,8 @@
         <translation>%1 сейчас поблизости</translation>
     </message>
     <message>
-        <source>I invite you to install the VKGeo Friends on Map app and join the community: http://vkgeo.sourceforge.io/</source>
-        <translation>Я приглашаю Вас установить приложение VKGeo Друзья на Карте и присоединиться к сообществу: http://vk.com/vkgeo_app</translation>
+        <source>I invite you to install the VKGeo Friends on Map app and join the community: https://vkgeo.sourceforge.io/</source>
+        <translation>Я приглашаю Вас установить приложение VKGeo Друзья на Карте и присоединиться к сообществу: https://vk.com/vkgeo_app</translation>
     </message>
 </context>
 <context>
@@ -144,7 +144,7 @@
         <translation>Вступить в группу</translation>
     </message>
     <message>
-        <source>http://vkgeo.sourceforge.io/</source>
+        <source>https://vkgeo.sourceforge.io/</source>
         <translation>vkgeo_app</translation>
     </message>
     <message>
