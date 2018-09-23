@@ -4,13 +4,13 @@
 #include <QtQml/QQmlApplicationEngine>
 #include <QtQml/QQmlContext>
 
+#include "vkgeoapplicationdelegate.h"
 #include "admobhelper.h"
 #include "storehelper.h"
 #include "batteryhelpershared.h"
 #include "uihelper.h"
 #include "notificationhelper.h"
 #include "vkhelpershared.h"
-#include "vkgeoapplicationdelegate.h"
 
 BatteryHelper *BatteryHelperShared = nullptr;
 VKHelper      *VKHelperShared      = nullptr;

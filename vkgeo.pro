@@ -7,6 +7,7 @@ SOURCES += src/main.cpp
 
 OBJECTIVE_SOURCES += \
     src/vkgeoapplicationdelegate.mm \
+    src/locationmanagerdelegate.mm \
     src/admobhelper.mm \
     src/storehelper.mm \
     src/batteryhelper.mm \
@@ -16,6 +17,7 @@ OBJECTIVE_SOURCES += \
 
 HEADERS += \
     src/vkgeoapplicationdelegate.h \
+    src/locationmanagerdelegate.h \
     src/admobhelper.h \
     src/storehelper.h \
     src/batteryhelper.h \
