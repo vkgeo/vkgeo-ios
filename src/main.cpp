@@ -10,6 +10,7 @@
 #include "uihelper.h"
 #include "notificationhelper.h"
 #include "vkhelpershared.h"
+#include "vkgeoapplicationdelegate.h"
 
 BatteryHelper *BatteryHelperShared = nullptr;
 VKHelper      *VKHelperShared      = nullptr;
@@ -22,6 +23,8 @@ int main(int argc, char *argv[])
     if (translator.load(QString(":/tr/vkgeo_%1").arg(QLocale::system().name()))) {
         app.installTranslator(&translator);
     }
+
+    InitializeVKGeoApplicationDelegate();
 
     BatteryHelperShared = new BatteryHelper(&app);
     VKHelperShared      = new VKHelper(&app);

@@ -13,6 +13,8 @@
 #include "batteryhelpershared.h"
 #include "vkhelpershared.h"
 
+#include "vkgeoapplicationdelegate.h"
+
 static const qint64             LOCATION_UPDATE_CTR_TIMEOUT          = 900;
 static const NSTimeInterval     DESIRED_ACCURACY_ADJUSTMENT_INTERVAL = 60.0;
 static const CLLocationDistance LOCATION_DISTANCE_FILTER             = 100.0,
@@ -40,10 +42,10 @@ static qint64 elapsedNanos()
 @interface QIOSApplicationDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate>
 @end
 
-@interface QIOSApplicationDelegate (VKGeoAppDelegate)
+@interface QIOSApplicationDelegate (QIOSApplicationDelegateVKGeoCategory)
 @end
 
-@implementation QIOSApplicationDelegate (VKGeoAppDelegate)
+@implementation QIOSApplicationDelegate (QIOSApplicationDelegateVKGeoCategory)
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -72,15 +74,6 @@ static qint64 elapsedNanos()
     }
 
     [self performSelector:@selector(adjustDesiredAccuracy) withObject:nil afterDelay:DESIRED_ACCURACY_ADJUSTMENT_INTERVAL];
-
-    return YES;
-}
-
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
-{
-    Q_UNUSED(application)
-
-    [VKSdk processOpenURL:url fromApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]];
 
     return YES;
 }
@@ -162,3 +155,26 @@ static qint64 elapsedNanos()
 }
 
 @end
+
+@interface VKGeoApplicationDelegate : QIOSApplicationDelegate
+@end
+
+@implementation VKGeoApplicationDelegate
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+    [VKSdk processOpenURL:url fromApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]];
+
+    return [super application:application openURL:url options:options];
+}
+
+@end
+
+void InitializeVKGeoApplicationDelegate()
+{
+#ifndef __clang_analyzer__
+    // XCode clang analyzer reports potential leak of an object, but since app delegate will
+    // stay for an app's lifetime, this warning is not relevant here
+    [[UIApplication sharedApplication] setDelegate:[[VKGeoApplicationDelegate alloc] init]];
+#endif
+}

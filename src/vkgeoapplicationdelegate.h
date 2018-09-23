@@ -1,0 +1,6 @@
+#ifndef VKGEOAPPLICATIONDELEGATE_H
+#define VKGEOAPPLICATIONDELEGATE_H
+
+void InitializeVKGeoApplicationDelegate();
+
+#endif // VKGEOAPPLICATIONDELEGATE_H

@@ -6,7 +6,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += src/main.cpp
 
 OBJECTIVE_SOURCES += \
-    src/vkgeoappdelegate.mm \
+    src/vkgeoapplicationdelegate.mm \
     src/admobhelper.mm \
     src/storehelper.mm \
     src/batteryhelper.mm \
@@ -15,6 +15,7 @@ OBJECTIVE_SOURCES += \
     src/vkhelper.mm
 
 HEADERS += \
+    src/vkgeoapplicationdelegate.h \
     src/admobhelper.h \
     src/storehelper.h \
     src/batteryhelper.h \
