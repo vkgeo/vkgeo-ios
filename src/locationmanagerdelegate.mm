@@ -91,7 +91,7 @@ static qint64 elapsedNanos()
         CenterLocationChanged           = false;
         CenterLocationChangeHandleNanos = elapsedNanos();
     } else if (elapsedNanos() - CenterLocationChangeHandleNanos > LOCATION_UPDATE_CTR_TIMEOUT * 1000000000) {
-        LocationManager.desiredAccuracy = kCLLocationAccuracyKilometer;
+        LocationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters;
     }
 
     [self performSelector:@selector(adjustDesiredAccuracy) withObject:nil afterDelay:DESIRED_ACCURACY_ADJUSTMENT_INTERVAL];
