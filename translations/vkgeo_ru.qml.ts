@@ -233,7 +233,7 @@
     </message>
     <message>
         <source>VKGeo</source>
-        <translation type="unfinished"></translation>
+        <translation>VKGeo</translation>
     </message>
 </context>
 </TS>
