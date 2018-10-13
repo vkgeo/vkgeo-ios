@@ -9,6 +9,7 @@ import "Core"
 
 Window {
     id:      mainWindow
+    title:   qsTr("VKGeo")
     visible: true
 
     property bool disableAds:             false
