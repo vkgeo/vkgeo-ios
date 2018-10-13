@@ -231,5 +231,9 @@
         <source>BUY</source>
         <translation>КУПИТЬ</translation>
     </message>
+    <message>
+        <source>VKGeo</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>
