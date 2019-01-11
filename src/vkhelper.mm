@@ -408,7 +408,7 @@ void VKHelper::updateTrustedFriendsList(QVariantList trusted_friends_list)
     if (!ContextHasActiveRequests("updateTrustedFriendsList")) {
         QStringList user_id_list;
 
-        foreach (QString key, FriendsData.keys()) {
+        for (const QString &key : FriendsData.keys()) {
             QVariantMap frnd = FriendsData[key].toMap();
 
             frnd["trusted"] = false;
@@ -458,7 +458,7 @@ void VKHelper::updateTrackedFriendsList(QVariantList tracked_friends_list)
     if (!ContextHasActiveRequests("updateTrackedFriendsList")) {
         QStringList user_id_list;
 
-        foreach (QString key, FriendsData.keys()) {
+        for (const QString &key : FriendsData.keys()) {
             QVariantMap frnd = FriendsData[key].toMap();
 
             frnd["tracked"] = false;
@@ -511,7 +511,7 @@ void VKHelper::updateTrackedFriendsData(bool expedited)
     if (expedited || elapsed < 0 || elapsed > UPDATE_TRACKED_FRIENDS_DATA_INTERVAL) {
         LastUpdateTrackedFriendsDataTime = QDateTime::currentSecsSinceEpoch();
 
-        foreach (QString key, FriendsData.keys()) {
+        for (const QString &key : FriendsData.keys()) {
             QVariantMap frnd = FriendsData[key].toMap();
 
             if ((frnd.contains("trusted") && frnd["trusted"].toBool()) ||
