@@ -319,7 +319,7 @@ void VKHelper::cleanup()
 
     RequestQueueTimer.stop();
 
-    foreach (VKBatchRequest *vk_batch_request, VKBatchRequestTracker.keys()) {
+    for (VKBatchRequest *vk_batch_request : VKBatchRequestTracker.keys()) {
         [vk_batch_request cancel];
     }
 
@@ -800,7 +800,7 @@ VKRequest *VKHelper::ProcessRequest(QVariantMap request)
 
             vk_parameters = [NSMutableDictionary dictionaryWithCapacity:static_cast<NSUInteger>(parameters.count())];
 
-            foreach (QString key, parameters.keys()) {
+            for (const QString &key : parameters.keys()) {
                 vk_parameters[key.toNSString()] = parameters[key].toString().toNSString();
             }
         } else {
