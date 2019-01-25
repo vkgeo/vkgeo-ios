@@ -55,11 +55,12 @@ class VKHelper : public QObject
 public:
     static const int DEFAULT_MAX_TRUSTED_FRIENDS_COUNT    = 5,
                      DEFAULT_MAX_TRACKED_FRIENDS_COUNT    = 5,
+                     MAX_SEND_DATA_TRIES_COUNT            = 5,
                      REQUEST_QUEUE_TIMER_INTERVAL         = 1000,
+                     SEND_DATA_ON_UPDATE_TIMER_INTERVAL   = 100,
                      SEND_DATA_TIMER_INTERVAL             = 60000,
                      SEND_DATA_INTERVAL                   = 300,
                      UPDATE_TRACKED_FRIENDS_DATA_INTERVAL = 60,
-                     SEND_DATA_ON_UPDATE_DELAY            = 100,
                      MAX_BATCH_SIZE                       = 25,
                      MAX_NOTES_GET_COUNT                  = 100,
                      MAX_FRIENDS_GET_COUNT                = 5000;
@@ -117,8 +118,8 @@ public:
     static void setAuthState(int state);
 
 private slots:
-    void sendDataOnUpdateSingleShot();
     void requestQueueTimerTimeout();
+    void sendDataOnUpdateTimerTimeout();
     void sendDataTimerTimeout();
 
 signals:
@@ -182,13 +183,19 @@ private:
     void ProcessGroupsJoinResponse(QString response, QVariantMap resp_request);
     void ProcessGroupsJoinError(QVariantMap err_request);
 
-    bool                         CurrentDataUpdated;
-    int                          AuthState, MaxTrustedFriendsCount, MaxTrackedFriendsCount;
+    enum DataState {
+        DataNotUpdated,
+        DataUpdated,
+        DataUpdatedAndSent
+    };
+
+    int                          CurrentDataState, AuthState, MaxTrustedFriendsCount,
+                                 MaxTrackedFriendsCount, SendDataTryNumber;
     qint64                       LastSendDataTime, LastUpdateTrackedFriendsDataTime,
                                  NextRequestQueueTimerTimeout;
     QString                      UserId, FirstName, LastName, PhotoUrl, BigPhotoUrl,
                                  TrustedFriendsListId, TrackedFriendsListId;
-    QTimer                       RequestQueueTimer, SendDataTimer;
+    QTimer                       RequestQueueTimer, SendDataOnUpdateTimer, SendDataTimer;
     QQueue<QVariantMap>          RequestQueue;
     QMap<QString, int>           ContextTracker;
 #ifdef __OBJC__
