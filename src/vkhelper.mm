@@ -1,3 +1,5 @@
+#import <VKSdkFramework/VKSdkFramework.h>
+
 #include <QtCore/QByteArray>
 #include <QtCore/QDateTime>
 #include <QtCore/QStringList>

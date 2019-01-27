@@ -1,10 +1,6 @@
 #ifndef VKHELPER_H
 #define VKHELPER_H
 
-#ifdef __OBJC__
-#import <VKSdkFramework/VKSdkFramework.h>
-#endif
-
 #include <QtCore/QtGlobal>
 #include <QtCore/QObject>
 #include <QtCore/QString>
@@ -15,6 +11,8 @@
 #include <QtCore/QTimer>
 
 #ifdef __OBJC__
+@class VKRequest;
+@class VKBatchRequest;
 @class VKDelegate;
 #endif
 
