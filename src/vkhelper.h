@@ -12,7 +12,6 @@
 
 #ifdef __OBJC__
 @class VKRequest;
-@class VKBatchRequest;
 @class VKDelegate;
 #endif
 
@@ -144,12 +143,10 @@ private:
 
     bool ContextHasActiveRequests(QString context);
 
-    void       EnqueueRequest(QVariantMap request);
-#ifdef __OBJC__
-    VKRequest *ProcessRequest(QVariantMap request);
-#else
-    void      *ProcessRequest(QVariantMap request);
-#endif
+    void EnqueueRequest(QVariantMap request);
+
+    void ProcessResponse(QString response, QVariantMap resp_request);
+    void ProcessError(QString error_message, QVariantMap err_request);
 
     void ProcessNotesGetResponse(QString response, QVariantMap resp_request);
     void ProcessNotesGetError(QVariantMap err_request);
@@ -200,11 +197,6 @@ private:
     QMap<VKRequest *, bool>      VKRequestTracker;
 #else
     QMap<void *, bool>           VKRequestTracker;
-#endif
-#ifdef __OBJC__
-    QMap<VKBatchRequest *, bool> VKBatchRequestTracker;
-#else
-    QMap<void *, bool>           VKBatchRequestTracker;
 #endif
     QVariantMap                  CurrentData, FriendsData, FriendsDataTmp;
     static VKHelper             *Instance;
