@@ -10,7 +10,7 @@
 #include "vkgeoapplicationdelegate.h"
 
 static const QString VK_APP_ID("6459902"),
-                     VK_API_V("5.80");
+                     VK_API_V("5.92");
 
 static LocationManagerDelegate *LocationManagerDelegateInstance = nil;
 
