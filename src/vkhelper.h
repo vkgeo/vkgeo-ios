@@ -184,26 +184,26 @@ private:
         DataUpdatedAndSent
     };
 
-    int                          CurrentDataState, AuthState, MaxTrustedFriendsCount,
-                                 MaxTrackedFriendsCount, SendDataTryNumber;
-    qint64                       LastSendDataTime, LastUpdateTrackedFriendsDataTime,
-                                 NextRequestQueueTimerTimeout;
-    QString                      UserId, FirstName, LastName, PhotoUrl, BigPhotoUrl,
-                                 TrustedFriendsListId, TrackedFriendsListId;
-    QTimer                       RequestQueueTimer, SendDataOnUpdateTimer, SendDataTimer;
-    QQueue<QVariantMap>          RequestQueue;
-    QMap<QString, int>           ContextTracker;
+    int                     CurrentDataState, AuthState, MaxTrustedFriendsCount,
+                            MaxTrackedFriendsCount, SendDataTryNumber;
+    qint64                  LastSendDataTime, LastUpdateTrackedFriendsDataTime,
+                            NextRequestQueueTimerTimeout;
+    QString                 UserId, FirstName, LastName, PhotoUrl, BigPhotoUrl,
+                            TrustedFriendsListId, TrackedFriendsListId;
+    QTimer                  RequestQueueTimer, SendDataOnUpdateTimer, SendDataTimer;
+    QQueue<QVariantMap>     RequestQueue;
+    QMap<QString, int>      ContextTracker;
 #ifdef __OBJC__
-    QMap<VKRequest *, bool>      VKRequestTracker;
+    QMap<VKRequest *, bool> VKRequestTracker;
 #else
-    QMap<void *, bool>           VKRequestTracker;
+    QMap<void *, bool>      VKRequestTracker;
 #endif
-    QVariantMap                  CurrentData, FriendsData, FriendsDataTmp;
-    static VKHelper             *Instance;
+    QVariantMap             CurrentData, FriendsData, FriendsDataTmp;
+    static VKHelper        *Instance;
 #ifdef __OBJC__
-    VKDelegate                  *VKDelegateInstance;
+    VKDelegate             *VKDelegateInstance;
 #else
-    void                        *VKDelegateInstance;
+    void                   *VKDelegateInstance;
 #endif
 };
 
