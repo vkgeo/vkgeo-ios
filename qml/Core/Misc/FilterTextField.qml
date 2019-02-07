@@ -31,6 +31,10 @@ Pane {
             background: Rectangle {
                 color: "transparent"
             }
+
+            onEditingFinished: {
+                focus = false;
+            }
         }
 
         Image {
