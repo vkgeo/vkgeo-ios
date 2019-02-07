@@ -73,9 +73,5 @@ ios {
     QMAKE_INFO_PLIST = ios/Info.plist
 }
 
-CONFIG(release, debug|release) {
-    CONFIG += qtquickcompiler
-}
-
 # Default rules for deployment.
 include(deployment.pri)
