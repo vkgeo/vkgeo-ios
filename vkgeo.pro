@@ -42,6 +42,8 @@ QML_IMPORT_PATH =
 QML_DESIGNER_IMPORT_PATH =
 
 ios {
+    CONFIG += qtquickcompiler
+
     INCLUDEPATH += $$PWD/ios/frameworks
     DEPENDPATH += $$PWD/ios/frameworks
 
@@ -71,10 +73,6 @@ ios {
 
     QMAKE_APPLE_DEVICE_ARCHS = arm64
     QMAKE_INFO_PLIST = ios/Info.plist
-}
-
-CONFIG(release, debug|release) {
-    CONFIG += qtquickcompiler
 }
 
 # Default rules for deployment.
