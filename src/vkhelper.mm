@@ -40,7 +40,7 @@ VKHelper *VKHelper::Instance = nullptr;
 
         [VKSdk wakeUpSession:AUTH_SCOPE completeBlock:^(VKAuthorizationState state, NSError *error) {
             if (error != nil) {
-                qWarning() << QString::fromNSString([error localizedDescription]);
+                qWarning() << QString::fromNSString(error.localizedDescription);
 
                 VKHelper::setAuthState(VKAuthState::StateNotAuthorized);
             } else if (state == VKAuthorizationAuthorized) {
@@ -62,7 +62,7 @@ VKHelper *VKHelper::Instance = nullptr;
 - (void)vkSdkAccessAuthorizationFinishedWithResult:(VKAuthorizationResult *)result
 {
     if (result.error != nil) {
-        qWarning() << QString::fromNSString([result.error localizedDescription]);
+        qWarning() << QString::fromNSString(result.error.localizedDescription);
 
         VKHelper::setAuthState(VKAuthState::StateNotAuthorized);
     } else if (result.token != nil) {
@@ -80,7 +80,7 @@ VKHelper *VKHelper::Instance = nullptr;
 - (void)vkSdkAuthorizationStateUpdatedWithResult:(VKAuthorizationResult *)result
 {
     if (result.error != nil) {
-        qWarning() << QString::fromNSString([result.error localizedDescription]);
+        qWarning() << QString::fromNSString(result.error.localizedDescription);
 
         VKHelper::setAuthState(VKAuthState::StateNotAuthorized);
     } else if (result.token != nil) {
@@ -101,8 +101,8 @@ VKHelper *VKHelper::Instance = nullptr;
 {
     UIViewController * __block root_view_controller = nil;
 
-    [[[UIApplication sharedApplication] windows] enumerateObjectsUsingBlock:^(UIWindow * _Nonnull window, NSUInteger, BOOL * _Nonnull stop) {
-        root_view_controller = [window rootViewController];
+    [UIApplication.sharedApplication.windows enumerateObjectsUsingBlock:^(UIWindow * _Nonnull window, NSUInteger, BOOL * _Nonnull stop) {
+        root_view_controller = window.rootViewController;
 
         *stop = (root_view_controller != nil);
     }];
@@ -116,8 +116,8 @@ VKHelper *VKHelper::Instance = nullptr;
 {
     UIViewController * __block root_view_controller = nil;
 
-    [[[UIApplication sharedApplication] windows] enumerateObjectsUsingBlock:^(UIWindow * _Nonnull window, NSUInteger, BOOL * _Nonnull stop) {
-        root_view_controller = [window rootViewController];
+    [UIApplication.sharedApplication.windows enumerateObjectsUsingBlock:^(UIWindow * _Nonnull window, NSUInteger, BOOL * _Nonnull stop) {
+        root_view_controller = window.rootViewController;
 
         *stop = (root_view_controller != nil);
     }];
@@ -599,7 +599,7 @@ void VKHelper::setAuthState(int state)
         VKAccessToken *token = [VKSdk accessToken];
 
         if (token != nil && token.localUser != nil && token.localUser.id != nil) {
-            Instance->UserId = QString::fromNSString([token.localUser.id stringValue]);
+            Instance->UserId = QString::fromNSString(token.localUser.id.stringValue);
         } else {
             Instance->UserId = "";
         }
@@ -731,7 +731,7 @@ void VKHelper::requestQueueTimerTimeout()
                     VKRequestTracker.remove(vk_request);
 
                     for (int i = 0; i < request_list.count(); i++) {
-                        ProcessError(QString::fromNSString([error localizedDescription]), request_list[i].toMap());
+                        ProcessError(QString::fromNSString(error.localizedDescription), request_list[i].toMap());
                     }
                 }
             }];

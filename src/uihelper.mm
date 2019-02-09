@@ -19,14 +19,14 @@ int UIHelper::getSafeAreaTopMargin()
 {
     UIViewController * __block root_view_controller = nil;
 
-    [[[UIApplication sharedApplication] windows] enumerateObjectsUsingBlock:^(UIWindow * _Nonnull window, NSUInteger, BOOL * _Nonnull stop) {
-        root_view_controller = [window rootViewController];
+    [UIApplication.sharedApplication.windows enumerateObjectsUsingBlock:^(UIWindow * _Nonnull window, NSUInteger, BOOL * _Nonnull stop) {
+        root_view_controller = window.rootViewController;
 
         *stop = (root_view_controller != nil);
     }];
 
     if (@available(iOS 11, *)) {
-        CGSize  status_bar_size   = [[UIApplication sharedApplication] statusBarFrame].size;
+        CGSize  status_bar_size   = UIApplication.sharedApplication.statusBarFrame.size;
         CGFloat status_bar_height = qMin(status_bar_size.width, status_bar_size.height);
 
         return qFloor(root_view_controller.view.safeAreaInsets.top - status_bar_height);
@@ -39,8 +39,8 @@ int UIHelper::getSafeAreaBottomMargin()
 {
     UIViewController * __block root_view_controller = nil;
 
-    [[[UIApplication sharedApplication] windows] enumerateObjectsUsingBlock:^(UIWindow * _Nonnull window, NSUInteger, BOOL * _Nonnull stop) {
-        root_view_controller = [window rootViewController];
+    [UIApplication.sharedApplication.windows enumerateObjectsUsingBlock:^(UIWindow * _Nonnull window, NSUInteger, BOOL * _Nonnull stop) {
+        root_view_controller = window.rootViewController;
 
         *stop = (root_view_controller != nil);
     }];

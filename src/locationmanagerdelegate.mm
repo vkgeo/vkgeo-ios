@@ -154,7 +154,7 @@ static qint64 elapsedNanos()
 {
     Q_UNUSED(manager)
 
-    qWarning() << QString::fromNSString([error localizedDescription]);
+    qWarning() << QString::fromNSString(error.localizedDescription);
 }
 
 - (void)locationManager:(CLLocationManager *)manager monitoringDidFailForRegion:(CLRegion *)region withError:(NSError *)error
@@ -162,7 +162,7 @@ static qint64 elapsedNanos()
     Q_UNUSED(manager)
     Q_UNUSED(region)
 
-    qWarning() << QString::fromNSString([error localizedDescription]);
+    qWarning() << QString::fromNSString(error.localizedDescription);
 }
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status

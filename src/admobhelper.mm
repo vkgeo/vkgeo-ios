@@ -38,8 +38,8 @@ AdMobHelper *AdMobHelper::Instance = nullptr;
     if (self) {
         UIViewController * __block root_view_controller = nil;
 
-        [[[UIApplication sharedApplication] windows] enumerateObjectsUsingBlock:^(UIWindow * _Nonnull window, NSUInteger, BOOL * _Nonnull stop) {
-            root_view_controller = [window rootViewController];
+        [UIApplication.sharedApplication.windows enumerateObjectsUsingBlock:^(UIWindow * _Nonnull window, NSUInteger, BOOL * _Nonnull stop) {
+            root_view_controller = window.rootViewController;
 
             *stop = (root_view_controller != nil);
         }];
@@ -62,7 +62,7 @@ AdMobHelper *AdMobHelper::Instance = nullptr;
                 [BannerView.topAnchor     constraintEqualToAnchor:guide.topAnchor]
             ]];
 
-            CGSize  status_bar_size   = [[UIApplication sharedApplication] statusBarFrame].size;
+            CGSize  status_bar_size   = UIApplication.sharedApplication.statusBarFrame.size;
             CGFloat status_bar_height = qMin(status_bar_size.width, status_bar_size.height);
 
             AdMobHelper::setBannerViewHeight(qFloor(BannerView.frame.size.height + root_view_controller.view.safeAreaInsets.top
@@ -118,7 +118,7 @@ AdMobHelper *AdMobHelper::Instance = nullptr;
 {
     Q_UNUSED(adView)
 
-    qWarning() << QString::fromNSString([error localizedDescription]);
+    qWarning() << QString::fromNSString(error.localizedDescription);
 
     [self performSelector:@selector(loadAd) withObject:nil afterDelay:10.0];
 }
@@ -184,8 +184,8 @@ AdMobHelper *AdMobHelper::Instance = nullptr;
     if (Interstitial != nil && Interstitial.isReady) {
         UIViewController * __block root_view_controller = nil;
 
-        [[[UIApplication sharedApplication] windows] enumerateObjectsUsingBlock:^(UIWindow * _Nonnull window, NSUInteger, BOOL * _Nonnull stop) {
-            root_view_controller = [window rootViewController];
+        [UIApplication.sharedApplication.windows enumerateObjectsUsingBlock:^(UIWindow * _Nonnull window, NSUInteger, BOOL * _Nonnull stop) {
+            root_view_controller = window.rootViewController;
 
             *stop = (root_view_controller != nil);
         }];
@@ -238,7 +238,7 @@ AdMobHelper *AdMobHelper::Instance = nullptr;
 {
     Q_UNUSED(ad)
 
-    qWarning() << QString::fromNSString([error localizedDescription]);
+    qWarning() << QString::fromNSString(error.localizedDescription);
 
     [self performSelector:@selector(loadAd) withObject:nil afterDelay:10.0];
 }

@@ -15,7 +15,7 @@ NotificationHelper::NotificationHelper(QObject *parent) : QObject(parent)
         Q_UNUSED(granted)
 
         if (error != nil) {
-            qWarning() << QString::fromNSString([error localizedDescription]);
+            qWarning() << QString::fromNSString(error.localizedDescription);
         }
     }];
 }
@@ -32,13 +32,13 @@ void NotificationHelper::showNotification(QString id, QString title, QString bod
 
             content.title = title.toNSString();
             content.body  = body.toNSString();
-            content.sound = [UNNotificationSound defaultSound];
+            content.sound = UNNotificationSound.defaultSound;
 
             UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:id.toNSString() content:content trigger:nil];
 
             [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
                 if (error != nil) {
-                    qWarning() << QString::fromNSString([error localizedDescription]);
+                    qWarning() << QString::fromNSString(error.localizedDescription);
                 }
             }];
         }

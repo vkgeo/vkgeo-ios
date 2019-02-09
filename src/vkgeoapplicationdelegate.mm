@@ -55,5 +55,5 @@ void InitializeVKGeoApplicationDelegate()
 {
     VKGeoApplicationDelegateInstance = [[VKGeoApplicationDelegate alloc] init];
 
-    [UIApplication sharedApplication].delegate = VKGeoApplicationDelegateInstance;
+    UIApplication.sharedApplication.delegate = VKGeoApplicationDelegateInstance;
 }
