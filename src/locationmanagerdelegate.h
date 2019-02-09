@@ -3,10 +3,9 @@
 
 #ifdef __OBJC__
 
-#import <UIKit/UIKit.h>
 #import <CoreLocation/CLLocationManagerDelegate.h>
 
-@interface LocationManagerDelegate : UIResponder<CLLocationManagerDelegate>
+@interface LocationManagerDelegate : NSObject<CLLocationManagerDelegate>
 
 - (id)init;
 - (void)dealloc;
