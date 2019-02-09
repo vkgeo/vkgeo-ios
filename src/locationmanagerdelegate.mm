@@ -41,7 +41,7 @@ static qint64 elapsedNanos()
     self = [super init];
 
     if (self) {
-        CentralLocationChanged           = false;
+        CentralLocationChanged           = true;
         CentralLocationChangeHandleNanos = 0;
         CurrentLocation                  = nil;
         CentralLocation                  = nil;
