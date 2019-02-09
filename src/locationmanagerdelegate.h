@@ -4,8 +4,6 @@
 #ifdef __OBJC__
 
 #import <UIKit/UIKit.h>
-#import <CoreLocation/CLCircularRegion.h>
-#import <CoreLocation/CLLocationManager.h>
 #import <CoreLocation/CLLocationManagerDelegate.h>
 
 @interface LocationManagerDelegate : UIResponder<CLLocationManagerDelegate>

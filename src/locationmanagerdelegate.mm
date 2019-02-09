@@ -1,3 +1,6 @@
+#import <CoreLocation/CLCircularRegion.h>
+#import <CoreLocation/CLLocationManager.h>
+
 #include <time.h>
 
 #include <QtCore/QtGlobal>
