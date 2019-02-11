@@ -8,18 +8,6 @@
         <translation>Быстрый поиск</translation>
     </message>
     <message>
-        <source>Invitation sent</source>
-        <translation>Приглашение отправлено</translation>
-    </message>
-    <message>
-        <source>Invite friend</source>
-        <translation>Пригласить друга</translation>
-    </message>
-    <message>
-        <source>Do you want to send an invitation to this friend?</source>
-        <translation>Вы действительно хотите отослать приглашение этому другу?</translation>
-    </message>
-    <message>
         <source>New friends nearby</source>
         <translation>Новые друзья поблизости</translation>
     </message>
