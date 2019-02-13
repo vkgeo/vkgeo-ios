@@ -36,6 +36,17 @@
     </message>
 </context>
 <context>
+    <name>MainPage</name>
+    <message>
+        <source>You are not logged into your VK account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tap to open the application</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>MapSwipe</name>
     <message>
         <source>Update location data</source>
