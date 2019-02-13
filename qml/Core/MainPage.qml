@@ -93,7 +93,12 @@ Page {
     }
 
     onVkAuthStateChanged: {
-        if (vkAuthState === VKAuthState.StateAuthorized) {
+        if (vkAuthState === VKAuthState.StateNotAuthorized) {
+            NotificationHelper.showNotification("NOT_LOGGED_IN_NOTIFICATION", qsTr("You are not logged into your VK account"),
+                                                                              qsTr("Tap to open the application"));
+        } else if (vkAuthState === VKAuthState.StateAuthorized) {
+            NotificationHelper.hideNotification("NOT_LOGGED_IN_NOTIFICATION");
+
             VKHelper.updateFriends();
         }
     }

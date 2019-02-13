@@ -13,6 +13,7 @@ public:
     virtual ~NotificationHelper();
 
     Q_INVOKABLE void showNotification(QString id, QString title, QString body);
+    Q_INVOKABLE void hideNotification(QString id);
 };
 
 #endif // NOTIFICATIONHELPER_H

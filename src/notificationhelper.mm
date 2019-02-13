@@ -44,3 +44,12 @@ void NotificationHelper::showNotification(QString id, QString title, QString bod
         }
     }];
 }
+
+void NotificationHelper::hideNotification(QString id)
+{
+    [[UNUserNotificationCenter currentNotificationCenter] getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings *settings) {
+        if (settings.authorizationStatus == UNAuthorizationStatusAuthorized) {
+            [[UNUserNotificationCenter currentNotificationCenter] removeDeliveredNotificationsWithIdentifiers:@[id.toNSString()]];
+        }
+    }];
+}
