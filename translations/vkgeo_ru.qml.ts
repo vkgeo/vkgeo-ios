@@ -39,11 +39,11 @@
     <name>MainPage</name>
     <message>
         <source>You are not logged into your VK account</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы не авторизованы в сети ВКонтакте</translation>
     </message>
     <message>
         <source>Tap to open the application</source>
-        <translation type="unfinished"></translation>
+        <translation>Коснитесь, чтобы перейти в приложение</translation>
     </message>
 </context>
 <context>
