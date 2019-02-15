@@ -75,7 +75,7 @@ Page {
         }
     }
 
-    property bool appInForeground:     Qt.application.active
+    property bool appInForeground:     Qt.application.state === Qt.ApplicationActive
 
     property int safeAreaTopMargin:    0
     property int safeAreaBottomMargin: 0
