@@ -8,8 +8,9 @@ import VKHelper 1.0
 Window {
     id:      mainWindow
     title:   qsTr("VKGeo")
-    visible: true
+    visible: false
 
+    property bool appInForeground:        Qt.application.state === Qt.ApplicationActive
     property bool disableAds:             false
     property bool enableTrackedFriends:   false
     property bool increaseTrackingLimits: false
@@ -17,6 +18,12 @@ Window {
     property int vkAuthState:             VKHelper.authState
 
     property var loginPage:               null
+
+    onAppInForegroundChanged: {
+        if (appInForeground) {
+            visible = true;
+        }
+    }
 
     onDisableAdsChanged: {
         setSetting("DisableAds", disableAds ? "true" : "false");
