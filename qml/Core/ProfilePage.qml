@@ -11,8 +11,7 @@ Page {
     id: profilePage
 
     header: Rectangle {
-        height: Math.max(profilePage.safeAreaTopMargin, profilePage.bannerViewHeight) +
-                headerControlsLayout.height
+        height: profilePage.bannerViewHeight + headerControlsLayout.height
         color:  "lightsteelblue"
 
         RowLayout {
@@ -60,40 +59,25 @@ Page {
         }
     }
 
-    footer: Rectangle {
-        height: profilePage.safeAreaBottomMargin
-        color:  "lightsteelblue"
-    }
+    property bool online:            false
+    property bool dataAvailable:     false
+    property bool locationAvailable: false
 
-    property bool online:              false
-    property bool dataAvailable:       false
-    property bool locationAvailable:   false
+    property int bannerViewHeight:   AdMobHelper.bannerViewHeight
+    property int batteryLevel:       0
 
-    property int safeAreaTopMargin:    0
-    property int safeAreaBottomMargin: 0
-    property int bannerViewHeight:     AdMobHelper.bannerViewHeight
-    property int batteryLevel:         0
+    property real latitude:          0.0
+    property real longitude:         0.0
 
-    property real latitude:            0.0
-    property real longitude:           0.0
+    property double updateTime:      0.0
 
-    property double updateTime:        0.0
-
-    property string userId:            ""
-    property string firstName:         ""
-    property string lastName:          ""
-    property string bigPhotoUrl:       ""
-    property string screenName:        ""
-    property string status:            ""
-    property string batteryStatus:     ""
-
-    StackView.onStatusChanged: {
-        if (StackView.status === StackView.Activating ||
-            StackView.status === StackView.Active) {
-            safeAreaTopMargin    = UIHelper.getSafeAreaTopMargin();
-            safeAreaBottomMargin = UIHelper.getSafeAreaBottomMargin();
-        }
-    }
+    property string userId:          ""
+    property string firstName:       ""
+    property string lastName:        ""
+    property string bigPhotoUrl:     ""
+    property string screenName:      ""
+    property string status:          ""
+    property string batteryStatus:   ""
 
     signal locateOnMap(string user_id)
 
