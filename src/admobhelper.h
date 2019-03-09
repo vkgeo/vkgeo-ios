@@ -28,7 +28,7 @@ public:
 
     bool interstitialReady() const;
     bool interstitialActive() const;
-    int  bannerViewHeight() const;
+    int bannerViewHeight() const;
 
     Q_INVOKABLE void showBannerView();
     Q_INVOKABLE void hideBannerView();
