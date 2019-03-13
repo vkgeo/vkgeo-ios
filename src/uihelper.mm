@@ -12,16 +12,12 @@ UIHelper::UIHelper(QObject *parent) : QObject(parent)
 {
 }
 
-UIHelper::~UIHelper()
-{
-}
-
 QString UIHelper::getAppSettingsUrl()
 {
     return QString::fromNSString(UIApplicationOpenSettingsURLString);
 }
 
-void UIHelper::sendInvitation(QString text)
+void UIHelper::sendInvitation(const QString &text)
 {
     UIViewController * __block root_view_controller = nil;
 

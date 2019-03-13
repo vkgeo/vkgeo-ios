@@ -20,21 +20,21 @@ NotificationHelper::NotificationHelper(QObject *parent) : QObject(parent)
     }];
 }
 
-NotificationHelper::~NotificationHelper()
+void NotificationHelper::showNotification(const QString &id, const QString &title, const QString &body)
 {
-}
+    NSString *ns_id    = id.toNSString();
+    NSString *ns_title = title.toNSString();
+    NSString *ns_body  = body.toNSString();
 
-void NotificationHelper::showNotification(QString id, QString title, QString body)
-{
     [[UNUserNotificationCenter currentNotificationCenter] getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings *settings) {
         if (settings.authorizationStatus == UNAuthorizationStatusAuthorized) {
             UNMutableNotificationContent *content = [[[UNMutableNotificationContent alloc] init] autorelease];
 
-            content.title = title.toNSString();
-            content.body  = body.toNSString();
+            content.title = ns_title;
+            content.body  = ns_body;
             content.sound = UNNotificationSound.defaultSound;
 
-            UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:id.toNSString() content:content trigger:nil];
+            UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:ns_id content:content trigger:nil];
 
             [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
                 if (error != nil) {
@@ -45,11 +45,13 @@ void NotificationHelper::showNotification(QString id, QString title, QString bod
     }];
 }
 
-void NotificationHelper::hideNotification(QString id)
+void NotificationHelper::hideNotification(const QString &id)
 {
+    NSString *ns_id = id.toNSString();
+
     [[UNUserNotificationCenter currentNotificationCenter] getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings *settings) {
         if (settings.authorizationStatus == UNAuthorizationStatusAuthorized) {
-            [[UNUserNotificationCenter currentNotificationCenter] removeDeliveredNotificationsWithIdentifiers:@[id.toNSString()]];
+            [[UNUserNotificationCenter currentNotificationCenter] removeDeliveredNotificationsWithIdentifiers:@[ns_id]];
         }
     }];
 }

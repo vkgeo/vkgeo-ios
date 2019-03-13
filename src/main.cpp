@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     if (translator.load(QString(":/tr/vkgeo_%1").arg(QLocale::system().name()))) {
-        app.installTranslator(&translator);
+        QGuiApplication::installTranslator(&translator);
     }
 
     InitializeVKGeoApplicationDelegate();
@@ -45,5 +45,5 @@ int main(int argc, char *argv[])
     if (engine.rootObjects().isEmpty())
         return -1;
 
-    return app.exec();
+    return QGuiApplication::exec();
 }

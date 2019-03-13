@@ -10,10 +10,10 @@ class NotificationHelper : public QObject
 
 public:
     explicit NotificationHelper(QObject *parent = nullptr);
-    virtual ~NotificationHelper();
+    ~NotificationHelper() override = default;
 
-    Q_INVOKABLE void showNotification(QString id, QString title, QString body);
-    Q_INVOKABLE void hideNotification(QString id);
+    Q_INVOKABLE void showNotification(const QString &id, const QString &title, const QString &body);
+    Q_INVOKABLE void hideNotification(const QString &id);
 };
 
 #endif // NOTIFICATIONHELPER_H

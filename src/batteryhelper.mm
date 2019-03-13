@@ -9,10 +9,6 @@ BatteryHelper::BatteryHelper(QObject *parent) : QObject(parent)
     UIDevice.currentDevice.batteryMonitoringEnabled = YES;
 }
 
-BatteryHelper::~BatteryHelper()
-{
-}
-
 QString BatteryHelper::getBatteryStatus()
 {
     UIDeviceBatteryState battery_state = UIDevice.currentDevice.batteryState;
@@ -29,7 +25,7 @@ QString BatteryHelper::getBatteryStatus()
 
 int BatteryHelper::getBatteryLevel()
 {
-    qreal battery_level = static_cast<qreal>(UIDevice.currentDevice.batteryLevel);
+    auto battery_level = static_cast<qreal>(UIDevice.currentDevice.batteryLevel);
 
     if (battery_level > 0.0) {
         return qFloor(battery_level * 100);

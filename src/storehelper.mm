@@ -6,10 +6,6 @@ StoreHelper::StoreHelper(QObject *parent) : QObject(parent)
 {
 }
 
-StoreHelper::~StoreHelper()
-{
-}
-
 void StoreHelper::requestReview()
 {
     if (@available(iOS 10.3, *)) {

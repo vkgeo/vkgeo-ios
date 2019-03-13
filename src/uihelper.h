@@ -10,11 +10,11 @@ class UIHelper : public QObject
 
 public:
     explicit UIHelper(QObject *parent = nullptr);
-    virtual ~UIHelper();
+    ~UIHelper() override = default;
 
     Q_INVOKABLE QString getAppSettingsUrl();
 
-    Q_INVOKABLE void sendInvitation(QString text);
+    Q_INVOKABLE void sendInvitation(const QString &text);
 };
 
 #endif // UIHELPER_H

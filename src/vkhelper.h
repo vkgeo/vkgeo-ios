@@ -68,7 +68,7 @@ public:
                          TRACKED_FRIENDS_LIST_NAME;
 
     explicit VKHelper(QObject *parent = nullptr);
-    virtual ~VKHelper();
+    ~VKHelper() override;
 
     bool locationValid() const;
     qint64 locationUpdateTime() const;
@@ -95,19 +95,19 @@ public:
     Q_INVOKABLE void logout();
 
     Q_INVOKABLE void updateLocation(qreal latitude, qreal longitude);
-    Q_INVOKABLE void updateBatteryStatus(QString status, int level);
+    Q_INVOKABLE void updateBatteryStatus(const QString &status, int level);
     Q_INVOKABLE void sendData();
 
     Q_INVOKABLE void updateFriends();
     Q_INVOKABLE QVariantMap getFriends();
     Q_INVOKABLE QVariantList getFriendsList();
 
-    Q_INVOKABLE void updateTrustedFriendsList(QVariantList trusted_friends_list);
-    Q_INVOKABLE void updateTrackedFriendsList(QVariantList tracked_friends_list);
+    Q_INVOKABLE void updateTrustedFriendsList(const QVariantList &trusted_friends_list);
+    Q_INVOKABLE void updateTrackedFriendsList(const QVariantList &tracked_friends_list);
 
     Q_INVOKABLE void updateTrackedFriendsData(bool expedited);
 
-    Q_INVOKABLE void joinGroup(QString group_id);
+    Q_INVOKABLE void joinGroup(const QString &group_id);
 
     static void setAuthState(int state);
 
@@ -119,55 +119,55 @@ private slots:
 signals:
     void authStateChanged(int authState);
     void friendsCountChanged(int friendsCount);
-    void userIdChanged(QString userId);
-    void firstNameChanged(QString firstName);
-    void lastNameChanged(QString lastName);
-    void photoUrlChanged(QString photoUrl);
-    void bigPhotoUrlChanged(QString bigPhotoUrl);
+    void userIdChanged(const QString &userId);
+    void firstNameChanged(const QString &firstName);
+    void lastNameChanged(const QString &lastName);
+    void photoUrlChanged(const QString &photoUrl);
+    void bigPhotoUrlChanged(const QString &bigPhotoUrl);
     void maxTrustedFriendsCountChanged(int maxTrustedFriendsCount);
     void maxTrackedFriendsCountChanged(int maxTrackedFriendsCount);
     void locationUpdated();
     void batteryStatusUpdated();
     void dataSent();
     void friendsUpdated();
-    void trackedFriendDataUpdated(QString id, QVariantMap data);
+    void trackedFriendDataUpdated(const QString &id, const QVariantMap &data);
 
 private:
     void SendData(bool expedited);
 
-    void ContextTrackerAddRequest(QVariantMap request);
-    void ContextTrackerDelRequest(QVariantMap request);
+    void ContextTrackerAddRequest(const QVariantMap &request);
+    void ContextTrackerDelRequest(const QVariantMap &request);
 
-    bool ContextHasActiveRequests(QString context);
+    bool ContextHasActiveRequests(const QString &context);
 
-    void EnqueueRequest(QVariantMap request);
+    void EnqueueRequest(const QVariantMap &request);
 
-    void ProcessResponse(QString response, QVariantMap resp_request);
-    void ProcessError(QString error_message, QVariantMap err_request);
+    void ProcessResponse(const QString &response, const QVariantMap &resp_request);
+    void ProcessError(const QString &error_message, const QVariantMap &err_request);
 
-    void ProcessNotesGetResponse(QString response, QVariantMap resp_request);
-    void ProcessNotesGetError(QVariantMap err_request);
+    void ProcessNotesGetResponse(const QString &response, const QVariantMap &resp_request);
+    void ProcessNotesGetError(const QVariantMap &err_request);
 
-    void ProcessNotesAddResponse(QString response, QVariantMap resp_request);
-    void ProcessNotesAddError(QVariantMap err_request);
+    void ProcessNotesAddResponse(const QString &response, const QVariantMap &resp_request);
+    void ProcessNotesAddError(const QVariantMap &err_request);
 
-    void ProcessNotesDeleteResponse(QString response, QVariantMap resp_request);
-    void ProcessNotesDeleteError(QVariantMap err_request);
+    void ProcessNotesDeleteResponse(const QString &response, const QVariantMap &resp_request);
+    void ProcessNotesDeleteError(const QVariantMap &err_request);
 
-    void ProcessFriendsGetResponse(QString response, QVariantMap resp_request);
-    void ProcessFriendsGetError(QVariantMap err_request);
+    void ProcessFriendsGetResponse(const QString &response, const QVariantMap &resp_request);
+    void ProcessFriendsGetError(const QVariantMap &err_request);
 
-    void ProcessFriendsGetListsResponse(QString response, QVariantMap resp_request);
-    void ProcessFriendsGetListsError(QVariantMap err_request);
+    void ProcessFriendsGetListsResponse(const QString &response, const QVariantMap &resp_request);
+    void ProcessFriendsGetListsError(const QVariantMap &err_request);
 
-    void ProcessFriendsAddListResponse(QString response, QVariantMap resp_request);
-    void ProcessFriendsAddListError(QVariantMap err_request);
+    void ProcessFriendsAddListResponse(const QString &response, const QVariantMap &resp_request);
+    void ProcessFriendsAddListError(const QVariantMap &err_request);
 
-    void ProcessFriendsEditListResponse(QString response, QVariantMap resp_request);
-    void ProcessFriendsEditListError(QVariantMap err_request);
+    void ProcessFriendsEditListResponse(const QString &response, const QVariantMap &resp_request);
+    void ProcessFriendsEditListError(const QVariantMap &err_request);
 
-    void ProcessGroupsJoinResponse(QString response, QVariantMap resp_request);
-    void ProcessGroupsJoinError(QVariantMap err_request);
+    void ProcessGroupsJoinResponse(const QString &response, const QVariantMap &resp_request);
+    void ProcessGroupsJoinError(const QVariantMap &err_request);
 
     enum DataState {
         DataNotUpdated,
