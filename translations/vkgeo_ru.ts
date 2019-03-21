@@ -246,15 +246,4 @@
         <translation>&amp;Нет</translation>
     </message>
 </context>
-<context>
-    <name>QAndroidPlatformTheme</name>
-    <message>
-        <source>Yes</source>
-        <translation>Да</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Нет</translation>
-    </message>
-</context>
 </TS>
