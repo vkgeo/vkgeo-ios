@@ -45,7 +45,7 @@ QML_IMPORT_PATH =
 QML_DESIGNER_IMPORT_PATH =
 
 ios {
-    CONFIG += qtquickcompiler
+    CONFIG += qtquickcompiler no_default_rpath
 
     INCLUDEPATH += $$PWD/ios/frameworks
     DEPENDPATH += $$PWD/ios/frameworks
@@ -73,6 +73,8 @@ ios {
     VK_SDK_FRAMEWORK.path = Frameworks
 
     QMAKE_BUNDLE_DATA += VK_SDK_FRAMEWORK
+
+    QMAKE_RPATHDIR = @executable_path/Frameworks
 
     QMAKE_APPLE_DEVICE_ARCHS = arm64
     QMAKE_INFO_PLIST = ios/Info.plist
