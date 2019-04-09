@@ -159,13 +159,14 @@ static qint64 elapsedNanos()
 
 - (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region
 {
-    if (CurrentRegion != nil && [CurrentRegion.identifier isEqualToString:region.identifier]) {
-        CLLocation *location = LocationManager.location;
+    Q_UNUSED(manager)
 
-        if (location != nil) {
-            if (CurrentLocation == nil || [CurrentLocation.timestamp compare:location.timestamp] == NSOrderedAscending) {
-                [self locationManager:manager didUpdateLocations:@[location]];
-            }
+    if (CurrentRegion != nil && [CurrentRegion.identifier isEqualToString:region.identifier]) {
+        [LocationManager stopUpdatingLocation];
+
+        if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse ||
+            [CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
+            [LocationManager startUpdatingLocation];
         }
     }
 }
