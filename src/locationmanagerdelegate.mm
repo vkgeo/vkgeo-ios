@@ -36,7 +36,9 @@ static qint64 elapsedNanos()
     CLLocation        *CurrentLocation;
     CLLocation        *CentralLocation;
     CLCircularRegion  *CentralRegion;
-    CLLocationManager *LocationManager;
+    CLLocationManager *RegularLocationManager,
+                      *SignificantChangesLocationManager,
+                      *RegionLocationManager;
 }
 
 - (id)init
@@ -50,21 +52,33 @@ static qint64 elapsedNanos()
         CentralLocation                  = nil;
         CentralRegion                    = nil;
 
-        LocationManager = [[CLLocationManager alloc] init];
+        RegularLocationManager = [[CLLocationManager alloc] init];
 
-        LocationManager.allowsBackgroundLocationUpdates    = YES;
-        LocationManager.pausesLocationUpdatesAutomatically = NO;
-        LocationManager.desiredAccuracy                    = kCLLocationAccuracyNearestTenMeters;
-        LocationManager.distanceFilter                     = LOCATION_DISTANCE_FILTER;
-        LocationManager.delegate                           = self;
+        RegularLocationManager.allowsBackgroundLocationUpdates    = YES;
+        RegularLocationManager.pausesLocationUpdatesAutomatically = NO;
+        RegularLocationManager.desiredAccuracy                    = kCLLocationAccuracyNearestTenMeters;
+        RegularLocationManager.distanceFilter                     = LOCATION_DISTANCE_FILTER;
+        RegularLocationManager.delegate                           = self;
+
+        SignificantChangesLocationManager = [[CLLocationManager alloc] init];
+
+        SignificantChangesLocationManager.allowsBackgroundLocationUpdates    = YES;
+        SignificantChangesLocationManager.pausesLocationUpdatesAutomatically = NO;
+        SignificantChangesLocationManager.delegate                           = self;
+
+        RegionLocationManager = [[CLLocationManager alloc] init];
+
+        RegionLocationManager.allowsBackgroundLocationUpdates    = YES;
+        RegionLocationManager.pausesLocationUpdatesAutomatically = NO;
+        RegionLocationManager.delegate                           = self;
 
         if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse ||
             [CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
-            [LocationManager startUpdatingLocation];
+            [RegularLocationManager startUpdatingLocation];
 
             if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
                 if ([CLLocationManager significantLocationChangeMonitoringAvailable]) {
-                    [LocationManager startMonitoringSignificantLocationChanges];
+                    [SignificantChangesLocationManager startMonitoringSignificantLocationChanges];
                 }
             }
         }
@@ -87,7 +101,9 @@ static qint64 elapsedNanos()
         [CentralRegion release];
     }
 
-    [LocationManager release];
+    [RegularLocationManager            release];
+    [SignificantChangesLocationManager release];
+    [RegionLocationManager             release];
 
     [super dealloc];
 }
@@ -95,12 +111,12 @@ static qint64 elapsedNanos()
 - (void)adjustDesiredAccuracy
 {
     if (CentralLocationChanged) {
-        LocationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
+        RegularLocationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
 
         CentralLocationChanged           = false;
         CentralLocationChangeHandleNanos = elapsedNanos();
     } else if (elapsedNanos() - CentralLocationChangeHandleNanos > CENTRAL_LOCATION_CHANGE_TIMEOUT * 1000000000) {
-        LocationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters;
+        RegularLocationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters;
     }
 
     [self performSelector:@selector(adjustDesiredAccuracy) withObject:nil afterDelay:LOCATION_ACCURACY_ADJUSTMENT_INTERVAL];
@@ -142,7 +158,7 @@ static qint64 elapsedNanos()
 
                 if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
                     if ([CLLocationManager isMonitoringAvailableForClass:[CLCircularRegion class]]) {
-                        [LocationManager startMonitoringForRegion:CentralRegion];
+                        [RegionLocationManager startMonitoringForRegion:CentralRegion];
                     }
                 }
             }
@@ -171,31 +187,31 @@ static qint64 elapsedNanos()
 
     if (status == kCLAuthorizationStatusAuthorizedWhenInUse ||
         status == kCLAuthorizationStatusAuthorizedAlways) {
-        [LocationManager startUpdatingLocation];
+        [RegularLocationManager startUpdatingLocation];
 
         if (status == kCLAuthorizationStatusAuthorizedAlways) {
             if ([CLLocationManager significantLocationChangeMonitoringAvailable]) {
-                [LocationManager startMonitoringSignificantLocationChanges];
+                [SignificantChangesLocationManager startMonitoringSignificantLocationChanges];
             }
 
             if (CentralRegion != nil) {
                 if ([CLLocationManager isMonitoringAvailableForClass:[CLCircularRegion class]]) {
-                    [LocationManager startMonitoringForRegion:CentralRegion];
+                    [RegionLocationManager startMonitoringForRegion:CentralRegion];
                 }
             }
         } else {
-            [LocationManager stopMonitoringSignificantLocationChanges];
+            [SignificantChangesLocationManager stopMonitoringSignificantLocationChanges];
 
             if (CentralRegion != nil) {
-                [LocationManager stopMonitoringForRegion:CentralRegion];
+                [RegionLocationManager stopMonitoringForRegion:CentralRegion];
             }
         }
     } else {
-        [LocationManager stopUpdatingLocation];
-        [LocationManager stopMonitoringSignificantLocationChanges];
+        [RegularLocationManager            stopUpdatingLocation];
+        [SignificantChangesLocationManager stopMonitoringSignificantLocationChanges];
 
         if (CentralRegion != nil) {
-            [LocationManager stopMonitoringForRegion:CentralRegion];
+            [RegionLocationManager stopMonitoringForRegion:CentralRegion];
         }
     }
 }
