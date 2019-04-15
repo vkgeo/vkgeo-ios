@@ -1,5 +1,4 @@
-#import <CoreLocation/CLCircularRegion.h>
-#import <CoreLocation/CLLocationManager.h>
+#import <CoreLocation/CoreLocation.h>
 
 #include <time.h>
 

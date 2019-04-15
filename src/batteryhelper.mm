@@ -1,4 +1,4 @@
-#import <UIKit/UIDevice.h>
+#import <UIKit/UIKit.h>
 
 #include <QtCore/QtMath>
 

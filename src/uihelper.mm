@@ -1,7 +1,4 @@
-#import <UIKit/UIWindow.h>
-#import <UIKit/UIApplication.h>
-#import <UIKit/UIActivityViewController.h>
-#import <UIKit/UIPopoverPresentationController.h>
+#import <UIKit/UIKit.h>
 
 #include <QtCore/QtGlobal>
 #include <QtCore/QtMath>

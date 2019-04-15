@@ -1,9 +1,4 @@
-#import <GoogleMobileAds/GADMobileAds.h>
-#import <GoogleMobileAds/GADRequest.h>
-#import <GoogleMobileAds/GADBannerView.h>
-#import <GoogleMobileAds/GADBannerViewDelegate.h>
-#import <GoogleMobileAds/GADInterstitial.h>
-#import <GoogleMobileAds/GADInterstitialDelegate.h>
+#import <GoogleMobileAds/GoogleMobileAds.h>
 
 #include <QtCore/QtGlobal>
 #include <QtCore/QtMath>

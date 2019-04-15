@@ -1,8 +1,4 @@
-#import <UserNotifications/UNUserNotificationCenter.h>
-#import <UserNotifications/UNNotificationSettings.h>
-#import <UserNotifications/UNNotificationSound.h>
-#import <UserNotifications/UNNotificationContent.h>
-#import <UserNotifications/UNNotificationRequest.h>
+#import <UserNotifications/UserNotifications.h>
 
 #include <QtCore/QDebug>
 
