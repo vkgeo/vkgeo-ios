@@ -1,3 +1,4 @@
+#import <UIKit/UIKit.h>
 #import <VKSdkFramework/VKSdkFramework.h>
 
 #include <QtCore/QByteArray>

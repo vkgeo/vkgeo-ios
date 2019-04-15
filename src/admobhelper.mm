@@ -1,3 +1,4 @@
+#import <UIKit/UIKit.h>
 #import <GoogleMobileAds/GoogleMobileAds.h>
 
 #include <QtCore/QtGlobal>
