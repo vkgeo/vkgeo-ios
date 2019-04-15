@@ -14,7 +14,7 @@
 
 static const qint64             CENTRAL_LOCATION_CHANGE_TIMEOUT       = 900;
 static const NSTimeInterval     LOCATION_ACCURACY_ADJUSTMENT_INTERVAL = 60.0;
-static const CLLocationDistance LOCATION_DISTANCE_FILTER              = 100.0,
+static const CLLocationDistance CURRENT_LOCATION_CHANGE_DISTANCE      = 100.0,
                                 CURRENT_REGION_RADIUS                 = 100.0,
                                 CENTRAL_LOCATION_CHANGE_DISTANCE      = 500.0;
 
@@ -55,7 +55,6 @@ static qint64 elapsedNanos()
         LocationManager.allowsBackgroundLocationUpdates    = YES;
         LocationManager.pausesLocationUpdatesAutomatically = NO;
         LocationManager.desiredAccuracy                    = kCLLocationAccuracyNearestTenMeters;
-        LocationManager.distanceFilter                     = LOCATION_DISTANCE_FILTER;
         LocationManager.delegate                           = self;
 
         if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse ||
@@ -119,7 +118,8 @@ static qint64 elapsedNanos()
     if (locations != nil && locations.lastObject != nil) {
         CLLocation *location = locations.lastObject;
 
-        if (CurrentLocation == nil || [CurrentLocation distanceFromLocation:location] > location.horizontalAccuracy) {
+        if (CurrentLocation == nil || ([CurrentLocation distanceFromLocation:location] > location.horizontalAccuracy &&
+                                       [CurrentLocation distanceFromLocation:location] > CURRENT_LOCATION_CHANGE_DISTANCE)) {
             if (CurrentLocation != nil) {
                 [CurrentLocation release];
             }
