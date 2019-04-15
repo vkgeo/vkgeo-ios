@@ -52,6 +52,9 @@ ios {
 
     LIBS += -F $$PWD/ios/frameworks \
             -framework GoogleMobileAds \
+            -framework GoogleAppMeasurement \
+            -framework GoogleUtilities \
+            -framework nanopb \
             -framework VKSdkFramework \
             -framework AdSupport \
             -framework AvFoundation \
@@ -68,6 +71,8 @@ ios {
             -framework StoreKit \
             -framework SystemConfiguration \
             -framework UserNotifications
+
+    QMAKE_LFLAGS += -ObjC
 
     VK_SDK_FRAMEWORK.files = ios/Frameworks/VKSdkFramework.framework
     VK_SDK_FRAMEWORK.path = Frameworks

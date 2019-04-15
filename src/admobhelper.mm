@@ -243,7 +243,7 @@ AdMobHelper *AdMobHelper::Instance = nullptr;
 
 AdMobHelper::AdMobHelper(QObject *parent) : QObject(parent)
 {
-    [GADMobileAds configureWithApplicationID:ADMOB_APP_ID.toNSString()];
+    [[GADMobileAds sharedInstance] startWithCompletionHandler:nil];
 
     InterstitialActive           = false;
     BannerViewHeight             = 0;
