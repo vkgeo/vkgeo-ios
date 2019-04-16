@@ -1,4 +1,3 @@
-#import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 
 #include <ctime>
@@ -117,12 +116,6 @@ static qint64 elapsedNanos()
 {
     Q_UNUSED(manager)
 
-    UIBackgroundTaskIdentifier __block bg_task_id = [UIApplication.sharedApplication beginBackgroundTaskWithExpirationHandler:^(void) {
-        if (bg_task_id != UIBackgroundTaskInvalid) {
-            [UIApplication.sharedApplication endBackgroundTask:bg_task_id];
-        }
-    }];
-
     if (locations != nil && locations.lastObject != nil) {
         CLLocation *location = locations.lastObject;
 
@@ -178,12 +171,6 @@ static qint64 elapsedNanos()
 - (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region
 {
     Q_UNUSED(manager)
-
-    UIBackgroundTaskIdentifier __block bg_task_id = [UIApplication.sharedApplication beginBackgroundTaskWithExpirationHandler:^(void) {
-        if (bg_task_id != UIBackgroundTaskInvalid) {
-            [UIApplication.sharedApplication endBackgroundTask:bg_task_id];
-        }
-    }];
 
     if (CurrentRegion != nil && [CurrentRegion.identifier isEqualToString:region.identifier]) {
         CLLocation *location = LocationManager.location;
