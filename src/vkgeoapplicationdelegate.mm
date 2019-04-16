@@ -43,8 +43,12 @@ static LocationManagerDelegate *LocationManagerDelegateInstance = nil;
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
-    return [VKSdk processOpenURL:url fromApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]] ||
-           [super application:application openURL:url options:options];
+    if (@available(iOS 9, *)) {
+        return [VKSdk processOpenURL:url fromApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]] ||
+               [super application:application openURL:url options:options];
+    } else {
+        assert(0);
+    }
 }
 
 @end

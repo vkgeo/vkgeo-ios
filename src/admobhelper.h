@@ -24,7 +24,14 @@ public:
                          ADMOB_TEST_DEVICE_ID;
 
     explicit AdMobHelper(QObject *parent = nullptr);
-    ~AdMobHelper() override;
+
+    AdMobHelper(const AdMobHelper&) = delete;
+    AdMobHelper(const AdMobHelper&&) noexcept = delete;
+
+    AdMobHelper& operator=(const AdMobHelper&) = delete;
+    AdMobHelper& operator=(const AdMobHelper&&) noexcept = delete;
+
+    ~AdMobHelper() noexcept override;
 
     bool interstitialReady() const;
     bool interstitialActive() const;

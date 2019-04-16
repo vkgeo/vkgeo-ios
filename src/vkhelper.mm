@@ -204,7 +204,7 @@ VKHelper::VKHelper(QObject *parent) : QObject(parent)
     SendDataTimer.setInterval(SEND_DATA_TIMER_INTERVAL);
 }
 
-VKHelper::~VKHelper()
+VKHelper::~VKHelper() noexcept
 {
     [VKDelegateInstance release];
 }
@@ -1030,8 +1030,6 @@ void VKHelper::ProcessNotesGetResponse(const QString &response, const QVariantMa
 
                                 if (base64_regexp.indexIn(note_text) != -1) {
                                     QString note_base64 = base64_regexp.cap(1);
-
-                                    QVariantMap user_data = QJsonDocument::fromJson(QByteArray::fromBase64(note_base64.toUtf8())).toVariant().toMap();
 
                                     emit trackedFriendDataUpdated(user_id, QJsonDocument::fromJson(QByteArray::fromBase64(note_base64.toUtf8())).toVariant().toMap());
                                 } else {

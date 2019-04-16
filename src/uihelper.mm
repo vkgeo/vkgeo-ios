@@ -11,7 +11,11 @@ UIHelper::UIHelper(QObject *parent) : QObject(parent)
 
 QString UIHelper::getAppSettingsUrl()
 {
-    return QString::fromNSString(UIApplicationOpenSettingsURLString);
+    if (@available(iOS 8, *)) {
+        return QString::fromNSString(UIApplicationOpenSettingsURLString);
+    } else {
+        assert(0);
+    }
 }
 
 void UIHelper::sendInvitation(const QString &text)
@@ -24,13 +28,17 @@ void UIHelper::sendInvitation(const QString &text)
         *stop = (root_view_controller != nil);
     }];
 
-    UIActivityViewController *activity_view_controller = [[[UIActivityViewController alloc] initWithActivityItems:@[text.toNSString()] applicationActivities:nil] autorelease];
+    if (@available(iOS 8, *)) {
+        UIActivityViewController *activity_view_controller = [[[UIActivityViewController alloc] initWithActivityItems:@[text.toNSString()] applicationActivities:nil] autorelease];
 
-    activity_view_controller.excludedActivityTypes = @[];
+        activity_view_controller.excludedActivityTypes = @[];
 
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        activity_view_controller.popoverPresentationController.sourceView = root_view_controller.view;
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            activity_view_controller.popoverPresentationController.sourceView = root_view_controller.view;
+        }
+
+        [root_view_controller presentViewController:activity_view_controller animated:YES completion:nil];
+    } else {
+        assert(0);
     }
-
-    [root_view_controller presentViewController:activity_view_controller animated:YES completion:nil];
 }

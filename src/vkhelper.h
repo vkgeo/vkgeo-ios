@@ -19,14 +19,13 @@ class VKAuthState : public QObject
 {
     Q_OBJECT
 
-    Q_ENUMS(AuthState)
-
 public:
     enum AuthState {
         StateUnknown,
         StateNotAuthorized,
         StateAuthorized
     };
+    Q_ENUM(AuthState)
 };
 
 class VKHelper : public QObject
@@ -68,7 +67,14 @@ public:
                          TRACKED_FRIENDS_LIST_NAME;
 
     explicit VKHelper(QObject *parent = nullptr);
-    ~VKHelper() override;
+
+    VKHelper(const VKHelper&) = delete;
+    VKHelper(const VKHelper&&) noexcept = delete;
+
+    VKHelper& operator=(const VKHelper&) = delete;
+    VKHelper& operator=(const VKHelper&&) noexcept = delete;
+
+    ~VKHelper() noexcept override;
 
     bool locationValid() const;
     qint64 locationUpdateTime() const;
