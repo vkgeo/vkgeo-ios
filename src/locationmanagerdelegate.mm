@@ -1,3 +1,4 @@
+#import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 
 #include <ctime>
@@ -13,7 +14,7 @@
 
 static const qint64             CENTRAL_LOCATION_CHANGE_TIMEOUT       = 900;
 static const NSTimeInterval     LOCATION_ACCURACY_ADJUSTMENT_INTERVAL = 60.0;
-static const CLLocationDistance CURRENT_LOCATION_CHANGE_DISTANCE      = 100.0,
+static const CLLocationDistance LOCATION_DISTANCE_FILTER              = 100.0,
                                 CURRENT_REGION_RADIUS                 = 100.0,
                                 CENTRAL_LOCATION_CHANGE_DISTANCE      = 500.0;
 
@@ -34,12 +35,13 @@ static qint64 elapsedNanos()
 
 @implementation LocationManagerDelegate
 {
-    bool               CentralLocationChanged;
-    qint64             CentralLocationChangeHandleNanos;
-    CLLocation        *CurrentLocation;
-    CLCircularRegion  *CurrentRegion API_AVAILABLE(ios(7));
-    CLLocation        *CentralLocation;
-    CLLocationManager *LocationManager;
+    bool                       CentralLocationChanged;
+    qint64                     CentralLocationChangeHandleNanos;
+    UIBackgroundTaskIdentifier BackgroundTaskId;
+    CLLocation                *CurrentLocation;
+    CLCircularRegion          *CurrentRegion API_AVAILABLE(ios(7));
+    CLLocation                *CentralLocation;
+    CLLocationManager         *LocationManager;
 }
 
 - (id)init
@@ -49,6 +51,7 @@ static qint64 elapsedNanos()
     if (self) {
         CentralLocationChanged           = true;
         CentralLocationChangeHandleNanos = 0;
+        BackgroundTaskId                 = UIBackgroundTaskInvalid;
         CurrentLocation                  = nil;
         CurrentRegion                    = nil;
         CentralLocation                  = nil;
@@ -59,6 +62,7 @@ static qint64 elapsedNanos()
             LocationManager.allowsBackgroundLocationUpdates    = YES;
             LocationManager.pausesLocationUpdatesAutomatically = NO;
             LocationManager.desiredAccuracy                    = kCLLocationAccuracyNearestTenMeters;
+            LocationManager.distanceFilter                     = LOCATION_DISTANCE_FILTER;
             LocationManager.delegate                           = self;
 
             if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse ||
@@ -72,6 +76,7 @@ static qint64 elapsedNanos()
                 }
             }
 
+            [self startBackgroundTask];
             [self performSelector:@selector(adjustDesiredAccuracy) withObject:nil afterDelay:LOCATION_ACCURACY_ADJUSTMENT_INTERVAL];
         } else {
             assert(0);
@@ -98,20 +103,6 @@ static qint64 elapsedNanos()
     [super dealloc];
 }
 
-- (void)adjustDesiredAccuracy
-{
-    if (CentralLocationChanged) {
-        LocationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
-
-        CentralLocationChanged           = false;
-        CentralLocationChangeHandleNanos = elapsedNanos();
-    } else if (elapsedNanos() - CentralLocationChangeHandleNanos > CENTRAL_LOCATION_CHANGE_TIMEOUT * 1000000000) {
-        LocationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters;
-    }
-
-    [self performSelector:@selector(adjustDesiredAccuracy) withObject:nil afterDelay:LOCATION_ACCURACY_ADJUSTMENT_INTERVAL];
-}
-
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations
 {
     Q_UNUSED(manager)
@@ -119,8 +110,7 @@ static qint64 elapsedNanos()
     if (locations != nil && locations.lastObject != nil) {
         CLLocation *location = locations.lastObject;
 
-        if (CurrentLocation == nil || ([CurrentLocation distanceFromLocation:location] > location.horizontalAccuracy &&
-                                       [CurrentLocation distanceFromLocation:location] > CURRENT_LOCATION_CHANGE_DISTANCE)) {
+        if (CurrentLocation == nil || [CurrentLocation distanceFromLocation:location] > location.horizontalAccuracy) {
             if (CurrentLocation != nil) {
                 [CurrentLocation release];
             }
@@ -161,13 +151,6 @@ static qint64 elapsedNanos()
     }
 }
 
-- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
-{
-    Q_UNUSED(manager)
-
-    qWarning() << QString::fromNSString(error.localizedDescription);
-}
-
 - (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region
 {
     Q_UNUSED(manager)
@@ -185,14 +168,6 @@ static qint64 elapsedNanos()
             }
         }
     }
-}
-
-- (void)locationManager:(CLLocationManager *)manager monitoringDidFailForRegion:(CLRegion *)region withError:(NSError *)error
-{
-    Q_UNUSED(manager)
-    Q_UNUSED(region)
-
-    qWarning() << QString::fromNSString(error.localizedDescription);
 }
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
@@ -231,6 +206,62 @@ static qint64 elapsedNanos()
         }
     } else {
         assert(0);
+    }
+}
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
+{
+    Q_UNUSED(manager)
+
+    qWarning() << QString::fromNSString(error.localizedDescription);
+}
+
+- (void)locationManager:(CLLocationManager *)manager monitoringDidFailForRegion:(CLRegion *)region withError:(NSError *)error
+{
+    Q_UNUSED(manager)
+    Q_UNUSED(region)
+
+    qWarning() << QString::fromNSString(error.localizedDescription);
+}
+
+- (void)adjustDesiredAccuracy
+{
+    [self stopBackgroundTask];
+
+    if (CentralLocationChanged) {
+        LocationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
+
+        CentralLocationChanged           = false;
+        CentralLocationChangeHandleNanos = elapsedNanos();
+    } else if (elapsedNanos() - CentralLocationChangeHandleNanos > CENTRAL_LOCATION_CHANGE_TIMEOUT * 1000000000) {
+        LocationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters;
+    }
+
+    [self startBackgroundTask];
+    [self performSelector:@selector(adjustDesiredAccuracy) withObject:nil afterDelay:LOCATION_ACCURACY_ADJUSTMENT_INTERVAL];
+}
+
+- (void)startBackgroundTask
+{
+    if (BackgroundTaskId != UIBackgroundTaskInvalid) {
+        [UIApplication.sharedApplication endBackgroundTask:BackgroundTaskId];
+    }
+
+    BackgroundTaskId = [UIApplication.sharedApplication beginBackgroundTaskWithExpirationHandler:^(void) {
+        if (BackgroundTaskId != UIBackgroundTaskInvalid) {
+            [UIApplication.sharedApplication endBackgroundTask:BackgroundTaskId];
+
+            BackgroundTaskId = UIBackgroundTaskInvalid;
+        }
+    }];
+}
+
+- (void)stopBackgroundTask
+{
+    if (BackgroundTaskId != UIBackgroundTaskInvalid) {
+        [UIApplication.sharedApplication endBackgroundTask:BackgroundTaskId];
+
+        BackgroundTaskId = UIBackgroundTaskInvalid;
     }
 }
 
