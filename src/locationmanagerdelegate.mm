@@ -76,11 +76,12 @@ static qint64 elapsedNanos()
                 }
             }
 
-            [self startBackgroundTask];
             [self performSelector:@selector(adjustDesiredAccuracy) withObject:nil afterDelay:LOCATION_ACCURACY_ADJUSTMENT_INTERVAL];
         } else {
             assert(0);
         }
+
+        [self requestBackgroundExecution];
     }
 
     return self;
@@ -149,6 +150,8 @@ static qint64 elapsedNanos()
             }
         }
     }
+
+    [self requestBackgroundExecution];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region
@@ -168,6 +171,8 @@ static qint64 elapsedNanos()
             }
         }
     }
+
+    [self requestBackgroundExecution];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
@@ -207,6 +212,8 @@ static qint64 elapsedNanos()
     } else {
         assert(0);
     }
+
+    [self requestBackgroundExecution];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
@@ -214,6 +221,8 @@ static qint64 elapsedNanos()
     Q_UNUSED(manager)
 
     qWarning() << QString::fromNSString(error.localizedDescription);
+
+    [self requestBackgroundExecution];
 }
 
 - (void)locationManager:(CLLocationManager *)manager monitoringDidFailForRegion:(CLRegion *)region withError:(NSError *)error
@@ -222,12 +231,12 @@ static qint64 elapsedNanos()
     Q_UNUSED(region)
 
     qWarning() << QString::fromNSString(error.localizedDescription);
+
+    [self requestBackgroundExecution];
 }
 
 - (void)adjustDesiredAccuracy
 {
-    [self stopBackgroundTask];
-
     if (CentralLocationChanged) {
         LocationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
 
@@ -237,11 +246,12 @@ static qint64 elapsedNanos()
         LocationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters;
     }
 
-    [self startBackgroundTask];
     [self performSelector:@selector(adjustDesiredAccuracy) withObject:nil afterDelay:LOCATION_ACCURACY_ADJUSTMENT_INTERVAL];
+
+    [self requestBackgroundExecution];
 }
 
-- (void)startBackgroundTask
+- (void)requestBackgroundExecution
 {
     if (BackgroundTaskId != UIBackgroundTaskInvalid) {
         [UIApplication.sharedApplication endBackgroundTask:BackgroundTaskId];
@@ -254,15 +264,6 @@ static qint64 elapsedNanos()
             BackgroundTaskId = UIBackgroundTaskInvalid;
         }
     }];
-}
-
-- (void)stopBackgroundTask
-{
-    if (BackgroundTaskId != UIBackgroundTaskInvalid) {
-        [UIApplication.sharedApplication endBackgroundTask:BackgroundTaskId];
-
-        BackgroundTaskId = UIBackgroundTaskInvalid;
-    }
 }
 
 @end
