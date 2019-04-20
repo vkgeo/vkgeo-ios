@@ -13,3 +13,15 @@ VKGeo  –  лучшее мобильное приложение для опре
 
 Посетите   [официальный  сайт  проекта](https://vkgeo.sourceforge.io/)  для
 получения дополнительной информации.
+
+---
+
+[![SonarCloud Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=vkgeo%3Avkgeo-ios&metric=alert_status)](https://sonarcloud.io/dashboard?id=vkgeo%3Avkgeo-ios)
+
+[![SonarCloud Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=vkgeo%3Avkgeo-ios&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=vkgeo%3Avkgeo-ios)
+[![SonarCloud Security Rating](https://sonarcloud.io/api/project_badges/measure?project=vkgeo%3Avkgeo-ios&metric=security_rating)](https://sonarcloud.io/dashboard?id=vkgeo%3Avkgeo-ios)
+[![SonarCloud Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=vkgeo%3Avkgeo-ios&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=vkgeo%3Avkgeo-ios)
+
+[![SonarCloud Bugs](https://sonarcloud.io/api/project_badges/measure?project=vkgeo%3Avkgeo-ios&metric=bugs)](https://sonarcloud.io/dashboard?id=vkgeo%3Avkgeo-ios)
+[![SonarCloud Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=vkgeo%3Avkgeo-ios&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=vkgeo%3Avkgeo-ios)
+[![SonarCloud Code Smells](https://sonarcloud.io/api/project_badges/measure?project=vkgeo%3Avkgeo-ios&metric=code_smells)](https://sonarcloud.io/dashboard?id=vkgeo%3Avkgeo-ios)
