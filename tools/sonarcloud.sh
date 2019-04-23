@@ -15,6 +15,7 @@ if [ "$#" = "1" ]; then
                   -Dsonar.sources=. \
                   -Dsonar.sourceEncoding=UTF-8 \
                   -Dsonar.exclusions="qml/**/*,translations/*" \
+                  -Dsonar.cpp.file.suffixes=.cpp,.mm \
                   -Dsonar.cfamily.build-wrapper-output=.sonarbuild/bw-output \
                   -Dsonar.host.url=https://sonarcloud.io \
                   -Dsonar.login="$1"
