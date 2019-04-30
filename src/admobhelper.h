@@ -26,10 +26,10 @@ public:
     explicit AdMobHelper(QObject *parent = nullptr);
 
     AdMobHelper(const AdMobHelper&) = delete;
-    AdMobHelper(const AdMobHelper&&) noexcept = delete;
+    AdMobHelper(AdMobHelper&&) noexcept = delete;
 
     AdMobHelper& operator=(const AdMobHelper&) = delete;
-    AdMobHelper& operator=(const AdMobHelper&&) noexcept = delete;
+    AdMobHelper& operator=(AdMobHelper&&) noexcept = delete;
 
     ~AdMobHelper() noexcept override;
 

@@ -12,10 +12,10 @@ public:
     explicit NotificationHelper(QObject *parent = nullptr);
 
     NotificationHelper(const NotificationHelper&) = delete;
-    NotificationHelper(const NotificationHelper&&) noexcept = delete;
+    NotificationHelper(NotificationHelper&&) noexcept = delete;
 
     NotificationHelper& operator=(const NotificationHelper&) = delete;
-    NotificationHelper& operator=(const NotificationHelper&&) noexcept = delete;
+    NotificationHelper& operator=(NotificationHelper&&) noexcept = delete;
 
     ~NotificationHelper() noexcept override = default;
 
