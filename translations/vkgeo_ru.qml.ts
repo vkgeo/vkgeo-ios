@@ -132,7 +132,7 @@
     </message>
     <message>
         <source>Group membership request sent</source>
-        <translation>Запрос на вступление в группу отправлен</translation>
+        <translation type="vanished">Запрос на вступление в группу отправлен</translation>
     </message>
     <message>
         <source>View my VK profile</source>
@@ -157,6 +157,22 @@
     <message>
         <source>Additional settings</source>
         <translation>Дополнительные настройки</translation>
+    </message>
+    <message>
+        <source>Settings has been updated successfully</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to update settings, please try again later</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You have successfully joined the group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to join group, please try again later</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
