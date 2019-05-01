@@ -1551,7 +1551,11 @@ void VKHelper::ProcessFriendsGetListsResponse(const QString &response, const QVa
 
 void VKHelper::ProcessFriendsGetListsError(const QVariantMap &err_request)
 {
-    Q_UNUSED(err_request)
+    if (err_request["context"].toString() == "updateTrustedFriendsList") {
+        emit trustedFriendsListUpdateFailed();
+    } else if (err_request["context"].toString() == "updateTrackedFriendsList") {
+        emit trackedFriendsListUpdateFailed();
+    }
 }
 
 void VKHelper::ProcessFriendsAddListResponse(const QString &response, const QVariantMap &resp_request)
@@ -1564,6 +1568,8 @@ void VKHelper::ProcessFriendsAddListResponse(const QString &response, const QVar
 
             if (json_response.contains("list_id")) {
                 TrustedFriendsListId = QString::number(json_response.value("list_id").toVariant().toLongLong());
+
+                emit trustedFriendsListUpdated();
             } else {
                 qWarning() << "ProcessFriendsAddListResponse() : invalid response";
             }
@@ -1578,6 +1584,8 @@ void VKHelper::ProcessFriendsAddListResponse(const QString &response, const QVar
 
             if (json_response.contains("list_id")) {
                 TrackedFriendsListId = QString::number(json_response.value("list_id").toVariant().toLongLong());
+
+                emit trackedFriendsListUpdated();
             } else {
                 qWarning() << "ProcessFriendsAddListResponse() : invalid response";
             }
@@ -1589,31 +1597,49 @@ void VKHelper::ProcessFriendsAddListResponse(const QString &response, const QVar
 
 void VKHelper::ProcessFriendsAddListError(const QVariantMap &err_request)
 {
-    Q_UNUSED(err_request)
+    if (err_request["context"].toString() == "updateTrustedFriendsList") {
+        emit trustedFriendsListUpdateFailed();
+    } else if (err_request["context"].toString() == "updateTrackedFriendsList") {
+        emit trackedFriendsListUpdateFailed();
+    }
 }
 
 void VKHelper::ProcessFriendsEditListResponse(const QString &response, const QVariantMap &resp_request)
 {
     Q_UNUSED(response)
-    Q_UNUSED(resp_request)
+
+    if (resp_request["context"].toString() == "updateTrustedFriendsList") {
+        emit trustedFriendsListUpdated();
+    } else if (resp_request["context"].toString() == "updateTrackedFriendsList") {
+        emit trackedFriendsListUpdated();
+    }
 }
 
 void VKHelper::ProcessFriendsEditListError(const QVariantMap &err_request)
 {
     if (err_request["context"].toString() == "updateTrustedFriendsList") {
         TrustedFriendsListId = "";
+
+        emit trustedFriendsListUpdateFailed();
     } else if (err_request["context"].toString() == "updateTrackedFriendsList") {
         TrackedFriendsListId = "";
+
+        emit trackedFriendsListUpdateFailed();
     }
 }
 
 void VKHelper::ProcessGroupsJoinResponse(const QString &response, const QVariantMap &resp_request)
 {
     Q_UNUSED(response)
-    Q_UNUSED(resp_request)
+
+    if (resp_request["context"].toString() == "joinGroup") {
+        emit joiningGroupCompleted();
+    }
 }
 
 void VKHelper::ProcessGroupsJoinError(const QVariantMap &err_request)
 {
-    Q_UNUSED(err_request)
+    if (err_request["context"].toString() == "joinGroup") {
+        emit joiningGroupFailed();
+    }
 }

@@ -10,15 +10,66 @@ import "../../Util.js" as UtilScript
 Item {
     id: settingsSwipe
 
+    function friendsListUpdated() {
+        friendsListUpdatedToast.visible = true;
+    }
+
+    function friendsListUpdateFailed() {
+        friendsListUpdateFailedToast.visible = true;
+    }
+
+    function joiningVKGeoGroupCompleted() {
+        joiningVKGeoGroupCompletedToast.visible = true;
+    }
+
+    function joiningVKGeoGroupFailed() {
+        joiningVKGeoGroupFailedToast.visible = true;
+    }
+
     Toast {
-        id:              joinGroupToast
+        id:              friendsListUpdatedToast
         anchors.top:     parent.top
         anchors.left:    parent.left
         anchors.right:   parent.right
         anchors.margins: UtilScript.pt(4)
         height:          UtilScript.pt(48)
         z:               1
-        text:            qsTr("Group membership request sent")
+        text:            qsTr("Settings has been updated successfully")
+    }
+
+    Toast {
+        id:              friendsListUpdateFailedToast
+        anchors.top:     parent.top
+        anchors.left:    parent.left
+        anchors.right:   parent.right
+        anchors.margins: UtilScript.pt(4)
+        height:          UtilScript.pt(48)
+        z:               1
+        text:            qsTr("Failed to update settings, please try again later")
+        backgroundColor: "red"
+    }
+
+    Toast {
+        id:              joiningVKGeoGroupCompletedToast
+        anchors.top:     parent.top
+        anchors.left:    parent.left
+        anchors.right:   parent.right
+        anchors.margins: UtilScript.pt(4)
+        height:          UtilScript.pt(48)
+        z:               1
+        text:            qsTr("You have successfully joined the group")
+    }
+
+    Toast {
+        id:              joiningVKGeoGroupFailedToast
+        anchors.top:     parent.top
+        anchors.left:    parent.left
+        anchors.right:   parent.right
+        anchors.margins: UtilScript.pt(4)
+        height:          UtilScript.pt(48)
+        z:               1
+        text:            qsTr("Failed to join group, please try again later")
+        backgroundColor: "red"
     }
 
     Flickable {
@@ -92,6 +143,10 @@ Item {
 
                     if (component.status === Component.Ready) {
                         mainStackView.push(component);
+
+                        if (Math.random() < 0.30) {
+                            mainWindow.showInterstitial();
+                        }
                     } else {
                         console.log(component.errorString());
                     }
@@ -157,6 +212,10 @@ Item {
 
                     if (component.status === Component.Ready) {
                         mainStackView.push(component);
+
+                        if (Math.random() < 0.30) {
+                            mainWindow.showInterstitial();
+                        }
                     } else {
                         console.log(component.errorString());
                     }
@@ -286,8 +345,17 @@ Item {
 
         onYes: {
             VKHelper.joinGroup("166101702");
-
-            joinGroupToast.visible = true;
         }
+    }
+
+    Component.onCompleted: {
+        VKHelper.trustedFriendsListUpdated.connect(friendsListUpdated);
+        VKHelper.trustedFriendsListUpdateFailed.connect(friendsListUpdateFailed);
+
+        VKHelper.trackedFriendsListUpdated.connect(friendsListUpdated);
+        VKHelper.trackedFriendsListUpdateFailed.connect(friendsListUpdateFailed);
+
+        VKHelper.joiningGroupCompleted.connect(joiningVKGeoGroupCompleted);
+        VKHelper.joiningGroupFailed.connect(joiningVKGeoGroupFailed);
     }
 }
