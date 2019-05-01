@@ -131,10 +131,6 @@
         <translation>Выход из ВКонтакте</translation>
     </message>
     <message>
-        <source>Group membership request sent</source>
-        <translation type="vanished">Запрос на вступление в группу отправлен</translation>
-    </message>
-    <message>
         <source>View my VK profile</source>
         <translation>Посмотреть мой профиль ВКонтакте</translation>
     </message>
@@ -160,19 +156,19 @@
     </message>
     <message>
         <source>Settings has been updated successfully</source>
-        <translation type="unfinished"></translation>
+        <translation>Настройки успешно обновлены</translation>
     </message>
     <message>
         <source>Failed to update settings, please try again later</source>
-        <translation type="unfinished"></translation>
+        <translation>Не удалось обновить настройки, повторите попытку позже</translation>
     </message>
     <message>
         <source>You have successfully joined the group</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы присоединились к группе</translation>
     </message>
     <message>
         <source>Failed to join group, please try again later</source>
-        <translation type="unfinished"></translation>
+        <translation>Не удалось присоединиться к группе, повторите попытку позже</translation>
     </message>
 </context>
 <context>
