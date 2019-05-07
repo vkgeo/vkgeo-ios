@@ -2,7 +2,7 @@
 //  GADAdChoicesView.h
 //  Google Mobile Ads SDK
 //
-//  Copyright 2016 Google Inc. All rights reserved.
+//  Copyright 2016 Google LLC. All rights reserved.
 //
 
 #import <GoogleMobileAds/GoogleMobileAdsDefines.h>

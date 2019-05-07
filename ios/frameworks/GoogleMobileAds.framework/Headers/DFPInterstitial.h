@@ -2,7 +2,7 @@
 //  DFPInterstitial.h
 //  Google Mobile Ads SDK
 //
-//  Copyright 2012 Google Inc. All rights reserved.
+//  Copyright 2012 Google LLC. All rights reserved.
 //
 
 #import <GoogleMobileAds/DFPCustomRenderedInterstitialDelegate.h>

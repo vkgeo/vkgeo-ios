@@ -2,7 +2,7 @@
 //  GADAudioVideoManager.h
 //  Google Mobile Ads SDK
 //
-//  Copyright 2016 Google Inc. All rights reserved.
+//  Copyright 2016 Google LLC. All rights reserved.
 //
 
 #import <GoogleMobileAds/GADAudioVideoManagerDelegate.h>
@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// AVAudioSession's category to AVAudioSessionCategoryAmbient when all videos are muted, setting
 /// AVAudioSession's category to AVAudioSessionCategorySoloAmbient when any playing video becomes
 /// unmuted, and allowing background apps to continue playing sound when all videos rendered by
-/// Google Mobile Ads SDK are muted or have stopped playing.
+/// Google Mobile Ads SDK are muted or have stopped playing. Must be accessed on main thread only.
 @property(nonatomic, assign) BOOL audioSessionIsApplicationManaged;
 
 @end

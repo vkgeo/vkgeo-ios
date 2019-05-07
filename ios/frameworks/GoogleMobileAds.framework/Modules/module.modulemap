@@ -41,6 +41,7 @@ framework module GoogleMobileAds {
   header "GADCorrelator.h"
   header "GADCorrelatorAdLoaderOptions.h"
   header "GADDebugOptionsViewController.h"
+  header "GADDisplayAdMeasurement.h"
   header "GADExtras.h"
   header "GADInAppPurchase.h"
   header "GADInAppPurchaseDelegate.h"
@@ -93,6 +94,7 @@ framework module GoogleMobileAds {
   header "GADMultipleAdsAdLoaderOptions.h"
   header "GADMuteThisAdReason.h"
   header "GADNativeAdImageAdLoaderOptions.h"
+  header "GADNativeAdMediaAdLoaderOptions.h"
   header "GADNativeAdViewAdOptions.h"
   header "GADNativeMuteThisAdLoaderOptions.h"
 

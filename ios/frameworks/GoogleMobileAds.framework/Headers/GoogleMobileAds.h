@@ -7,8 +7,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0
-#error The Google Mobile Ads SDK requires a deployment target of iOS 6.0 or later.
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
+#error The Google Mobile Ads SDK requires a deployment target of iOS 8.0 or later.
 #endif
 
 #if defined(__ARM_ARCH_7S__) && __ARM_ARCH_7S__
@@ -32,6 +32,7 @@ FOUNDATION_EXPORT const unsigned char GoogleMobileAdsVersionString[];
 #import <GoogleMobileAds/GADCorrelator.h>
 #import <GoogleMobileAds/GADCorrelatorAdLoaderOptions.h>
 #import <GoogleMobileAds/GADDebugOptionsViewController.h>
+#import <GoogleMobileAds/GADDisplayAdMeasurement.h>
 #import <GoogleMobileAds/GADExtras.h>
 #import <GoogleMobileAds/GADInAppPurchase.h>
 #import <GoogleMobileAds/GADInAppPurchaseDelegate.h>
@@ -84,6 +85,7 @@ FOUNDATION_EXPORT const unsigned char GoogleMobileAdsVersionString[];
 #import <GoogleMobileAds/GADMultipleAdsAdLoaderOptions.h>
 #import <GoogleMobileAds/GADMuteThisAdReason.h>
 #import <GoogleMobileAds/GADNativeAdImageAdLoaderOptions.h>
+#import <GoogleMobileAds/GADNativeAdMediaAdLoaderOptions.h>
 #import <GoogleMobileAds/GADNativeAdViewAdOptions.h>
 #import <GoogleMobileAds/GADNativeMuteThisAdLoaderOptions.h>
 
