@@ -48,6 +48,10 @@ class VKHelper : public QObject
     Q_PROPERTY(int maxTrustedFriendsCount READ maxTrustedFriendsCount WRITE setMaxTrustedFriendsCount NOTIFY maxTrustedFriendsCountChanged)
     Q_PROPERTY(int maxTrackedFriendsCount READ maxTrackedFriendsCount WRITE setMaxTrackedFriendsCount NOTIFY maxTrackedFriendsCountChanged)
 
+private:
+    explicit VKHelper(QObject *parent = nullptr);
+    ~VKHelper() noexcept override;
+
 public:
     static const int DEFAULT_MAX_TRUSTED_FRIENDS_COUNT    = 5,
                      DEFAULT_MAX_TRACKED_FRIENDS_COUNT    = 5,
@@ -66,15 +70,13 @@ public:
                          TRUSTED_FRIENDS_LIST_NAME,
                          TRACKED_FRIENDS_LIST_NAME;
 
-    explicit VKHelper(QObject *parent = nullptr);
-
     VKHelper(const VKHelper&) = delete;
     VKHelper(VKHelper&&) noexcept = delete;
 
     VKHelper &operator=(const VKHelper&) = delete;
     VKHelper &operator=(VKHelper&&) noexcept = delete;
 
-    ~VKHelper() noexcept override;
+    static VKHelper &GetInstance();
 
     bool locationValid() const;
     qint64 locationUpdateTime() const;
@@ -202,7 +204,6 @@ private:
     QMap<void *, bool>      VKRequestTracker;
 #endif
     QVariantMap             CurrentData, FriendsData, FriendsDataTmp;
-    static VKHelper        *Instance;
 #ifdef __OBJC__
     VKDelegate             *VKDelegateInstance;
 #else

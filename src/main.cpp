@@ -6,15 +6,15 @@
 #include <QtQml/QQmlContext>
 
 #include "vkgeoapplicationdelegate.h"
+#include "appinitialized.h"
 #include "admobhelper.h"
 #include "storehelper.h"
-#include "batteryhelpershared.h"
+#include "batteryhelper.h"
 #include "uihelper.h"
 #include "notificationhelper.h"
-#include "vkhelpershared.h"
+#include "vkhelper.h"
 
-BatteryHelper *BatteryHelperShared = nullptr;
-VKHelper      *VKHelperShared      = nullptr;
+bool AppInitialized = false;
 
 int main(int argc, char *argv[])
 {
@@ -25,21 +25,20 @@ int main(int argc, char *argv[])
         QGuiApplication::installTranslator(&translator);
     }
 
-    InitializeVKGeoApplicationDelegate();
+    AppInitialized = true;
 
-    BatteryHelperShared = new BatteryHelper(&app);
-    VKHelperShared      = new VKHelper(&app);
+    InitializeVKGeoApplicationDelegate();
 
     qmlRegisterType<VKAuthState>("VKHelper", 1, 0, "VKAuthState");
 
     QQmlApplicationEngine engine;
 
-    engine.rootContext()->setContextProperty(QStringLiteral("AdMobHelper"), new AdMobHelper(&app));
-    engine.rootContext()->setContextProperty(QStringLiteral("StoreHelper"), new StoreHelper(&app));
-    engine.rootContext()->setContextProperty(QStringLiteral("BatteryHelper"), BatteryHelperShared);
-    engine.rootContext()->setContextProperty(QStringLiteral("UIHelper"), new UIHelper(&app));
-    engine.rootContext()->setContextProperty(QStringLiteral("NotificationHelper"), new NotificationHelper(&app));
-    engine.rootContext()->setContextProperty(QStringLiteral("VKHelper"), VKHelperShared);
+    engine.rootContext()->setContextProperty(QStringLiteral("AdMobHelper"), &AdMobHelper::GetInstance());
+    engine.rootContext()->setContextProperty(QStringLiteral("StoreHelper"), &StoreHelper::GetInstance());
+    engine.rootContext()->setContextProperty(QStringLiteral("BatteryHelper"), &BatteryHelper::GetInstance());
+    engine.rootContext()->setContextProperty(QStringLiteral("UIHelper"), &UIHelper::GetInstance());
+    engine.rootContext()->setContextProperty(QStringLiteral("NotificationHelper"), &NotificationHelper::GetInstance());
+    engine.rootContext()->setContextProperty(QStringLiteral("VKHelper"), &VKHelper::GetInstance());
 
     engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
 

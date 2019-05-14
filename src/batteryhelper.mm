@@ -9,6 +9,13 @@ BatteryHelper::BatteryHelper(QObject *parent) : QObject(parent)
     UIDevice.currentDevice.batteryMonitoringEnabled = YES;
 }
 
+BatteryHelper &BatteryHelper::GetInstance()
+{
+    static BatteryHelper instance;
+
+    return instance;
+}
+
 QString BatteryHelper::getBatteryStatus()
 {
     UIDeviceBatteryState battery_state = UIDevice.currentDevice.batteryState;

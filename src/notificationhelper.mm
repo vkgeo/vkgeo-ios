@@ -20,6 +20,13 @@ NotificationHelper::NotificationHelper(QObject *parent) : QObject(parent)
     }
 }
 
+NotificationHelper &NotificationHelper::GetInstance()
+{
+    static NotificationHelper instance;
+
+    return instance;
+}
+
 void NotificationHelper::showNotification(const QString &id, const QString &title, const QString &body)
 {
     NSString *ns_id    = id.toNSString();

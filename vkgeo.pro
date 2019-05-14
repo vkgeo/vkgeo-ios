@@ -19,16 +19,15 @@ OBJECTIVE_SOURCES += \
     src/vkhelper.mm
 
 HEADERS += \
+    src/appinitialized.h \
     src/vkgeoapplicationdelegate.h \
     src/locationmanagerdelegate.h \
     src/admobhelper.h \
     src/storehelper.h \
     src/batteryhelper.h \
-    src/batteryhelpershared.h \
     src/uihelper.h \
     src/notificationhelper.h \
-    src/vkhelper.h \
-    src/vkhelpershared.h
+    src/vkhelper.h
 
 RESOURCES += \
     qml.qrc \

@@ -17,13 +17,15 @@ class AdMobHelper : public QObject
     Q_PROPERTY(bool interstitialActive READ interstitialActive NOTIFY interstitialActiveChanged)
     Q_PROPERTY(int  bannerViewHeight   READ bannerViewHeight   NOTIFY bannerViewHeightChanged)
 
+private:
+    explicit AdMobHelper(QObject *parent = nullptr);
+    ~AdMobHelper() noexcept override;
+
 public:
     static const QString ADMOB_APP_ID,
                          ADMOB_BANNERVIEW_UNIT_ID,
                          ADMOB_INTERSTITIAL_UNIT_ID,
                          ADMOB_TEST_DEVICE_ID;
-
-    explicit AdMobHelper(QObject *parent = nullptr);
 
     AdMobHelper(const AdMobHelper&) = delete;
     AdMobHelper(AdMobHelper&&) noexcept = delete;
@@ -31,7 +33,7 @@ public:
     AdMobHelper &operator=(const AdMobHelper&) = delete;
     AdMobHelper &operator=(AdMobHelper&&) noexcept = delete;
 
-    ~AdMobHelper() noexcept override;
+    static AdMobHelper &GetInstance();
 
     bool interstitialReady() const;
     bool interstitialActive() const;
@@ -51,7 +53,6 @@ signals:
 private:
     bool                  InterstitialActive;
     int                   BannerViewHeight;
-    static AdMobHelper   *Instance;
 #ifdef __OBJC__
     BannerViewDelegate   *BannerViewDelegateInstance;
     InterstitialDelegate *InterstitialDelegateInstance;

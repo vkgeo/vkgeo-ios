@@ -20,8 +20,6 @@ const QString VKHelper::TRACKED_FRIENDS_LIST_NAME("VKGeo Tracked Friends");
 
 static NSArray *AUTH_SCOPE = @[ @"friends", @"notes", @"groups", @"offline" ];
 
-VKHelper *VKHelper::Instance = nullptr;
-
 @interface VKDelegate : NSObject<VKSdkDelegate, VKSdkUIDelegate>
 
 - (id)init;
@@ -187,7 +185,6 @@ VKHelper::VKHelper(QObject *parent) : QObject(parent)
     NextRequestQueueTimerTimeout     = 0;
     PhotoUrl                         = DEFAULT_PHOTO_URL;
     BigPhotoUrl                      = DEFAULT_PHOTO_URL;
-    Instance                         = this;
     VKDelegateInstance               = [[VKDelegate alloc] init];
 
     connect(&RequestQueueTimer, &QTimer::timeout, this, &VKHelper::requestQueueTimerTimeout);
@@ -207,6 +204,13 @@ VKHelper::VKHelper(QObject *parent) : QObject(parent)
 VKHelper::~VKHelper() noexcept
 {
     [VKDelegateInstance release];
+}
+
+VKHelper &VKHelper::GetInstance()
+{
+    static VKHelper instance;
+
+    return instance;
 }
 
 bool VKHelper::locationValid() const
@@ -562,54 +566,54 @@ void VKHelper::joinGroup(const QString &group_id)
 
 void VKHelper::setAuthState(int state)
 {
-    Instance->AuthState = state;
+    GetInstance().AuthState = state;
 
-    emit Instance->authStateChanged(Instance->AuthState);
+    emit GetInstance().authStateChanged(GetInstance().AuthState);
 
-    if (Instance->AuthState == VKAuthState::StateAuthorized) {
+    if (GetInstance().AuthState == VKAuthState::StateAuthorized) {
         VKAccessToken *token = [VKSdk accessToken];
 
         if (token != nil && token.localUser != nil && token.localUser.id != nil) {
-            Instance->UserId = QString::fromNSString(token.localUser.id.stringValue);
+            GetInstance().UserId = QString::fromNSString(token.localUser.id.stringValue);
         } else {
-            Instance->UserId = "";
+            GetInstance().UserId = "";
         }
 
-        emit Instance->userIdChanged(Instance->UserId);
+        emit GetInstance().userIdChanged(GetInstance().UserId);
 
         if (token != nil && token.localUser != nil && token.localUser.first_name != nil) {
-            Instance->FirstName = QString::fromNSString(token.localUser.first_name);
+            GetInstance().FirstName = QString::fromNSString(token.localUser.first_name);
         } else {
-            Instance->FirstName = "";
+            GetInstance().FirstName = "";
         }
 
-        emit Instance->firstNameChanged(Instance->FirstName);
+        emit GetInstance().firstNameChanged(GetInstance().FirstName);
 
         if (token != nil && token.localUser != nil && token.localUser.last_name != nil) {
-            Instance->LastName = QString::fromNSString(token.localUser.last_name);
+            GetInstance().LastName = QString::fromNSString(token.localUser.last_name);
         } else {
-            Instance->LastName = "";
+            GetInstance().LastName = "";
         }
 
-        emit Instance->lastNameChanged(Instance->LastName);
+        emit GetInstance().lastNameChanged(GetInstance().LastName);
 
         if (token != nil && token.localUser != nil && token.localUser.photo_100 != nil) {
-            Instance->PhotoUrl = QString::fromNSString(token.localUser.photo_100);
+            GetInstance().PhotoUrl = QString::fromNSString(token.localUser.photo_100);
         } else {
-            Instance->PhotoUrl = DEFAULT_PHOTO_URL;
+            GetInstance().PhotoUrl = DEFAULT_PHOTO_URL;
         }
 
-        emit Instance->photoUrlChanged(Instance->PhotoUrl);
+        emit GetInstance().photoUrlChanged(GetInstance().PhotoUrl);
 
         if (token != nil && token.localUser != nil && token.localUser.photo_200 != nil) {
-            Instance->BigPhotoUrl = QString::fromNSString(token.localUser.photo_200);
+            GetInstance().BigPhotoUrl = QString::fromNSString(token.localUser.photo_200);
         } else {
-            Instance->BigPhotoUrl = DEFAULT_PHOTO_URL;
+            GetInstance().BigPhotoUrl = DEFAULT_PHOTO_URL;
         }
 
-        emit Instance->bigPhotoUrlChanged(Instance->BigPhotoUrl);
-    } else if (Instance->AuthState == VKAuthState::StateNotAuthorized) {
-        Instance->cleanup();
+        emit GetInstance().bigPhotoUrlChanged(GetInstance().BigPhotoUrl);
+    } else if (GetInstance().AuthState == VKAuthState::StateNotAuthorized) {
+        GetInstance().cleanup();
     }
 }
 

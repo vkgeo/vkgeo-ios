@@ -12,8 +12,6 @@ const QString AdMobHelper::ADMOB_BANNERVIEW_UNIT_ID  ("ca-app-pub-24550888550156
 const QString AdMobHelper::ADMOB_INTERSTITIAL_UNIT_ID("ca-app-pub-2455088855015693/6215026625");
 const QString AdMobHelper::ADMOB_TEST_DEVICE_ID      ("");
 
-AdMobHelper *AdMobHelper::Instance = nullptr;
-
 @interface BannerViewDelegate : NSObject<GADBannerViewDelegate>
 
 - (id)init;
@@ -252,7 +250,6 @@ AdMobHelper::AdMobHelper(QObject *parent) : QObject(parent)
 
     InterstitialActive           = false;
     BannerViewHeight             = 0;
-    Instance                     = this;
     BannerViewDelegateInstance   = nullptr;
     InterstitialDelegateInstance = [[InterstitialDelegate alloc] init];
 
@@ -266,6 +263,13 @@ AdMobHelper::~AdMobHelper() noexcept
     }
 
     [InterstitialDelegateInstance release];
+}
+
+AdMobHelper &AdMobHelper::GetInstance()
+{
+    static AdMobHelper instance;
+
+    return instance;
 }
 
 bool AdMobHelper::interstitialReady() const
@@ -320,14 +324,14 @@ void AdMobHelper::showInterstitial()
 
 void AdMobHelper::setInterstitialActive(bool active)
 {
-    Instance->InterstitialActive = active;
+    GetInstance().InterstitialActive = active;
 
-    emit Instance->interstitialActiveChanged(Instance->InterstitialActive);
+    emit GetInstance().interstitialActiveChanged(GetInstance().InterstitialActive);
 }
 
 void AdMobHelper::setBannerViewHeight(int height)
 {
-    Instance->BannerViewHeight = height;
+    GetInstance().BannerViewHeight = height;
 
-    emit Instance->bannerViewHeightChanged(Instance->BannerViewHeight);
+    emit GetInstance().bannerViewHeightChanged(GetInstance().BannerViewHeight);
 }

@@ -8,16 +8,18 @@ class NotificationHelper : public QObject
 {
     Q_OBJECT
 
-public:
+private:
     explicit NotificationHelper(QObject *parent = nullptr);
+    ~NotificationHelper() noexcept override = default;
 
+public:
     NotificationHelper(const NotificationHelper&) = delete;
     NotificationHelper(NotificationHelper&&) noexcept = delete;
 
     NotificationHelper &operator=(const NotificationHelper&) = delete;
     NotificationHelper &operator=(NotificationHelper&&) noexcept = delete;
 
-    ~NotificationHelper() noexcept override = default;
+    static NotificationHelper &GetInstance();
 
     Q_INVOKABLE void showNotification(const QString &id, const QString &title, const QString &body);
     Q_INVOKABLE void hideNotification(const QString &id);

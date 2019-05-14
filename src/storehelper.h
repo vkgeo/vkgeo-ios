@@ -7,16 +7,18 @@ class StoreHelper : public QObject
 {
     Q_OBJECT
 
-public:
+private:
     explicit StoreHelper(QObject *parent = nullptr);
+    ~StoreHelper() noexcept override = default;
 
+public:
     StoreHelper(const StoreHelper&) = delete;
     StoreHelper(StoreHelper&&) noexcept = delete;
 
     StoreHelper &operator=(const StoreHelper&) = delete;
     StoreHelper &operator=(StoreHelper&&) noexcept = delete;
 
-    ~StoreHelper() noexcept override = default;
+    static StoreHelper &GetInstance();
 
     Q_INVOKABLE void requestReview();
 };

@@ -7,8 +7,9 @@
 #include <QtCore/QString>
 #include <QtCore/QDebug>
 
-#include "batteryhelpershared.h"
-#include "vkhelpershared.h"
+#include "appinitialized.h"
+#include "batteryhelper.h"
+#include "vkhelper.h"
 
 #include "locationmanagerdelegate.h"
 
@@ -129,12 +130,9 @@ static qint64 elapsedNanos()
                     }
                 }
 
-                if (VKHelperShared != nullptr) {
-                    VKHelperShared->updateLocation(CurrentLocation.coordinate.latitude, CurrentLocation.coordinate.longitude);
-
-                    if (BatteryHelperShared != nullptr) {
-                        VKHelperShared->updateBatteryStatus(BatteryHelperShared->getBatteryStatus(), BatteryHelperShared->getBatteryLevel());
-                    }
+                if (AppInitialized) {
+                    VKHelper::GetInstance().updateLocation(CurrentLocation.coordinate.latitude, CurrentLocation.coordinate.longitude);
+                    VKHelper::GetInstance().updateBatteryStatus(BatteryHelper::GetInstance().getBatteryStatus(), BatteryHelper::GetInstance().getBatteryLevel());
                 }
 
                 if (CentralLocation == nil || [CentralLocation distanceFromLocation:CurrentLocation] > CENTRAL_LOCATION_CHANGE_DISTANCE) {
