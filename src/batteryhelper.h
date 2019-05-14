@@ -14,8 +14,8 @@ public:
     BatteryHelper(const BatteryHelper&) = delete;
     BatteryHelper(BatteryHelper&&) noexcept = delete;
 
-    BatteryHelper& operator=(const BatteryHelper&) = delete;
-    BatteryHelper& operator=(BatteryHelper&&) noexcept = delete;
+    BatteryHelper &operator=(const BatteryHelper&) = delete;
+    BatteryHelper &operator=(BatteryHelper&&) noexcept = delete;
 
     ~BatteryHelper() noexcept override = default;
 

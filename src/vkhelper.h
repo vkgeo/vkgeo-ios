@@ -71,8 +71,8 @@ public:
     VKHelper(const VKHelper&) = delete;
     VKHelper(VKHelper&&) noexcept = delete;
 
-    VKHelper& operator=(const VKHelper&) = delete;
-    VKHelper& operator=(VKHelper&&) noexcept = delete;
+    VKHelper &operator=(const VKHelper&) = delete;
+    VKHelper &operator=(VKHelper&&) noexcept = delete;
 
     ~VKHelper() noexcept override;
 

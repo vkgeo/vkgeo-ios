@@ -14,8 +14,8 @@ public:
     UIHelper(const UIHelper&) = delete;
     UIHelper(UIHelper&&) noexcept = delete;
 
-    UIHelper& operator=(const UIHelper&) = delete;
-    UIHelper& operator=(UIHelper&&) noexcept = delete;
+    UIHelper &operator=(const UIHelper&) = delete;
+    UIHelper &operator=(UIHelper&&) noexcept = delete;
 
     ~UIHelper() noexcept override = default;
 
