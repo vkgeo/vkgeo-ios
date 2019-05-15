@@ -251,9 +251,7 @@ static qint64 elapsedNanos()
 
 - (void)requestBackgroundExecution
 {
-    if (BackgroundTaskId != UIBackgroundTaskInvalid) {
-        [UIApplication.sharedApplication endBackgroundTask:BackgroundTaskId];
-    }
+    UIBackgroundTaskIdentifier prev_bg_task_id = BackgroundTaskId;
 
     BackgroundTaskId = [UIApplication.sharedApplication beginBackgroundTaskWithExpirationHandler:^(void) {
         if (BackgroundTaskId != UIBackgroundTaskInvalid) {
@@ -262,6 +260,10 @@ static qint64 elapsedNanos()
             BackgroundTaskId = UIBackgroundTaskInvalid;
         }
     }];
+
+    if (prev_bg_task_id != UIBackgroundTaskInvalid) {
+        [UIApplication.sharedApplication endBackgroundTask:prev_bg_task_id];
+    }
 }
 
 @end
