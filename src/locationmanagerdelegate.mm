@@ -57,6 +57,8 @@ static qint64 elapsedNanos()
         CurrentRegion                    = nil;
         CentralLocation                  = nil;
 
+        [self requestBackgroundExecution];
+
         if (@available(iOS 9, *)) {
             LocationManager = [[CLLocationManager alloc] init];
 
@@ -81,8 +83,6 @@ static qint64 elapsedNanos()
         } else {
             assert(0);
         }
-
-        [self requestBackgroundExecution];
     }
 
     return self;
@@ -108,6 +108,8 @@ static qint64 elapsedNanos()
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations
 {
     Q_UNUSED(manager)
+
+    [self requestBackgroundExecution];
 
     if (locations != nil && locations.lastObject != nil) {
         CLLocation *location = locations.lastObject;
@@ -148,13 +150,13 @@ static qint64 elapsedNanos()
             }
         }
     }
-
-    [self requestBackgroundExecution];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region
 {
     Q_UNUSED(manager)
+
+    [self requestBackgroundExecution];
 
     if (CurrentRegion != nil && [CurrentRegion.identifier isEqualToString:region.identifier]) {
         CLLocation *location = LocationManager.location;
@@ -169,13 +171,13 @@ static qint64 elapsedNanos()
             }
         }
     }
-
-    [self requestBackgroundExecution];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 {
     Q_UNUSED(manager)
+
+    [self requestBackgroundExecution];
 
     if (@available(iOS 8, *)) {
         if (status == kCLAuthorizationStatusAuthorizedWhenInUse ||
@@ -210,17 +212,15 @@ static qint64 elapsedNanos()
     } else {
         assert(0);
     }
-
-    [self requestBackgroundExecution];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
     Q_UNUSED(manager)
 
-    qWarning() << QString::fromNSString(error.localizedDescription);
-
     [self requestBackgroundExecution];
+
+    qWarning() << QString::fromNSString(error.localizedDescription);
 }
 
 - (void)locationManager:(CLLocationManager *)manager monitoringDidFailForRegion:(CLRegion *)region withError:(NSError *)error
@@ -228,13 +228,15 @@ static qint64 elapsedNanos()
     Q_UNUSED(manager)
     Q_UNUSED(region)
 
-    qWarning() << QString::fromNSString(error.localizedDescription);
-
     [self requestBackgroundExecution];
+
+    qWarning() << QString::fromNSString(error.localizedDescription);
 }
 
 - (void)adjustDesiredAccuracy
 {
+    [self requestBackgroundExecution];
+
     if (CentralLocationChanged) {
         LocationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
 
@@ -245,8 +247,6 @@ static qint64 elapsedNanos()
     }
 
     [self performSelector:@selector(adjustDesiredAccuracy) withObject:nil afterDelay:LOCATION_ACCURACY_ADJUSTMENT_INTERVAL];
-
-    [self requestBackgroundExecution];
 }
 
 - (void)requestBackgroundExecution
