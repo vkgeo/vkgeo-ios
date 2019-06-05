@@ -78,11 +78,11 @@ static qint64 elapsedNanos()
                     }
                 }
             }
-
-            [self performSelector:@selector(adjustDesiredAccuracy) withObject:nil afterDelay:LOCATION_ACCURACY_ADJUSTMENT_INTERVAL];
         } else {
             assert(0);
         }
+
+        [self performSelector:@selector(adjustDesiredAccuracy) withObject:nil afterDelay:LOCATION_ACCURACY_ADJUSTMENT_INTERVAL];
     }
 
     return self;
