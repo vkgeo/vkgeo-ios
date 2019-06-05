@@ -90,6 +90,8 @@ static qint64 elapsedNanos()
 
 - (void)dealloc
 {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+
     if (CurrentLocation != nil) {
         [CurrentLocation release];
     }
