@@ -37,20 +37,25 @@ static NSArray *AUTH_SCOPE = @[ @"friends", @"notes", @"groups", @"offline" ];
         [[VKSdk instance] registerDelegate:self];
         [[VKSdk instance] setUiDelegate:self];
 
-        [VKSdk wakeUpSession:AUTH_SCOPE completeBlock:^(VKAuthorizationState state, NSError *error) {
-            if (error != nil) {
-                qWarning() << QString::fromNSString(error.localizedDescription);
-
-                VKHelper::setAuthState(VKAuthState::StateNotAuthorized);
-            } else if (state == VKAuthorizationAuthorized) {
-                VKHelper::setAuthState(VKAuthState::StateAuthorized);
-            } else {
-                VKHelper::setAuthState(VKAuthState::StateNotAuthorized);
-            }
-        }];
+        [self performSelector:@selector(deferredInit) withObject:nil afterDelay:0.0];
     }
 
     return self;
+}
+
+- (void)deferredInit
+{
+    [VKSdk wakeUpSession:AUTH_SCOPE completeBlock:^(VKAuthorizationState state, NSError *error) {
+        if (error != nil) {
+            qWarning() << QString::fromNSString(error.localizedDescription);
+
+            VKHelper::setAuthState(VKAuthState::StateNotAuthorized);
+        } else if (state == VKAuthorizationAuthorized) {
+            VKHelper::setAuthState(VKAuthState::StateAuthorized);
+        } else {
+            VKHelper::setAuthState(VKAuthState::StateNotAuthorized);
+        }
+    }];
 }
 
 - (void)dealloc
