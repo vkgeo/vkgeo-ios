@@ -9,7 +9,6 @@
 
 - (id)init;
 - (void)dealloc;
-- (void)adjustDesiredAccuracy;
 
 @end
 
