@@ -53,6 +53,17 @@ const QString AdMobHelper::ADMOB_TEST_DEVICE_ID      ("");
 
         [root_view_controller.view addSubview:BannerView];
 
+        if (@available(iOS 11, *)) {
+            UILayoutGuide *guide = root_view_controller.view.safeAreaLayoutGuide;
+
+            [NSLayoutConstraint activateConstraints:@[
+                [BannerView.centerXAnchor constraintEqualToAnchor:guide.centerXAnchor],
+                [BannerView.topAnchor     constraintEqualToAnchor:guide.topAnchor]
+            ]];
+        } else {
+            assert(0);
+        }
+
         [self performSelector:@selector(deferredInit) withObject:nil afterDelay:0.0];
     }
 
@@ -70,13 +81,6 @@ const QString AdMobHelper::ADMOB_TEST_DEVICE_ID      ("");
     }];
 
     if (@available(iOS 11, *)) {
-        UILayoutGuide *guide = root_view_controller.view.safeAreaLayoutGuide;
-
-        [NSLayoutConstraint activateConstraints:@[
-            [BannerView.centerXAnchor constraintEqualToAnchor:guide.centerXAnchor],
-            [BannerView.topAnchor     constraintEqualToAnchor:guide.topAnchor]
-        ]];
-
         CGSize  status_bar_size   = UIApplication.sharedApplication.statusBarFrame.size;
         CGFloat status_bar_height = qMin(status_bar_size.width, status_bar_size.height);
 
