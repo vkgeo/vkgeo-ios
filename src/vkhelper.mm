@@ -313,44 +313,6 @@ void VKHelper::setMaxTrackedFriendsCount(int count)
     emit maxTrackedFriendsCountChanged(MaxTrackedFriendsCount);
 }
 
-void VKHelper::cleanup()
-{
-    LastSendDataTime                 = 0;
-    LastUpdateTrackedFriendsDataTime = 0;
-    NextRequestQueueTimerTimeout     = QDateTime::currentMSecsSinceEpoch() + REQUEST_QUEUE_TIMER_INTERVAL;
-    UserId                           = "";
-    FirstName                        = "";
-    LastName                         = "";
-    PhotoUrl                         = DEFAULT_PHOTO_URL;
-    BigPhotoUrl                      = DEFAULT_PHOTO_URL;
-    TrustedFriendsListId             = "";
-    TrackedFriendsListId             = "";
-
-    emit userIdChanged(UserId);
-    emit firstNameChanged(FirstName);
-    emit lastNameChanged(LastName);
-    emit photoUrlChanged(PhotoUrl);
-    emit bigPhotoUrlChanged(BigPhotoUrl);
-
-    while (!RequestQueue.isEmpty()) {
-        QVariantMap request = RequestQueue.dequeue();
-
-        ContextTrackerDelRequest(request);
-    }
-
-    RequestQueueTimer.stop();
-
-    for (VKRequest *vk_request : VKRequestTracker.keys()) {
-        [vk_request cancel];
-    }
-
-    FriendsData.clear();
-    FriendsDataTmp.clear();
-
-    emit friendsCountChanged(FriendsData.count());
-    emit friendsUpdated();
-}
-
 void VKHelper::login()
 {
     [VKSdk authorize:AUTH_SCOPE];
@@ -620,7 +582,7 @@ void VKHelper::setAuthState(int state)
 
         emit GetInstance().bigPhotoUrlChanged(GetInstance().BigPhotoUrl);
     } else if (GetInstance().AuthState == VKAuthState::StateNotAuthorized) {
-        GetInstance().cleanup();
+        GetInstance().Cleanup();
     }
 }
 
@@ -737,6 +699,44 @@ void VKHelper::sendDataOnUpdateTimerTimeout()
 void VKHelper::sendDataTimerTimeout()
 {
     SendData(false);
+}
+
+void VKHelper::Cleanup()
+{
+    LastSendDataTime                 = 0;
+    LastUpdateTrackedFriendsDataTime = 0;
+    NextRequestQueueTimerTimeout     = QDateTime::currentMSecsSinceEpoch() + REQUEST_QUEUE_TIMER_INTERVAL;
+    UserId                           = "";
+    FirstName                        = "";
+    LastName                         = "";
+    PhotoUrl                         = DEFAULT_PHOTO_URL;
+    BigPhotoUrl                      = DEFAULT_PHOTO_URL;
+    TrustedFriendsListId             = "";
+    TrackedFriendsListId             = "";
+
+    emit userIdChanged(UserId);
+    emit firstNameChanged(FirstName);
+    emit lastNameChanged(LastName);
+    emit photoUrlChanged(PhotoUrl);
+    emit bigPhotoUrlChanged(BigPhotoUrl);
+
+    while (!RequestQueue.isEmpty()) {
+        QVariantMap request = RequestQueue.dequeue();
+
+        ContextTrackerDelRequest(request);
+    }
+
+    RequestQueueTimer.stop();
+
+    for (VKRequest *vk_request : VKRequestTracker.keys()) {
+        [vk_request cancel];
+    }
+
+    FriendsData.clear();
+    FriendsDataTmp.clear();
+
+    emit friendsCountChanged(FriendsData.count());
+    emit friendsUpdated();
 }
 
 void VKHelper::SendData(bool expedited)
