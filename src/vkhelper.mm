@@ -23,7 +23,6 @@ static NSArray *AUTH_SCOPE = @[ @"friends", @"notes", @"groups", @"offline" ];
 @interface VKDelegate : NSObject<VKSdkDelegate, VKSdkUIDelegate>
 
 - (id)init;
-- (void)dealloc;
 
 @end
 
@@ -56,13 +55,6 @@ static NSArray *AUTH_SCOPE = @[ @"friends", @"notes", @"groups", @"offline" ];
             VKHelper::setAuthState(VKAuthState::StateNotAuthorized);
         }
     }];
-}
-
-- (void)dealloc
-{
-    [NSObject cancelPreviousPerformRequestsWithTarget:self];
-
-    [super dealloc];
 }
 
 - (void)vkSdkAccessAuthorizationFinishedWithResult:(VKAuthorizationResult *)result
