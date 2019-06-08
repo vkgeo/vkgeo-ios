@@ -23,6 +23,7 @@ static NSArray *AUTH_SCOPE = @[ @"friends", @"notes", @"groups", @"offline" ];
 @interface VKDelegate : NSObject<VKSdkDelegate, VKSdkUIDelegate>
 
 - (instancetype)initWithHelper:(VKHelper *)helper;
+- (void)removeHelperAndAutorelease;
 
 @end
 
@@ -45,11 +46,17 @@ static NSArray *AUTH_SCOPE = @[ @"friends", @"notes", @"groups", @"offline" ];
             if (error != nil) {
                 qWarning() << QString::fromNSString(error.localizedDescription);
 
-                VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
+                if (VKHelperInstance != nullptr) {
+                    VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
+                }
             } else if (state == VKAuthorizationAuthorized) {
-                VKHelperInstance->setAuthState(VKAuthState::StateAuthorized);
+                if (VKHelperInstance != nullptr) {
+                    VKHelperInstance->setAuthState(VKAuthState::StateAuthorized);
+                }
             } else {
-                VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
+                if (VKHelperInstance != nullptr) {
+                    VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
+                }
             }
         }];
     }
@@ -57,22 +64,37 @@ static NSArray *AUTH_SCOPE = @[ @"friends", @"notes", @"groups", @"offline" ];
     return self;
 }
 
+- (void)removeHelperAndAutorelease
+{
+    VKHelperInstance = nullptr;
+
+    [self autorelease];
+}
+
 - (void)vkSdkAccessAuthorizationFinishedWithResult:(VKAuthorizationResult *)result
 {
     if (result.error != nil) {
         qWarning() << QString::fromNSString(result.error.localizedDescription);
 
-        VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
+        if (VKHelperInstance != nullptr) {
+            VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
+        }
     } else if (result.token != nil) {
-        VKHelperInstance->setAuthState(VKAuthState::StateAuthorized);
+        if (VKHelperInstance != nullptr) {
+            VKHelperInstance->setAuthState(VKAuthState::StateAuthorized);
+        }
     } else {
-        VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
+        if (VKHelperInstance != nullptr) {
+            VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
+        }
     }
 }
 
 - (void)vkSdkUserAuthorizationFailed
 {
-    VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
+    if (VKHelperInstance != nullptr) {
+        VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
+    }
 }
 
 - (void)vkSdkAuthorizationStateUpdatedWithResult:(VKAuthorizationResult *)result
@@ -80,11 +102,17 @@ static NSArray *AUTH_SCOPE = @[ @"friends", @"notes", @"groups", @"offline" ];
     if (result.error != nil) {
         qWarning() << QString::fromNSString(result.error.localizedDescription);
 
-        VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
+        if (VKHelperInstance != nullptr) {
+            VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
+        }
     } else if (result.token != nil) {
-        VKHelperInstance->setAuthState(VKAuthState::StateAuthorized);
+        if (VKHelperInstance != nullptr) {
+            VKHelperInstance->setAuthState(VKAuthState::StateAuthorized);
+        }
     } else {
-        VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
+        if (VKHelperInstance != nullptr) {
+            VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
+        }
     }
 }
 
@@ -92,7 +120,9 @@ static NSArray *AUTH_SCOPE = @[ @"friends", @"notes", @"groups", @"offline" ];
 {
     Q_UNUSED(expiredToken)
 
-    VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
+    if (VKHelperInstance != nullptr) {
+        VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
+    }
 }
 
 - (void)vkSdkShouldPresentViewController:(UIViewController *)controller
@@ -202,7 +232,7 @@ VKHelper::VKHelper(QObject *parent) : QObject(parent)
 
 VKHelper::~VKHelper() noexcept
 {
-    [VKDelegateInstance release];
+    [VKDelegateInstance removeHelperAndAutorelease];
 }
 
 VKHelper &VKHelper::GetInstance()
