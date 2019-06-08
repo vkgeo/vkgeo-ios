@@ -22,13 +22,13 @@ static NSArray *AUTH_SCOPE = @[ @"friends", @"notes", @"groups", @"offline" ];
 
 @interface VKDelegate : NSObject<VKSdkDelegate, VKSdkUIDelegate>
 
-- (id)init;
+- (instancetype)init;
 
 @end
 
 @implementation VKDelegate
 
-- (id)init
+- (instancetype)init
 {
     self = [super init];
 

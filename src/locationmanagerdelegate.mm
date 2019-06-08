@@ -45,7 +45,7 @@ static qint64 elapsedNanos()
     CLLocationManager         *LocationManager;
 }
 
-- (id)init
+- (instancetype)init
 {
     self = [super init];
 

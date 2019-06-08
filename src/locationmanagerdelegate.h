@@ -7,7 +7,7 @@
 
 @interface LocationManagerDelegate : NSObject<CLLocationManagerDelegate>
 
-- (id)init;
+- (instancetype)init;
 - (void)dealloc;
 
 @end
