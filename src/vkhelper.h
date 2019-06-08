@@ -115,7 +115,7 @@ public:
 
     Q_INVOKABLE void joinGroup(const QString &group_id);
 
-    static void setAuthState(int state);
+    void setAuthState(int state);
 
 private slots:
     void requestQueueTimerTimeout();

@@ -22,39 +22,39 @@ static NSArray *AUTH_SCOPE = @[ @"friends", @"notes", @"groups", @"offline" ];
 
 @interface VKDelegate : NSObject<VKSdkDelegate, VKSdkUIDelegate>
 
-- (instancetype)init;
+- (instancetype)initWithHelper:(VKHelper *)helper;
 
 @end
 
 @implementation VKDelegate
+{
+    VKHelper *VKHelperInstance;
+}
 
-- (instancetype)init
+- (instancetype)initWithHelper:(VKHelper *)helper
 {
     self = [super init];
 
     if (self) {
+        VKHelperInstance = helper;
+
         [[VKSdk instance] registerDelegate:self];
         [[VKSdk instance] setUiDelegate:self];
 
-        [self performSelector:@selector(deferredInit) withObject:nil afterDelay:0.0];
+        [VKSdk wakeUpSession:AUTH_SCOPE completeBlock:^(VKAuthorizationState state, NSError *error) {
+            if (error != nil) {
+                qWarning() << QString::fromNSString(error.localizedDescription);
+
+                VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
+            } else if (state == VKAuthorizationAuthorized) {
+                VKHelperInstance->setAuthState(VKAuthState::StateAuthorized);
+            } else {
+                VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
+            }
+        }];
     }
 
     return self;
-}
-
-- (void)deferredInit
-{
-    [VKSdk wakeUpSession:AUTH_SCOPE completeBlock:^(VKAuthorizationState state, NSError *error) {
-        if (error != nil) {
-            qWarning() << QString::fromNSString(error.localizedDescription);
-
-            VKHelper::setAuthState(VKAuthState::StateNotAuthorized);
-        } else if (state == VKAuthorizationAuthorized) {
-            VKHelper::setAuthState(VKAuthState::StateAuthorized);
-        } else {
-            VKHelper::setAuthState(VKAuthState::StateNotAuthorized);
-        }
-    }];
 }
 
 - (void)vkSdkAccessAuthorizationFinishedWithResult:(VKAuthorizationResult *)result
@@ -62,17 +62,17 @@ static NSArray *AUTH_SCOPE = @[ @"friends", @"notes", @"groups", @"offline" ];
     if (result.error != nil) {
         qWarning() << QString::fromNSString(result.error.localizedDescription);
 
-        VKHelper::setAuthState(VKAuthState::StateNotAuthorized);
+        VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
     } else if (result.token != nil) {
-        VKHelper::setAuthState(VKAuthState::StateAuthorized);
+        VKHelperInstance->setAuthState(VKAuthState::StateAuthorized);
     } else {
-        VKHelper::setAuthState(VKAuthState::StateNotAuthorized);
+        VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
     }
 }
 
 - (void)vkSdkUserAuthorizationFailed
 {
-    VKHelper::setAuthState(VKAuthState::StateNotAuthorized);
+    VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
 }
 
 - (void)vkSdkAuthorizationStateUpdatedWithResult:(VKAuthorizationResult *)result
@@ -80,11 +80,11 @@ static NSArray *AUTH_SCOPE = @[ @"friends", @"notes", @"groups", @"offline" ];
     if (result.error != nil) {
         qWarning() << QString::fromNSString(result.error.localizedDescription);
 
-        VKHelper::setAuthState(VKAuthState::StateNotAuthorized);
+        VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
     } else if (result.token != nil) {
-        VKHelper::setAuthState(VKAuthState::StateAuthorized);
+        VKHelperInstance->setAuthState(VKAuthState::StateAuthorized);
     } else {
-        VKHelper::setAuthState(VKAuthState::StateNotAuthorized);
+        VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
     }
 }
 
@@ -92,7 +92,7 @@ static NSArray *AUTH_SCOPE = @[ @"friends", @"notes", @"groups", @"offline" ];
 {
     Q_UNUSED(expiredToken)
 
-    VKHelper::setAuthState(VKAuthState::StateNotAuthorized);
+    VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
 }
 
 - (void)vkSdkShouldPresentViewController:(UIViewController *)controller
@@ -184,7 +184,7 @@ VKHelper::VKHelper(QObject *parent) : QObject(parent)
     NextRequestQueueTimerTimeout     = 0;
     PhotoUrl                         = DEFAULT_PHOTO_URL;
     BigPhotoUrl                      = DEFAULT_PHOTO_URL;
-    VKDelegateInstance               = [[VKDelegate alloc] init];
+    VKDelegateInstance               = [[VKDelegate alloc] initWithHelper:this];
 
     connect(&RequestQueueTimer, &QTimer::timeout, this, &VKHelper::requestQueueTimerTimeout);
 
@@ -527,54 +527,54 @@ void VKHelper::joinGroup(const QString &group_id)
 
 void VKHelper::setAuthState(int state)
 {
-    GetInstance().AuthState = state;
+    AuthState = state;
 
-    emit GetInstance().authStateChanged(GetInstance().AuthState);
+    emit authStateChanged(AuthState);
 
-    if (GetInstance().AuthState == VKAuthState::StateAuthorized) {
+    if (AuthState == VKAuthState::StateAuthorized) {
         VKAccessToken *token = [VKSdk accessToken];
 
         if (token != nil && token.localUser != nil && token.localUser.id != nil) {
-            GetInstance().UserId = QString::fromNSString(token.localUser.id.stringValue);
+            UserId = QString::fromNSString(token.localUser.id.stringValue);
         } else {
-            GetInstance().UserId = "";
+            UserId = "";
         }
 
-        emit GetInstance().userIdChanged(GetInstance().UserId);
+        emit userIdChanged(UserId);
 
         if (token != nil && token.localUser != nil && token.localUser.first_name != nil) {
-            GetInstance().FirstName = QString::fromNSString(token.localUser.first_name);
+            FirstName = QString::fromNSString(token.localUser.first_name);
         } else {
-            GetInstance().FirstName = "";
+            FirstName = "";
         }
 
-        emit GetInstance().firstNameChanged(GetInstance().FirstName);
+        emit firstNameChanged(FirstName);
 
         if (token != nil && token.localUser != nil && token.localUser.last_name != nil) {
-            GetInstance().LastName = QString::fromNSString(token.localUser.last_name);
+            LastName = QString::fromNSString(token.localUser.last_name);
         } else {
-            GetInstance().LastName = "";
+            LastName = "";
         }
 
-        emit GetInstance().lastNameChanged(GetInstance().LastName);
+        emit lastNameChanged(LastName);
 
         if (token != nil && token.localUser != nil && token.localUser.photo_100 != nil) {
-            GetInstance().PhotoUrl = QString::fromNSString(token.localUser.photo_100);
+            PhotoUrl = QString::fromNSString(token.localUser.photo_100);
         } else {
-            GetInstance().PhotoUrl = DEFAULT_PHOTO_URL;
+            PhotoUrl = DEFAULT_PHOTO_URL;
         }
 
-        emit GetInstance().photoUrlChanged(GetInstance().PhotoUrl);
+        emit photoUrlChanged(PhotoUrl);
 
         if (token != nil && token.localUser != nil && token.localUser.photo_200 != nil) {
-            GetInstance().BigPhotoUrl = QString::fromNSString(token.localUser.photo_200);
+            BigPhotoUrl = QString::fromNSString(token.localUser.photo_200);
         } else {
-            GetInstance().BigPhotoUrl = DEFAULT_PHOTO_URL;
+            BigPhotoUrl = DEFAULT_PHOTO_URL;
         }
 
-        emit GetInstance().bigPhotoUrlChanged(GetInstance().BigPhotoUrl);
-    } else if (GetInstance().AuthState == VKAuthState::StateNotAuthorized) {
-        GetInstance().Cleanup();
+        emit bigPhotoUrlChanged(BigPhotoUrl);
+    } else if (AuthState == VKAuthState::StateNotAuthorized) {
+        Cleanup();
     }
 }
 
