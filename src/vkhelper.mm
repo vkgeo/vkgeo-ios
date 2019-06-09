@@ -36,7 +36,7 @@ static NSArray *AUTH_SCOPE = @[ @"friends", @"notes", @"groups", @"offline" ];
 {
     self = [super init];
 
-    if (self) {
+    if (self != nil) {
         VKHelperInstance = helper;
 
         [[VKSdk instance] registerDelegate:self];

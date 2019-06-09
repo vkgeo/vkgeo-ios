@@ -49,7 +49,7 @@ static qint64 elapsedNanos()
 {
     self = [super init];
 
-    if (self) {
+    if (self != nil) {
         CentralLocationChanged           = true;
         CentralLocationChangeHandleNanos = 0;
         BackgroundTaskId                 = UIBackgroundTaskInvalid;
