@@ -14,7 +14,8 @@ const QString AdMobHelper::ADMOB_TEST_DEVICE_ID      ("");
 
 @interface BannerViewDelegate : NSObject<GADBannerViewDelegate>
 
-- (instancetype)initWithHelper:(AdMobHelper *)helper;
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithHelper:(AdMobHelper *)helper NS_DESIGNATED_INITIALIZER;
 - (void)dealloc;
 - (void)removeHelperAndAutorelease;
 - (void)loadAd;
@@ -139,7 +140,8 @@ const QString AdMobHelper::ADMOB_TEST_DEVICE_ID      ("");
 
 @interface InterstitialDelegate : NSObject<GADInterstitialDelegate>
 
-- (instancetype)initWithHelper:(AdMobHelper *)helper;
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithHelper:(AdMobHelper *)helper NS_DESIGNATED_INITIALIZER;
 - (void)dealloc;
 - (void)removeHelperAndAutorelease;
 - (void)loadAd;

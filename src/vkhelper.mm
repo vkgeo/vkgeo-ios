@@ -22,7 +22,8 @@ static NSArray *AUTH_SCOPE = @[ @"friends", @"notes", @"groups", @"offline" ];
 
 @interface VKDelegate : NSObject<VKSdkDelegate, VKSdkUIDelegate>
 
-- (instancetype)initWithHelper:(VKHelper *)helper;
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithHelper:(VKHelper *)helper NS_DESIGNATED_INITIALIZER;
 - (void)removeHelperAndAutorelease;
 
 @end
