@@ -13,11 +13,11 @@ private:
     ~NotificationHelper() noexcept override = default;
 
 public:
-    NotificationHelper(const NotificationHelper&) = delete;
-    NotificationHelper(NotificationHelper&&) noexcept = delete;
+    NotificationHelper(const NotificationHelper &) = delete;
+    NotificationHelper(NotificationHelper &&) noexcept = delete;
 
-    NotificationHelper &operator=(const NotificationHelper&) = delete;
-    NotificationHelper &operator=(NotificationHelper&&) noexcept = delete;
+    NotificationHelper &operator=(const NotificationHelper &) = delete;
+    NotificationHelper &operator=(NotificationHelper &&) noexcept = delete;
 
     static NotificationHelper &GetInstance();
 
