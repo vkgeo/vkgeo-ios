@@ -58,7 +58,7 @@ Page {
         }
     }
 
-    property int bannerViewHeight: AdMobHelper.bannerViewHeight
+    readonly property int bannerViewHeight: AdMobHelper.bannerViewHeight
 
     Flickable {
         id:                   storeFlickable

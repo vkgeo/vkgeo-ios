@@ -12,8 +12,9 @@ import "../../Util.js" as UtilScript
 Item {
     id: friendsSwipe
 
-    property int nearbyDistance: 500
-    property var friendsList:    []
+    readonly property int nearbyDistance: 500
+
+    property var friendsList:             []
 
     signal locateFriendOnMap(string user_id)
 
@@ -254,7 +255,7 @@ Item {
                     border.width: UtilScript.pt(1)
                     border.color: "lightsteelblue"
 
-                    property var listView: ListView.view
+                    readonly property var listView: ListView.view
 
                     RowLayout {
                         anchors.fill:        parent
@@ -299,7 +300,7 @@ Item {
                                 fillMode: Image.PreserveAspectFit
                                 visible:  online
 
-                                property real angle: -Math.PI / 4
+                                readonly property real angle: -Math.PI / 4
                             }
 
                             MouseArea {

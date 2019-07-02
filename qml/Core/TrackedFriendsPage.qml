@@ -75,10 +75,11 @@ Page {
         }
     }
 
-    property int bannerViewHeight:    AdMobHelper.bannerViewHeight
-    property int trackedFriendsCount: 0
+    readonly property int bannerViewHeight: AdMobHelper.bannerViewHeight
 
-    property var friendsList:         []
+    property int trackedFriendsCount:       0
+
+    property var friendsList:               []
 
     function updateModel() {
         trackedFriendsListModel.clear();
@@ -164,7 +165,7 @@ Page {
                 border.width: UtilScript.pt(1)
                 border.color: "lightsteelblue"
 
-                property var listView: ListView.view
+                readonly property var listView: ListView.view
 
                 RowLayout {
                     anchors.fill:        parent

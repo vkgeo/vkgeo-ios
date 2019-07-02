@@ -10,14 +10,15 @@ Window {
     title:   qsTr("VKGeo")
     visible: false
 
-    property bool appInForeground:        Qt.application.state === Qt.ApplicationActive
-    property bool disableAds:             false
-    property bool enableTrackedFriends:   false
-    property bool increaseTrackingLimits: false
+    readonly property bool appInForeground: Qt.application.state === Qt.ApplicationActive
 
-    property int vkAuthState:             VKHelper.authState
+    readonly property int vkAuthState:      VKHelper.authState
 
-    property var loginPage:               null
+    property bool disableAds:               false
+    property bool enableTrackedFriends:     false
+    property bool increaseTrackingLimits:   false
+
+    property var loginPage:                 null
 
     onAppInForegroundChanged: {
         if (appInForeground) {
