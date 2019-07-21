@@ -1,11 +1,10 @@
 import QtQuick 2.12
-import QtQuick.Window 2.12
 import QtQuick.Controls 2.5
 import QtQuick.LocalStorage 2.12
 import QtPurchasing 1.0
 import VKHelper 1.0
 
-Window {
+ApplicationWindow {
     id:      mainWindow
     title:   qsTr("VKGeo")
     visible: false
@@ -237,10 +236,9 @@ Window {
         }
     }
 
-    MouseArea {
-        id:           screenLockMouseArea
+    MultiPointTouchArea {
         anchors.fill: parent
-        z:            100
+        z:            1
         enabled:      mainStackView.busy
     }
 
