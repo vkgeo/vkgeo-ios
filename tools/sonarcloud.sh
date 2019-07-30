@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PATH=$PATH:~/Qt/5.12.3/ios/bin:~/SonarCloud/build-wrapper-macosx-x86:~/SonarCloud/sonar-scanner-3.3.0.1492-macosx/bin
+PATH=$PATH:~/Qt/5.12.4/ios/bin:~/SonarCloud/build-wrapper-macosx-x86:~/SonarCloud/sonar-scanner-3.3.0.1492-macosx/bin
 
 if [ "$#" = "1" ]; then
     cd .. && \
