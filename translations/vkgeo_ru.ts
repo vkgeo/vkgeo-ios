@@ -5,15 +5,15 @@
     <name>AdMobConsentDialog</name>
     <message>
         <source>We keep this app free by showing ads. Ad network will &lt;a href=&quot;https://policies.google.com/technologies/ads&quot;&gt;collect data and use a unique identifier on your device&lt;/a&gt; to show you ads. Do you allow to use your data to tailor ads for you? You can change your choice anytime in the app settings.</source>
-        <translation type="unfinished"></translation>
+        <translation>Это приложение распространяется бесплатно за счет показа в нем рекламы. Рекламная сеть будет &lt;a href=&quot;https://policies.google.com/technologies/ads&quot;&gt;собирать данные и использовать уникальный идентификатор вашего устройства&lt;/a&gt; для того, чтобы показывать вам рекламные объявления. Разрешаете ли вы использовать свои данные для выбора наиболее подходящих для вас рекламных объявлений? Вы можете изменить свой выбор в любое время в настройках приложения.</translation>
     </message>
     <message>
         <source>Yes, show me relevant ads</source>
-        <translation type="unfinished"></translation>
+        <translation>Да, показывайте более подходящую рекламу</translation>
     </message>
     <message>
         <source>No, show me ads that are less relevant</source>
-        <translation type="unfinished"></translation>
+        <translation>Нет, показывайте менее подходящую рекламу</translation>
     </message>
 </context>
 <context>
@@ -187,7 +187,7 @@
     </message>
     <message>
         <source>Ad privacy settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Настройки конфиденциальности рекламы</translation>
     </message>
 </context>
 <context>
