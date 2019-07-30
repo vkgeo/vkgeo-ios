@@ -37,6 +37,8 @@
 	<string>1.0.40</string>
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-2455088855015693~9304224395</string>
+	<key>GADDelayAppMeasurementInit</key>
+	<true/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>vk</string>
