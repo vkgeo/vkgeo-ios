@@ -2,6 +2,21 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ru_RU">
 <context>
+    <name>AdMobConsentDialog</name>
+    <message>
+        <source>We keep this app free by showing ads. Ad network will &lt;a href=&quot;https://policies.google.com/technologies/ads&quot;&gt;collect data and use a unique identifier on your device&lt;/a&gt; to show you ads. Do you allow to use your data to tailor ads for you? You can change your choice anytime in the app settings.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Yes, show me relevant ads</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No, show me ads that are less relevant</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>FriendsSwipe</name>
     <message>
         <source>Quick search</source>
@@ -169,6 +184,10 @@
     <message>
         <source>Failed to join group, please try again later</source>
         <translation>Не удалось присоединиться к группе, повторите попытку позже</translation>
+    </message>
+    <message>
+        <source>Ad privacy settings</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
