@@ -19,7 +19,7 @@ const QString VKHelper::DATA_NOTE_TITLE          ("VKGeo Data");
 const QString VKHelper::TRUSTED_FRIENDS_LIST_NAME("VKGeo Trusted Friends");
 const QString VKHelper::TRACKED_FRIENDS_LIST_NAME("VKGeo Tracked Friends");
 
-static NSArray *AUTH_SCOPE = @[ @"friends", @"notes", @"groups", @"offline" ];
+static NSArray *AUTH_SCOPE = @[@"friends", @"notes", @"groups", @"offline"];
 
 @interface VKDelegate : NSObject<VKSdkDelegate, VKSdkUIDelegate>
 
