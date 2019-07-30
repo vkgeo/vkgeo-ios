@@ -18,12 +18,14 @@ const QString AdMobHelper::ADMOB_TEST_DEVICE_ID      ("");
 - (instancetype)initWithHelper:(AdMobHelper *)helper NS_DESIGNATED_INITIALIZER;
 - (void)dealloc;
 - (void)removeHelperAndAutorelease;
+- (void)setPersonalization:(BOOL)personalized;
 - (void)loadAd;
 
 @end
 
 @implementation BannerViewDelegate
 {
+    BOOL           ShowPersonalizedAds;
     GADBannerView *BannerView;
     AdMobHelper   *AdMobHelperInstance;
 }
@@ -33,6 +35,7 @@ const QString AdMobHelper::ADMOB_TEST_DEVICE_ID      ("");
     self = [super init];
 
     if (self != nil) {
+        ShowPersonalizedAds = NO;
         AdMobHelperInstance = helper;
 
         UIViewController * __block root_view_controller = nil;
@@ -96,12 +99,25 @@ const QString AdMobHelper::ADMOB_TEST_DEVICE_ID      ("");
     [self autorelease];
 }
 
+- (void)setPersonalization:(BOOL)personalized
+{
+    ShowPersonalizedAds = personalized;
+}
+
 - (void)loadAd
 {
     GADRequest *request = [GADRequest request];
 
     if (AdMobHelper::ADMOB_TEST_DEVICE_ID != "") {
-        request.testDevices = @[ AdMobHelper::ADMOB_TEST_DEVICE_ID.toNSString() ];
+        request.testDevices = @[AdMobHelper::ADMOB_TEST_DEVICE_ID.toNSString()];
+    }
+
+    if (!ShowPersonalizedAds) {
+        GADExtras *extras = [[[GADExtras alloc] init] autorelease];
+
+        extras.additionalParameters = @{@"npa": @"1"};
+
+        [request registerAdNetworkExtras:extras];
     }
 
     [BannerView loadRequest:request];
@@ -144,6 +160,7 @@ const QString AdMobHelper::ADMOB_TEST_DEVICE_ID      ("");
 - (instancetype)initWithHelper:(AdMobHelper *)helper NS_DESIGNATED_INITIALIZER;
 - (void)dealloc;
 - (void)removeHelperAndAutorelease;
+- (void)setPersonalization:(BOOL)personalized;
 - (void)loadAd;
 - (void)show;
 - (BOOL)isReady;
@@ -152,6 +169,7 @@ const QString AdMobHelper::ADMOB_TEST_DEVICE_ID      ("");
 
 @implementation InterstitialDelegate
 {
+    BOOL             ShowPersonalizedAds;
     GADInterstitial *Interstitial;
     AdMobHelper     *AdMobHelperInstance;
 }
@@ -161,6 +179,7 @@ const QString AdMobHelper::ADMOB_TEST_DEVICE_ID      ("");
     self = [super init];
 
     if (self != nil) {
+        ShowPersonalizedAds = NO;
         Interstitial        = nil;
         AdMobHelperInstance = helper;
     }
@@ -184,6 +203,11 @@ const QString AdMobHelper::ADMOB_TEST_DEVICE_ID      ("");
     [self autorelease];
 }
 
+- (void)setPersonalization:(BOOL)personalized
+{
+    ShowPersonalizedAds = personalized;
+}
+
 - (void)loadAd
 {
     if (Interstitial != nil) {
@@ -197,7 +221,15 @@ const QString AdMobHelper::ADMOB_TEST_DEVICE_ID      ("");
     GADRequest *request = [GADRequest request];
 
     if (AdMobHelper::ADMOB_TEST_DEVICE_ID != "") {
-        request.testDevices = @[ AdMobHelper::ADMOB_TEST_DEVICE_ID.toNSString() ];
+        request.testDevices = @[AdMobHelper::ADMOB_TEST_DEVICE_ID.toNSString()];
+    }
+
+    if (!ShowPersonalizedAds) {
+        GADExtras *extras = [[[GADExtras alloc] init] autorelease];
+
+        extras.additionalParameters = @{@"npa": @"1"};
+
+        [request registerAdNetworkExtras:extras];
     }
 
     [Interstitial loadRequest:request];
@@ -275,23 +307,22 @@ const QString AdMobHelper::ADMOB_TEST_DEVICE_ID      ("");
 
 AdMobHelper::AdMobHelper(QObject *parent) : QObject(parent)
 {
-    [[GADMobileAds sharedInstance] startWithCompletionHandler:nil];
-
+    Initialized                  = false;
+    ShowPersonalizedAds          = false;
     InterstitialActive           = false;
     BannerViewHeight             = 0;
-    BannerViewDelegateInstance   = nullptr;
-    InterstitialDelegateInstance = [[InterstitialDelegate alloc] initWithHelper:this];
-
-    [InterstitialDelegateInstance loadAd];
+    BannerViewDelegateInstance   = nil;
+    InterstitialDelegateInstance = nil;
 }
 
 AdMobHelper::~AdMobHelper() noexcept
 {
-    if (BannerViewDelegateInstance != nullptr && BannerViewDelegateInstance != nil) {
+    if (BannerViewDelegateInstance != nil) {
         [BannerViewDelegateInstance removeHelperAndAutorelease];
     }
-
-    [InterstitialDelegateInstance removeHelperAndAutorelease];
+    if (InterstitialDelegateInstance != nil) {
+        [InterstitialDelegateInstance removeHelperAndAutorelease];
+    }
 }
 
 AdMobHelper &AdMobHelper::GetInstance()
@@ -303,7 +334,11 @@ AdMobHelper &AdMobHelper::GetInstance()
 
 bool AdMobHelper::interstitialReady() const
 {
-    return [InterstitialDelegateInstance isReady];
+    if (Initialized) {
+        return [InterstitialDelegateInstance isReady];
+    } else {
+        return false;
+    }
 }
 
 bool AdMobHelper::interstitialActive() const
@@ -316,39 +351,73 @@ int AdMobHelper::bannerViewHeight() const
     return BannerViewHeight;
 }
 
+void AdMobHelper::initAds()
+{
+    if (!Initialized) {
+        [[GADMobileAds sharedInstance] startWithCompletionHandler:nil];
+
+        InterstitialDelegateInstance = [[InterstitialDelegate alloc] initWithHelper:this];
+
+        [InterstitialDelegateInstance setPersonalization:ShowPersonalizedAds];
+        [InterstitialDelegateInstance loadAd];
+
+        Initialized = true;
+    }
+}
+
+void AdMobHelper::setPersonalization(bool personalized)
+{
+    ShowPersonalizedAds = personalized;
+
+    if (Initialized) {
+        if (BannerViewDelegateInstance != nil) {
+            [BannerViewDelegateInstance setPersonalization:ShowPersonalizedAds];
+        }
+
+        [InterstitialDelegateInstance setPersonalization:ShowPersonalizedAds];
+    }
+}
+
 void AdMobHelper::showBannerView()
 {
-    if (BannerViewDelegateInstance != nullptr && BannerViewDelegateInstance != nil) {
-        [BannerViewDelegateInstance removeHelperAndAutorelease];
+    if (Initialized) {
+        if (BannerViewDelegateInstance != nil) {
+            [BannerViewDelegateInstance removeHelperAndAutorelease];
 
-        BannerViewHeight = 0;
+            BannerViewHeight = 0;
 
-        emit bannerViewHeightChanged(BannerViewHeight);
+            emit bannerViewHeightChanged(BannerViewHeight);
 
-        BannerViewDelegateInstance = nil;
+            BannerViewDelegateInstance = nil;
+        }
+
+        BannerViewDelegateInstance = [[BannerViewDelegate alloc] initWithHelper:this];
+
+        [BannerViewDelegateInstance setPersonalization:ShowPersonalizedAds];
+        [BannerViewDelegateInstance loadAd];
     }
-
-    BannerViewDelegateInstance = [[BannerViewDelegate alloc] initWithHelper:this];
-
-    [BannerViewDelegateInstance loadAd];
 }
 
 void AdMobHelper::hideBannerView()
 {
-    if (BannerViewDelegateInstance != nullptr && BannerViewDelegateInstance != nil) {
-        [BannerViewDelegateInstance removeHelperAndAutorelease];
+    if (Initialized) {
+        if (BannerViewDelegateInstance != nil) {
+            [BannerViewDelegateInstance removeHelperAndAutorelease];
 
-        BannerViewHeight = 0;
+            BannerViewHeight = 0;
 
-        emit bannerViewHeightChanged(BannerViewHeight);
+            emit bannerViewHeightChanged(BannerViewHeight);
 
-        BannerViewDelegateInstance = nil;
+            BannerViewDelegateInstance = nil;
+        }
     }
 }
 
 void AdMobHelper::showInterstitial()
 {
-    [InterstitialDelegateInstance show];
+    if (Initialized) {
+        [InterstitialDelegateInstance show];
+    }
 }
 
 void AdMobHelper::setInterstitialActive(bool active)

@@ -39,8 +39,13 @@ public:
     bool interstitialActive() const;
     int bannerViewHeight() const;
 
+    Q_INVOKABLE void initAds();
+
+    Q_INVOKABLE void setPersonalization(bool personalized);
+
     Q_INVOKABLE void showBannerView();
     Q_INVOKABLE void hideBannerView();
+
     Q_INVOKABLE void showInterstitial();
 
     void setInterstitialActive(bool active);
@@ -51,7 +56,7 @@ signals:
     void bannerViewHeightChanged(int bannerViewHeight);
 
 private:
-    bool                  InterstitialActive;
+    bool                  Initialized, ShowPersonalizedAds, InterstitialActive;
     int                   BannerViewHeight;
 #ifdef __OBJC__
     BannerViewDelegate   *BannerViewDelegateInstance;

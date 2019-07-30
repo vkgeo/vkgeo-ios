@@ -4,6 +4,8 @@ import QtQuick.LocalStorage 2.12
 import QtPurchasing 1.0
 import VKHelper 1.0
 
+import "Core/Dialog"
+
 ApplicationWindow {
     id:      mainWindow
     title:   qsTr("VKGeo")
@@ -17,11 +19,19 @@ ApplicationWindow {
     property bool enableTrackedFriends:     false
     property bool increaseTrackingLimits:   false
 
+    property string adMobConsent:           ""
+
     property var loginPage:                 null
 
     onAppInForegroundChanged: {
         if (appInForeground) {
             visible = true;
+        }
+    }
+
+    onVkAuthStateChanged: {
+        if (vkAuthState === VKAuthState.StateNotAuthorized) {
+            showLoginPage();
         }
     }
 
@@ -43,10 +53,10 @@ ApplicationWindow {
         updateFeatures();
     }
 
-    onVkAuthStateChanged: {
-        if (vkAuthState === VKAuthState.StateNotAuthorized) {
-            showLoginPage();
-        }
+    onAdMobConsentChanged: {
+        setSetting("AdMobConsent", adMobConsent);
+
+        updateFeatures();
     }
 
     function setSetting(key, value) {
@@ -98,6 +108,12 @@ ApplicationWindow {
     }
 
     function updateFeatures() {
+        if (!disableAds && (adMobConsent === "PERSONALIZED" || adMobConsent === "NON_PERSONALIZED")) {
+            AdMobHelper.setPersonalization(adMobConsent === "PERSONALIZED");
+
+            AdMobHelper.initAds();
+        }
+
         if (mainStackView.depth > 0 && typeof mainStackView.currentItem.bannerViewHeight === "number") {
             if (disableAds) {
                 AdMobHelper.hideBannerView();
@@ -205,6 +221,10 @@ ApplicationWindow {
         }
     }
 
+    function showAdMobConsentDialog() {
+        adMobConsentDialog.open();
+    }
+
     StackView {
         id:           mainStackView
         anchors.fill: parent
@@ -242,10 +262,23 @@ ApplicationWindow {
         enabled:      mainStackView.busy
     }
 
+    AdMobConsentDialog {
+        id: adMobConsentDialog
+
+        onShowPersonalizedAds: {
+            mainWindow.adMobConsent = "PERSONALIZED";
+        }
+
+        onShowNonPersonalizedAds: {
+            mainWindow.adMobConsent = "NON_PERSONALIZED";
+        }
+    }
+
     Component.onCompleted: {
         disableAds             = (getSetting("DisableAds",             "false") === "true");
         enableTrackedFriends   = (getSetting("EnableTrackedFriends",   "false") === "true");
         increaseTrackingLimits = (getSetting("IncreaseTrackingLimits", "false") === "true");
+        adMobConsent           =  getSetting("AdMobConsent",           "");
 
         updateFeatures();
 
@@ -259,6 +292,10 @@ ApplicationWindow {
 
         if (vkAuthState === VKAuthState.StateNotAuthorized) {
             showLoginPage();
+        }
+
+        if (!disableAds && adMobConsent !== "PERSONALIZED" && adMobConsent !== "NON_PERSONALIZED") {
+            adMobConsentDialog.open();
         }
     }
 }
