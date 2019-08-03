@@ -142,7 +142,7 @@ ApplicationWindow {
     }
 
     function showInterstitial() {
-        if (!disableAds && AdMobHelper.interstitialReady) {
+        if (!disableAds) {
             AdMobHelper.showInterstitial();
         }
     }
