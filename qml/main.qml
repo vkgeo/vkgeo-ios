@@ -15,6 +15,7 @@ ApplicationWindow {
 
     readonly property int vkAuthState:      VKHelper.authState
 
+    property bool componentCompleted:       false
     property bool disableAds:               false
     property bool enableTrackedFriends:     false
     property bool increaseTrackingLimits:   false
@@ -26,7 +27,9 @@ ApplicationWindow {
     onAppInForegroundChanged: {
         if (appInForeground) {
             visible = true;
+        }
 
+        if (appInForeground && componentCompleted) {
             if (!disableAds && adMobConsent !== "PERSONALIZED" && adMobConsent !== "NON_PERSONALIZED") {
                 adMobConsentDialog.open();
             }
@@ -34,7 +37,19 @@ ApplicationWindow {
     }
 
     onVkAuthStateChanged: {
-        if (vkAuthState === VKAuthState.StateNotAuthorized) {
+        if (vkAuthState === VKAuthState.StateNotAuthorized && componentCompleted) {
+            showLoginPage();
+        }
+    }
+
+    onComponentCompletedChanged: {
+        if (appInForeground && componentCompleted) {
+            if (!disableAds && adMobConsent !== "PERSONALIZED" && adMobConsent !== "NON_PERSONALIZED") {
+                adMobConsentDialog.open();
+            }
+        }
+
+        if (vkAuthState === VKAuthState.StateNotAuthorized && componentCompleted) {
             showLoginPage();
         }
     }
@@ -91,7 +106,7 @@ ApplicationWindow {
     }
 
     function showLoginPage() {
-        if (loginPage === null && mainStackView.depth > 0) {
+        if (loginPage === null) {
             var component = Qt.createComponent("Core/LoginPage.qml");
 
             if (component.status === Component.Ready) {
@@ -294,16 +309,6 @@ ApplicationWindow {
             console.log(component.errorString());
         }
 
-        if (vkAuthState === VKAuthState.StateNotAuthorized) {
-            showLoginPage();
-        }
-
-        if (appInForeground) {
-            visible = true;
-
-            if (!disableAds && adMobConsent !== "PERSONALIZED" && adMobConsent !== "NON_PERSONALIZED") {
-                adMobConsentDialog.open();
-            }
-        }
+        componentCompleted = true;
     }
 }
