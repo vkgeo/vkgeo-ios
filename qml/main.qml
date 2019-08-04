@@ -35,8 +35,12 @@ ApplicationWindow {
     }
 
     onVkAuthStateChanged: {
-        if (vkAuthState === VKAuthState.StateNotAuthorized && componentCompleted) {
-            showLoginPage();
+        if (componentCompleted) {
+            if (vkAuthState === VKAuthState.StateNotAuthorized) {
+                openLoginPage();
+            } else if (vkAuthState === VKAuthState.StateAuthorized) {
+                closeLoginPage();
+            }
         }
     }
 
@@ -49,8 +53,12 @@ ApplicationWindow {
             }
         }
 
-        if (vkAuthState === VKAuthState.StateNotAuthorized && componentCompleted) {
-            showLoginPage();
+        if (componentCompleted) {
+            if (vkAuthState === VKAuthState.StateNotAuthorized) {
+                openLoginPage();
+            } else if (vkAuthState === VKAuthState.StateAuthorized) {
+                closeLoginPage();
+            }
         }
     }
 
@@ -105,7 +113,7 @@ ApplicationWindow {
         return value;
     }
 
-    function showLoginPage() {
+    function openLoginPage() {
         if (loginPage === null) {
             var component = Qt.createComponent("Core/LoginPage.qml");
 
