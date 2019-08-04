@@ -26,6 +26,10 @@ ApplicationWindow {
     onAppInForegroundChanged: {
         if (appInForeground) {
             visible = true;
+
+            if (!disableAds && adMobConsent !== "PERSONALIZED" && adMobConsent !== "NON_PERSONALIZED") {
+                adMobConsentDialog.open();
+            }
         }
     }
 
@@ -292,10 +296,6 @@ ApplicationWindow {
 
         if (vkAuthState === VKAuthState.StateNotAuthorized) {
             showLoginPage();
-        }
-
-        if (!disableAds && adMobConsent !== "PERSONALIZED" && adMobConsent !== "NON_PERSONALIZED") {
-            adMobConsentDialog.open();
         }
     }
 }
