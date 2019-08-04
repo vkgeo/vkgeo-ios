@@ -70,16 +70,6 @@ Page {
     readonly property int bannerViewHeight: AdMobHelper.bannerViewHeight
     readonly property int vkAuthState:      VKHelper.authState
 
-    onAppInForegroundChanged: {
-        if (appInForeground) {
-            positionSource.active = true;
-            updateTimer.running   = true;
-        } else {
-            positionSource.active = false;
-            updateTimer.running   = false;
-        }
-    }
-
     onVkAuthStateChanged: {
         if (vkAuthState === VKAuthState.StateNotAuthorized) {
             NotificationHelper.showNotification("NOT_LOGGED_IN_NOTIFICATION", qsTr("You are not logged into your VK account"),
@@ -127,6 +117,7 @@ Page {
         id:                          positionSource
         updateInterval:              1000
         preferredPositioningMethods: PositionSource.AllPositioningMethods
+        active:                      mainPage.appInForeground
 
         onPositionChanged: {
             if (position.latitudeValid && position.longitudeValid) {
@@ -141,6 +132,7 @@ Page {
 
     Timer {
         id:       updateTimer
+        running:  mainPage.appInForeground
         interval: 1000
         repeat:   true
 
