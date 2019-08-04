@@ -297,5 +297,13 @@ ApplicationWindow {
         if (vkAuthState === VKAuthState.StateNotAuthorized) {
             showLoginPage();
         }
+
+        if (appInForeground) {
+            visible = true;
+
+            if (!disableAds && adMobConsent !== "PERSONALIZED" && adMobConsent !== "NON_PERSONALIZED") {
+                adMobConsentDialog.open();
+            }
+        }
     }
 }
