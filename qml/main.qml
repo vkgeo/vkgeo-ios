@@ -25,11 +25,9 @@ ApplicationWindow {
     property var loginPage:                 null
 
     onAppInForegroundChanged: {
-        if (appInForeground) {
-            visible = true;
-        }
-
         if (appInForeground && componentCompleted) {
+            visible = true;
+
             if (!disableAds && adMobConsent !== "PERSONALIZED" && adMobConsent !== "NON_PERSONALIZED") {
                 adMobConsentDialog.open();
             }
@@ -44,6 +42,8 @@ ApplicationWindow {
 
     onComponentCompletedChanged: {
         if (appInForeground && componentCompleted) {
+            visible = true;
+
             if (!disableAds && adMobConsent !== "PERSONALIZED" && adMobConsent !== "NON_PERSONALIZED") {
                 adMobConsentDialog.open();
             }
