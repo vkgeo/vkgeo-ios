@@ -70,14 +70,31 @@ Page {
     readonly property int bannerViewHeight: AdMobHelper.bannerViewHeight
     readonly property int vkAuthState:      VKHelper.authState
 
-    onVkAuthStateChanged: {
-        if (vkAuthState === VKAuthState.StateNotAuthorized) {
-            NotificationHelper.showNotification("NOT_LOGGED_IN_NOTIFICATION", qsTr("You are not logged into your VK account"),
-                                                                              qsTr("Tap to open the application"));
-        } else if (vkAuthState === VKAuthState.StateAuthorized) {
-            NotificationHelper.hideNotification("NOT_LOGGED_IN_NOTIFICATION");
+    property bool componentCompleted:       false
 
-            VKHelper.updateFriends();
+    onVkAuthStateChanged: {
+        if (componentCompleted) {
+            if (vkAuthState === VKAuthState.StateNotAuthorized) {
+                NotificationHelper.showNotification("NOT_LOGGED_IN_NOTIFICATION", qsTr("You are not logged into your VK account"),
+                                                                                  qsTr("Tap to open the application"));
+            } else if (vkAuthState === VKAuthState.StateAuthorized) {
+                NotificationHelper.hideNotification("NOT_LOGGED_IN_NOTIFICATION");
+
+                VKHelper.updateFriends();
+            }
+        }
+    }
+
+    onComponentCompletedChanged: {
+        if (componentCompleted) {
+            if (vkAuthState === VKAuthState.StateNotAuthorized) {
+                NotificationHelper.showNotification("NOT_LOGGED_IN_NOTIFICATION", qsTr("You are not logged into your VK account"),
+                                                                                  qsTr("Tap to open the application"));
+            } else if (vkAuthState === VKAuthState.StateAuthorized) {
+                NotificationHelper.hideNotification("NOT_LOGGED_IN_NOTIFICATION");
+
+                VKHelper.updateFriends();
+            }
         }
     }
 
@@ -152,13 +169,6 @@ Page {
     }
 
     Component.onCompleted: {
-        if (vkAuthState === VKAuthState.StateNotAuthorized) {
-            NotificationHelper.showNotification("NOT_LOGGED_IN_NOTIFICATION", qsTr("You are not logged into your VK account"),
-                                                                              qsTr("Tap to open the application"));
-        } else if (vkAuthState === VKAuthState.StateAuthorized) {
-            NotificationHelper.hideNotification("NOT_LOGGED_IN_NOTIFICATION");
-
-            VKHelper.updateFriends();
-        }
+        componentCompleted = true;
     }
 }
