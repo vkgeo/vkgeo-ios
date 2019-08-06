@@ -80,7 +80,7 @@ Page {
     property string status:                 ""
     property string batteryStatus:          ""
 
-    signal locateOnMap(string user_id)
+    signal locateOnMap(string userId)
 
     Flickable {
         id:                   profileFlickable

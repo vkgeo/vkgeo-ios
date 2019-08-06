@@ -70,29 +70,15 @@ Page {
     readonly property int bannerViewHeight: AdMobHelper.bannerViewHeight
     readonly property int vkAuthState:      VKHelper.authState
 
-    property bool componentCompleted:       false
-
     onVkAuthStateChanged: {
         if (vkAuthState === VKAuthState.StateNotAuthorized) {
             NotificationHelper.showNotification("NOT_LOGGED_IN_NOTIFICATION", qsTr("You are not logged into your VK account"),
                                                                               qsTr("Tap to open the application"));
         } else if (vkAuthState === VKAuthState.StateAuthorized) {
             NotificationHelper.hideNotification("NOT_LOGGED_IN_NOTIFICATION");
-        }
 
-        if (vkAuthState === VKAuthState.StateAuthorized && componentCompleted) {
             VKHelper.updateFriends();
         }
-    }
-
-    onComponentCompletedChanged: {
-        if (vkAuthState === VKAuthState.StateAuthorized && componentCompleted) {
-            VKHelper.updateFriends();
-        }
-    }
-
-    function updateTrackedFriendsData() {
-        VKHelper.updateTrackedFriendsData(true);
     }
 
     SwipeView {
@@ -104,7 +90,7 @@ Page {
             id: mapSwipe
 
             onOpenProfilePage: {
-                friendsSwipe.openProfilePage(user_id);
+                friendsSwipe.openProfilePage(userId);
             }
         }
 
@@ -112,7 +98,7 @@ Page {
             id: friendsSwipe
 
             onLocateFriendOnMap: {
-                mapSwipe.locateItemOnMap(user_id);
+                mapSwipe.locateItemOnMap(userId);
 
                 tabBar.setCurrentIndex(0);
             }
@@ -153,10 +139,26 @@ Page {
         }
     }
 
-    Component.onCompleted: {
-        VKHelper.dataSent.connect(updateTrackedFriendsData);
-        VKHelper.friendsUpdated.connect(updateTrackedFriendsData);
+    Connections {
+        target: VKHelper
 
-        componentCompleted = true;
+        onDataSent: {
+            VKHelper.updateTrackedFriendsData(true);
+        }
+
+        onFriendsUpdated: {
+            VKHelper.updateTrackedFriendsData(true);
+        }
+    }
+
+    Component.onCompleted: {
+        if (vkAuthState === VKAuthState.StateNotAuthorized) {
+            NotificationHelper.showNotification("NOT_LOGGED_IN_NOTIFICATION", qsTr("You are not logged into your VK account"),
+                                                                              qsTr("Tap to open the application"));
+        } else if (vkAuthState === VKAuthState.StateAuthorized) {
+            NotificationHelper.hideNotification("NOT_LOGGED_IN_NOTIFICATION");
+
+            VKHelper.updateFriends();
+        }
     }
 }

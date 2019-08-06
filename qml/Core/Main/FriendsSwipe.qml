@@ -16,28 +16,7 @@ Item {
 
     property var friendsList:             []
 
-    signal locateFriendOnMap(string user_id)
-
-    function updateFriends() {
-        friendsList = VKHelper.getFriendsList();
-
-        for (var i = 0; i < friendsList.length; i++) {
-            var frnd = friendsList[i];
-
-            frnd.nearby            = false;
-            frnd.dataAvailable     = false;
-            frnd.updateTime        = 0;
-            frnd.locationAvailable = false;
-            frnd.latitude          = 0;
-            frnd.longitude         = 0;
-            frnd.batteryStatus     = "";
-            frnd.batteryLevel      = 0;
-
-            friendsList[i] = frnd;
-        }
-
-        updateModel();
-    }
+    signal locateFriendOnMap(string userId)
 
     function updateModel() {
         friendsListModel.clear();
@@ -48,79 +27,6 @@ Item {
             if ("%1 %2".arg(frnd.firstName).arg(frnd.lastName).toUpperCase()
                        .includes(filterTextField.filterText.toUpperCase())) {
                 friendsListModel.append(frnd);
-            }
-        }
-    }
-
-    function trackedFriendDataAvailable(user_id, data) {
-        for (var i = 0; i < friendsList.length; i++) {
-            var frnd = friendsList[i];
-
-            if (user_id === frnd.userId) {
-                if (typeof data.update_time === "number" && isFinite(data.update_time)) {
-                    frnd.dataAvailable = true;
-                    frnd.updateTime    = data.update_time;
-
-                    if (typeof data.latitude  === "number" && isFinite(data.latitude) &&
-                        typeof data.longitude === "number" && isFinite(data.longitude)) {
-                        frnd.locationAvailable = true;
-                        frnd.latitude          = data.latitude;
-                        frnd.longitude         = data.longitude;
-
-                        if (VKHelper.locationValid) {
-                            var my_coordinate = QtPositioning.coordinate(VKHelper.locationLatitude, VKHelper.locationLongitude);
-
-                            if (my_coordinate.distanceTo(QtPositioning.coordinate(frnd.latitude, frnd.longitude)) < nearbyDistance) {
-                                if (!frnd.nearby) {
-                                    frnd.nearby = true;
-
-                                    NotificationHelper.showNotification("FRIENDS_NEARBY_NOTIFICATION_%1".arg(frnd.userId), qsTr("New friends nearby"),
-                                                                                                                           qsTr("%1 is nearby")
-                                                                                                                               .arg("%1 %2".arg(frnd.firstName)
-                                                                                                                                           .arg(frnd.lastName)));
-                                }
-                            } else {
-                                frnd.nearby = false;
-                            }
-                        }
-                    }
-
-                    if (typeof data.battery_status === "string" &&
-                        typeof data.battery_level  === "number" && isFinite(data.battery_level)) {
-                        frnd.batteryStatus = data.battery_status;
-                        frnd.batteryLevel  = data.battery_level;
-                    }
-                }
-
-                friendsList[i] = frnd;
-
-                break;
-            }
-        }
-
-        for (var j = 0; j < friendsListModel.count; j++) {
-            var model_frnd = friendsListModel.get(j);
-
-            if (user_id === model_frnd.userId) {
-                if (typeof data.update_time === "number" && isFinite(data.update_time)) {
-                    friendsListModel.set(j, {"dataAvailable" : true,
-                                             "updateTime"    : data.update_time});
-
-                    if (typeof data.latitude  === "number" && isFinite(data.latitude) &&
-                        typeof data.longitude === "number" && isFinite(data.longitude)) {
-                        friendsListModel.set(j, {"locationAvailable" : true,
-                                                 "latitude"          : data.latitude,
-                                                 "longitude"         : data.longitude});
-                    }
-
-                    if (typeof data.battery_status === "string" &&
-                        typeof data.battery_level  === "number" && isFinite(data.battery_level)) {
-                        friendsListModel.set(j, {"batteryStatus" : data.battery_status,
-                                                 "batteryLevel"  : data.battery_level});
-                    }
-                }
-
-                break;
             }
         }
     }
@@ -375,8 +281,101 @@ Item {
         }
     }
 
-    Component.onCompleted: {
-        VKHelper.friendsUpdated.connect(updateFriends);
-        VKHelper.trackedFriendDataUpdated.connect(trackedFriendDataAvailable);
+    Connections {
+        target: VKHelper
+
+        onFriendsUpdated: {
+            friendsSwipe.friendsList = VKHelper.getFriendsList();
+
+            for (var i = 0; i < friendsSwipe.friendsList.length; i++) {
+                var frnd = friendsSwipe.friendsList[i];
+
+                frnd.nearby            = false;
+                frnd.dataAvailable     = false;
+                frnd.updateTime        = 0;
+                frnd.locationAvailable = false;
+                frnd.latitude          = 0;
+                frnd.longitude         = 0;
+                frnd.batteryStatus     = "";
+                frnd.batteryLevel      = 0;
+
+                friendsSwipe.friendsList[i] = frnd;
+            }
+
+            friendsSwipe.updateModel();
+        }
+
+        onTrackedFriendDataUpdated: {
+            for (var i = 0; i < friendsSwipe.friendsList.length; i++) {
+                var frnd = friendsSwipe.friendsList[i];
+
+                if (friendUserId === frnd.userId) {
+                    if (typeof friendData.update_time === "number" && isFinite(friendData.update_time)) {
+                        frnd.dataAvailable = true;
+                        frnd.updateTime    = friendData.update_time;
+
+                        if (typeof friendData.latitude  === "number" && isFinite(friendData.latitude) &&
+                            typeof friendData.longitude === "number" && isFinite(friendData.longitude)) {
+                            frnd.locationAvailable = true;
+                            frnd.latitude          = friendData.latitude;
+                            frnd.longitude         = friendData.longitude;
+
+                            if (VKHelper.locationValid) {
+                                var my_coordinate = QtPositioning.coordinate(VKHelper.locationLatitude, VKHelper.locationLongitude);
+
+                                if (my_coordinate.distanceTo(QtPositioning.coordinate(frnd.latitude, frnd.longitude)) < friendsSwipe.nearbyDistance) {
+                                    if (!frnd.nearby) {
+                                        frnd.nearby = true;
+
+                                        NotificationHelper.showNotification("FRIENDS_NEARBY_NOTIFICATION_%1".arg(frnd.userId), qsTr("New friends nearby"),
+                                                                                                                               qsTr("%1 is nearby")
+                                                                                                                                   .arg("%1 %2".arg(frnd.firstName)
+                                                                                                                                               .arg(frnd.lastName)));
+                                    }
+                                } else {
+                                    frnd.nearby = false;
+                                }
+                            }
+                        }
+
+                        if (typeof friendData.battery_status === "string" &&
+                            typeof friendData.battery_level  === "number" && isFinite(friendData.battery_level)) {
+                            frnd.batteryStatus = friendData.battery_status;
+                            frnd.batteryLevel  = friendData.battery_level;
+                        }
+                    }
+
+                    friendsSwipe.friendsList[i] = frnd;
+
+                    break;
+                }
+            }
+
+            for (var j = 0; j < friendsListModel.count; j++) {
+                var model_frnd = friendsListModel.get(j);
+
+                if (friendUserId === model_frnd.userId) {
+                    if (typeof friendData.update_time === "number" && isFinite(friendData.update_time)) {
+                        friendsListModel.set(j, {"dataAvailable" : true,
+                                                 "updateTime"    : friendData.update_time});
+
+                        if (typeof friendData.latitude  === "number" && isFinite(friendData.latitude) &&
+                            typeof friendData.longitude === "number" && isFinite(friendData.longitude)) {
+                            friendsListModel.set(j, {"locationAvailable" : true,
+                                                     "latitude"          : friendData.latitude,
+                                                     "longitude"         : friendData.longitude});
+                        }
+
+                        if (typeof friendData.battery_status === "string" &&
+                            typeof friendData.battery_level  === "number" && isFinite(friendData.battery_level)) {
+                            friendsListModel.set(j, {"batteryStatus" : friendData.battery_status,
+                                                     "batteryLevel"  : friendData.battery_level});
+                        }
+                    }
+
+                    break;
+                }
+            }
+        }
     }
 }
