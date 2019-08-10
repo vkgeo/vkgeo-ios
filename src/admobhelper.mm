@@ -346,6 +346,9 @@ int AdMobHelper::bannerViewHeight() const
 void AdMobHelper::initAds()
 {
     if (!Initialized) {
+         [GADMobileAds sharedInstance].requestConfiguration.maxAdContentRating = GADMaxAdContentRatingGeneral;
+        [[GADMobileAds sharedInstance].requestConfiguration tagForChildDirectedTreatment:YES];
+
         [[GADMobileAds sharedInstance] startWithCompletionHandler:nil];
 
         InterstitialDelegateInstance = [[InterstitialDelegate alloc] initWithHelper:this];
