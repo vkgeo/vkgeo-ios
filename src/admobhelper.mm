@@ -12,6 +12,8 @@ const QString AdMobHelper::ADMOB_BANNERVIEW_UNIT_ID  ("ca-app-pub-24550888550156
 const QString AdMobHelper::ADMOB_INTERSTITIAL_UNIT_ID("ca-app-pub-2455088855015693/6215026625");
 const QString AdMobHelper::ADMOB_TEST_DEVICE_ID      ("");
 
+static const NSTimeInterval AD_RELOAD_ON_FAILURE_DELAY = 60.0;
+
 @interface BannerViewDelegate : NSObject<GADBannerViewDelegate>
 
 - (instancetype)init NS_UNAVAILABLE;
@@ -149,7 +151,7 @@ const QString AdMobHelper::ADMOB_TEST_DEVICE_ID      ("");
 
     qWarning() << QString::fromNSString(error.localizedDescription);
 
-    [self performSelector:@selector(loadAd) withObject:nil afterDelay:10.0];
+    [self performSelector:@selector(loadAd) withObject:nil afterDelay:AD_RELOAD_ON_FAILURE_DELAY];
 }
 
 @end
@@ -282,7 +284,7 @@ const QString AdMobHelper::ADMOB_TEST_DEVICE_ID      ("");
         AdMobHelperInstance->setInterstitialActive(false);
     }
 
-    [self performSelector:@selector(loadAd) withObject:nil afterDelay:10.0];
+    [self performSelector:@selector(loadAd) withObject:nil afterDelay:0.0];
 }
 
 - (void)interstitialWillLeaveApplication:(GADInterstitial *)ad
@@ -296,7 +298,7 @@ const QString AdMobHelper::ADMOB_TEST_DEVICE_ID      ("");
 
     qWarning() << QString::fromNSString(error.localizedDescription);
 
-    [self performSelector:@selector(loadAd) withObject:nil afterDelay:10.0];
+    [self performSelector:@selector(loadAd) withObject:nil afterDelay:AD_RELOAD_ON_FAILURE_DELAY];
 }
 
 @end
