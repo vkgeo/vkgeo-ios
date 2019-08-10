@@ -90,16 +90,9 @@ static qint64 elapsedNanos()
 
 - (void)dealloc
 {
-    if (CurrentLocation != nil) {
-        [CurrentLocation release];
-    }
-    if (CurrentRegion != nil) {
-        [CurrentRegion release];
-    }
-    if (CentralLocation != nil) {
-        [CentralLocation release];
-    }
-
+    [CurrentLocation release];
+    [CurrentRegion   release];
+    [CentralLocation release];
     [LocationManager release];
 
     [super dealloc];
@@ -111,43 +104,35 @@ static qint64 elapsedNanos()
 
     [self requestBackgroundExecution];
 
-    if (locations != nil && locations.lastObject != nil) {
-        CLLocation *location = locations.lastObject;
+    CLLocation *location = locations.lastObject;
 
-        if (CurrentLocation == nil || [CurrentLocation distanceFromLocation:location] > location.horizontalAccuracy) {
-            if (CurrentLocation != nil) {
-                [CurrentLocation release];
-            }
-            if (CurrentRegion != nil) {
-                [CurrentRegion release];
-            }
+    if (CurrentLocation == nil || [CurrentLocation distanceFromLocation:location] > location.horizontalAccuracy) {
+        [CurrentLocation release];
+        [CurrentRegion   release];
 
-            if (@available(iOS 8, *)) {
-                CurrentLocation = [location retain];
-                CurrentRegion   = [[CLCircularRegion alloc] initWithCenter:CurrentLocation.coordinate radius:CURRENT_REGION_RADIUS identifier:@"CURRENT_REGION"];
+        if (@available(iOS 8, *)) {
+            CurrentLocation = [location retain];
+            CurrentRegion   = [[CLCircularRegion alloc] initWithCenter:CurrentLocation.coordinate radius:CURRENT_REGION_RADIUS identifier:@"CURRENT_REGION"];
 
-                if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
-                    if ([CLLocationManager isMonitoringAvailableForClass:[CLCircularRegion class]]) {
-                        [LocationManager startMonitoringForRegion:CurrentRegion];
-                    }
+            if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
+                if ([CLLocationManager isMonitoringAvailableForClass:[CLCircularRegion class]]) {
+                    [LocationManager startMonitoringForRegion:CurrentRegion];
                 }
-
-                if (AppInitialized) {
-                    VKHelper::GetInstance().updateLocation(CurrentLocation.coordinate.latitude, CurrentLocation.coordinate.longitude);
-                    VKHelper::GetInstance().updateBatteryStatus(BatteryHelper::GetInstance().getBatteryStatus(), BatteryHelper::GetInstance().getBatteryLevel());
-                }
-
-                if (CentralLocation == nil || [CentralLocation distanceFromLocation:CurrentLocation] > CENTRAL_LOCATION_CHANGE_DISTANCE) {
-                    if (CentralLocation != nil) {
-                        [CentralLocation release];
-                    }
-
-                    CentralLocation        = [CurrentLocation retain];
-                    CentralLocationChanged = true;
-                }
-            } else {
-                assert(0);
             }
+
+            if (AppInitialized) {
+                VKHelper::GetInstance().updateLocation(CurrentLocation.coordinate.latitude, CurrentLocation.coordinate.longitude);
+                VKHelper::GetInstance().updateBatteryStatus(BatteryHelper::GetInstance().getBatteryStatus(), BatteryHelper::GetInstance().getBatteryLevel());
+            }
+
+            if (CentralLocation == nil || [CentralLocation distanceFromLocation:CurrentLocation] > CENTRAL_LOCATION_CHANGE_DISTANCE) {
+                [CentralLocation release];
+
+                CentralLocation        = [CurrentLocation retain];
+                CentralLocationChanged = true;
+            }
+        } else {
+            assert(0);
         }
     }
 }

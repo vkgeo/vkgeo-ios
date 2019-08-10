@@ -189,9 +189,7 @@ const QString AdMobHelper::ADMOB_TEST_DEVICE_ID      ("");
 
 - (void)dealloc
 {
-    if (Interstitial != nil) {
-        [Interstitial release];
-    }
+    [Interstitial release];
 
     [super dealloc];
 }
@@ -210,9 +208,7 @@ const QString AdMobHelper::ADMOB_TEST_DEVICE_ID      ("");
 
 - (void)loadAd
 {
-    if (Interstitial != nil) {
-        [Interstitial release];
-    }
+    [Interstitial release];
 
     Interstitial = [[GADInterstitial alloc] initWithAdUnitID:AdMobHelper::ADMOB_INTERSTITIAL_UNIT_ID.toNSString()];
 
@@ -317,12 +313,8 @@ AdMobHelper::AdMobHelper(QObject *parent) : QObject(parent)
 
 AdMobHelper::~AdMobHelper() noexcept
 {
-    if (BannerViewDelegateInstance != nil) {
-        [BannerViewDelegateInstance removeHelperAndAutorelease];
-    }
-    if (InterstitialDelegateInstance != nil) {
-        [InterstitialDelegateInstance removeHelperAndAutorelease];
-    }
+    [BannerViewDelegateInstance   removeHelperAndAutorelease];
+    [InterstitialDelegateInstance removeHelperAndAutorelease];
 }
 
 AdMobHelper &AdMobHelper::GetInstance()
@@ -370,10 +362,7 @@ void AdMobHelper::setPersonalization(bool personalized)
     ShowPersonalizedAds = personalized;
 
     if (Initialized) {
-        if (BannerViewDelegateInstance != nil) {
-            [BannerViewDelegateInstance setPersonalization:ShowPersonalizedAds];
-        }
-
+        [BannerViewDelegateInstance   setPersonalization:ShowPersonalizedAds];
         [InterstitialDelegateInstance setPersonalization:ShowPersonalizedAds];
     }
 }
@@ -381,15 +370,11 @@ void AdMobHelper::setPersonalization(bool personalized)
 void AdMobHelper::showBannerView()
 {
     if (Initialized) {
-        if (BannerViewDelegateInstance != nil) {
-            [BannerViewDelegateInstance removeHelperAndAutorelease];
+        [BannerViewDelegateInstance removeHelperAndAutorelease];
 
-            BannerViewHeight = 0;
+        BannerViewHeight = 0;
 
-            emit bannerViewHeightChanged(BannerViewHeight);
-
-            BannerViewDelegateInstance = nil;
-        }
+        emit bannerViewHeightChanged(BannerViewHeight);
 
         BannerViewDelegateInstance = [[BannerViewDelegate alloc] initWithHelper:this];
 
@@ -401,15 +386,13 @@ void AdMobHelper::showBannerView()
 void AdMobHelper::hideBannerView()
 {
     if (Initialized) {
-        if (BannerViewDelegateInstance != nil) {
-            [BannerViewDelegateInstance removeHelperAndAutorelease];
+        [BannerViewDelegateInstance removeHelperAndAutorelease];
 
-            BannerViewHeight = 0;
+        BannerViewHeight = 0;
 
-            emit bannerViewHeightChanged(BannerViewHeight);
+        emit bannerViewHeightChanged(BannerViewHeight);
 
-            BannerViewDelegateInstance = nil;
-        }
+        BannerViewDelegateInstance = nil;
     }
 }
 

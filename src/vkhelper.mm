@@ -137,9 +137,7 @@ static NSArray *AUTH_SCOPE = @[@"friends", @"notes", @"groups", @"offline"];
         *stop = (root_view_controller != nil);
     }];
 
-    if (root_view_controller != nil) {
-        [root_view_controller presentViewController:controller animated:YES completion:nil];
-    }
+    [root_view_controller presentViewController:controller animated:YES completion:nil];
 }
 
 - (void)vkSdkNeedCaptchaEnter:(VKError *)captchaError
