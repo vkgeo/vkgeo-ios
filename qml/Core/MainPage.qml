@@ -106,7 +106,7 @@ Page {
         MapSwipe {
             id: mapSwipe
 
-            onOpenProfilePage: {
+            onProfilePageRequested: {
                 friendsSwipe.openProfilePage(userId);
             }
         }
@@ -114,7 +114,7 @@ Page {
         FriendsSwipe {
             id: friendsSwipe
 
-            onLocateFriendOnMap: {
+            onLocationOnMapRequested: {
                 mapSwipe.locateItemOnMap(userId);
 
                 tabBar.setCurrentIndex(0);

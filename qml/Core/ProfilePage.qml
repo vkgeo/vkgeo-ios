@@ -80,7 +80,7 @@ Page {
     property string status:                 ""
     property string batteryStatus:          ""
 
-    signal locateOnMap(string userId)
+    signal locationOnMapRequested(string userId)
 
     Flickable {
         id:                   profileFlickable
@@ -247,7 +247,7 @@ Page {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 onClicked: {
-                    locateOnMap(profilePage.userId);
+                    profilePage.locationOnMapRequested(profilePage.userId);
 
                     mainStackView.pop();
                 }
