@@ -44,41 +44,25 @@ QML_IMPORT_PATH =
 QML_DESIGNER_IMPORT_PATH =
 
 ios {
-    CONFIG += qtquickcompiler no_default_rpath
+    CONFIG += qtquickcompiler
 
     INCLUDEPATH += $$PWD/ios/frameworks
     DEPENDPATH += $$PWD/ios/frameworks
 
     LIBS += -F $$PWD/ios/frameworks \
-            -framework GoogleMobileAds \
             -framework GoogleAppMeasurement \
+            -framework GoogleMobileAds \
             -framework GoogleUtilities \
             -framework nanopb \
             -framework VKSdkFramework \
-            -framework AdSupport \
-            -framework AvFoundation \
-            -framework CFNetwork \
-            -framework CoreMedia \
-            -framework CoreMotion \
-            -framework CoreTelephony \
-            -framework CoreVideo \
-            -framework GameKit \
-            -framework GLKit \
-            -framework MediaPlayer \
-            -framework MessageUI \
-            -framework SafariServices \
-            -framework StoreKit \
-            -framework SystemConfiguration \
             -framework UserNotifications
-
-    QMAKE_LFLAGS += -ObjC
 
     VK_SDK_FRAMEWORK.files = ios/Frameworks/VKSdkFramework.framework
     VK_SDK_FRAMEWORK.path = Frameworks
 
     QMAKE_BUNDLE_DATA += VK_SDK_FRAMEWORK
 
-    QMAKE_RPATHDIR = @executable_path/Frameworks
+    QMAKE_LFLAGS += -ObjC
 
     QMAKE_APPLE_DEVICE_ARCHS = arm64
     QMAKE_INFO_PLIST = ios/Info.plist
