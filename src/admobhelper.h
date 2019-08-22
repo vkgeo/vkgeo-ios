@@ -22,8 +22,7 @@ private:
     ~AdMobHelper() noexcept override;
 
 public:
-    static const QString ADMOB_APP_ID,
-                         ADMOB_BANNERVIEW_UNIT_ID,
+    static const QString ADMOB_BANNERVIEW_UNIT_ID,
                          ADMOB_INTERSTITIAL_UNIT_ID,
                          ADMOB_TEST_DEVICE_ID;
 
