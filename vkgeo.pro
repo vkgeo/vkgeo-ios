@@ -55,6 +55,9 @@ ios {
             -framework GoogleUtilities \
             -framework nanopb \
             -framework VKSdkFramework \
+            -framework UIKit \
+            -framework StoreKit \
+            -framework CoreLocation \
             -framework UserNotifications
 
     VK_SDK_FRAMEWORK.files = ios/Frameworks/VKSdkFramework.framework
