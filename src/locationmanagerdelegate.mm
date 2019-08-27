@@ -72,10 +72,9 @@ static qint64 elapsedNanos()
                 [CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
                 [LocationManager startUpdatingLocation];
 
-                if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
-                    if ([CLLocationManager significantLocationChangeMonitoringAvailable]) {
-                        [LocationManager startMonitoringSignificantLocationChanges];
-                    }
+                if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways &&
+                    [CLLocationManager significantLocationChangeMonitoringAvailable]) {
+                    [LocationManager startMonitoringSignificantLocationChanges];
                 }
             }
         } else {
@@ -114,10 +113,9 @@ static qint64 elapsedNanos()
             CurrentLocation = [location retain];
             CurrentRegion   = [[CLCircularRegion alloc] initWithCenter:CurrentLocation.coordinate radius:CURRENT_REGION_RADIUS identifier:@"CURRENT_REGION"];
 
-            if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
-                if ([CLLocationManager isMonitoringAvailableForClass:[CLCircularRegion class]]) {
-                    [LocationManager startMonitoringForRegion:CurrentRegion];
-                }
+            if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways &&
+                [CLLocationManager isMonitoringAvailableForClass:[CLCircularRegion class]]) {
+                [LocationManager startMonitoringForRegion:CurrentRegion];
             }
 
             if (AppInitialized) {
@@ -146,13 +144,12 @@ static qint64 elapsedNanos()
     if (CurrentRegion != nil && [CurrentRegion.identifier isEqualToString:region.identifier]) {
         CLLocation *location = LocationManager.location;
 
-        if (location != nil) {
-            if (CurrentLocation == nil || [CurrentLocation.timestamp compare:location.timestamp] == NSOrderedAscending) {
-                if (@available(iOS 6, *)) {
-                    [self locationManager:LocationManager didUpdateLocations:@[location]];
-                } else {
-                    assert(0);
-                }
+        if (location != nil && (CurrentLocation == nil ||
+                               [CurrentLocation.timestamp compare:location.timestamp] == NSOrderedAscending)) {
+            if (@available(iOS 6, *)) {
+                [self locationManager:LocationManager didUpdateLocations:@[location]];
+            } else {
+                assert(0);
             }
         }
     }
@@ -174,10 +171,8 @@ static qint64 elapsedNanos()
                     [LocationManager startMonitoringSignificantLocationChanges];
                 }
 
-                if (CurrentRegion != nil) {
-                    if ([CLLocationManager isMonitoringAvailableForClass:[CLCircularRegion class]]) {
-                        [LocationManager startMonitoringForRegion:CurrentRegion];
-                    }
+                if (CurrentRegion != nil && [CLLocationManager isMonitoringAvailableForClass:[CLCircularRegion class]]) {
+                    [LocationManager startMonitoringForRegion:CurrentRegion];
                 }
             } else {
                 [LocationManager stopMonitoringSignificantLocationChanges];

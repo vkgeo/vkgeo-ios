@@ -291,10 +291,8 @@ Item {
                 map.trackMapItem(map.myMapItem);
             }
 
-            if (map.mapItems.length > 1) {
-                if (Math.random() < 0.10) {
-                    StoreHelper.requestReview();
-                }
+            if (map.mapItems.length > 1 && Math.random() < 0.10) {
+                StoreHelper.requestReview();
             }
         }
 
