@@ -79,10 +79,6 @@
         <translation>Информация профиля</translation>
     </message>
     <message>
-        <source>Close</source>
-        <translation>Закрыть</translation>
-    </message>
-    <message>
         <source>Last update at: %1</source>
         <translation>Последнее обновление: %1</translation>
     </message>
@@ -150,6 +146,10 @@
         <translation>Список отслеживаемых друзей</translation>
     </message>
     <message>
+        <source>Dark theme</source>
+        <translation>Темная тема</translation>
+    </message>
+    <message>
         <source>Ad privacy settings</source>
         <translation>Настройки конфиденциальности рекламы</translation>
     </message>
@@ -197,10 +197,6 @@
         <translation>Магазин</translation>
     </message>
     <message>
-        <source>Close</source>
-        <translation>Закрыть</translation>
-    </message>
-    <message>
         <source>Tracked friends</source>
         <translation>Отслеживаемые друзья</translation>
     </message>
@@ -220,16 +216,8 @@
 <context>
     <name>TrackedFriendsPage</name>
     <message>
-        <source>Cancel</source>
-        <translation>Отменить</translation>
-    </message>
-    <message>
         <source>Tracked friends</source>
         <translation>Отслеживаемые друзья</translation>
-    </message>
-    <message>
-        <source>Save</source>
-        <translation>Сохранить</translation>
     </message>
     <message>
         <source>Quick search</source>
@@ -239,16 +227,8 @@
 <context>
     <name>TrustedFriendsPage</name>
     <message>
-        <source>Cancel</source>
-        <translation>Отменить</translation>
-    </message>
-    <message>
         <source>Trusted friends</source>
         <translation>Доверенные друзья</translation>
-    </message>
-    <message>
-        <source>Save</source>
-        <translation>Сохранить</translation>
     </message>
     <message>
         <source>Quick search</source>
