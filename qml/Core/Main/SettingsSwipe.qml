@@ -219,7 +219,7 @@ Rectangle {
             Rectangle {
                 width:            UtilScript.pt(280)
                 height:           UtilScript.pt(64)
-                color:            UIHelper.darkTheme ? "midnightblue" : "deepskyblue"
+                color:            UIHelper.darkTheme ? "midnightblue" : "lightsteelblue"
                 radius:           UtilScript.pt(8)
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
@@ -231,7 +231,7 @@ Rectangle {
 
                     Text {
                         text:                qsTr("Dark theme")
-                        color:               "white"
+                        color:               UIHelper.darkTheme ? "white" : "black"
                         font.pointSize:      16
                         font.family:         "Helvetica"
                         font.bold:           true

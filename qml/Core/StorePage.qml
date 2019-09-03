@@ -45,7 +45,7 @@ Page {
 
             Rectangle {
                 height:             UtilScript.pt(64)
-                color:              UIHelper.darkTheme ? "midnightblue" : "deepskyblue"
+                color:              UIHelper.darkTheme ? "midnightblue" : "lightsteelblue"
                 radius:             UtilScript.pt(8)
                 visible:            !mainWindow.enableTrackedFriends
                 Layout.leftMargin:  UtilScript.pt(16)
@@ -60,7 +60,7 @@ Page {
 
                     Text {
                         text:                qsTr("Tracked friends")
-                        color:               "white"
+                        color:               UIHelper.darkTheme ? "white" : "black"
                         font.pointSize:      16
                         font.family:         "Helvetica"
                         horizontalAlignment: Text.AlignLeft
@@ -88,7 +88,7 @@ Page {
 
             Rectangle {
                 height:             UtilScript.pt(64)
-                color:              UIHelper.darkTheme ? "midnightblue" : "deepskyblue"
+                color:              UIHelper.darkTheme ? "midnightblue" : "lightsteelblue"
                 radius:             UtilScript.pt(8)
                 visible:            !mainWindow.increaseTrackingLimits
                 Layout.leftMargin:  UtilScript.pt(16)
@@ -103,7 +103,7 @@ Page {
 
                     Text {
                         text:                qsTr("Tracking limits x 3")
-                        color:               "white"
+                        color:               UIHelper.darkTheme ? "white" : "black"
                         font.pointSize:      16
                         font.family:         "Helvetica"
                         horizontalAlignment: Text.AlignLeft
@@ -131,7 +131,7 @@ Page {
 
             Rectangle {
                 height:             UtilScript.pt(64)
-                color:              UIHelper.darkTheme ? "midnightblue" : "deepskyblue"
+                color:              UIHelper.darkTheme ? "midnightblue" : "lightsteelblue"
                 radius:             UtilScript.pt(8)
                 Layout.leftMargin:  UtilScript.pt(16)
                 Layout.rightMargin: UtilScript.pt(16)
@@ -145,7 +145,7 @@ Page {
 
                     Text {
                         text:                qsTr("Restore purchases")
-                        color:               "white"
+                        color:               UIHelper.darkTheme ? "white" : "black"
                         font.pointSize:      16
                         font.family:         "Helvetica"
                         horizontalAlignment: Text.AlignLeft
