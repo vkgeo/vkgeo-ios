@@ -4,9 +4,26 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
+class UITheme : public QObject
+{
+    Q_OBJECT
+
+public:
+    enum Theme {
+        ThemeAuto,
+        ThemeLight,
+        ThemeDark
+    };
+    Q_ENUM(Theme)
+};
+
 class UIHelper : public QObject
 {
     Q_OBJECT
+
+    Q_PROPERTY(bool darkTheme READ darkTheme NOTIFY darkThemeChanged)
+
+    Q_PROPERTY(int configuredTheme READ configuredTheme WRITE setConfiguredTheme NOTIFY configuredThemeChanged)
 
 private:
     explicit UIHelper(QObject *parent = nullptr);
@@ -21,9 +38,22 @@ public:
 
     static UIHelper &GetInstance();
 
+    bool darkTheme() const;
+
+    int configuredTheme() const;
+    void setConfiguredTheme(int theme);
+
     Q_INVOKABLE QString getAppSettingsUrl();
 
     Q_INVOKABLE void sendInvitation(const QString &text);
+
+signals:
+    void darkThemeChanged(bool darkTheme);
+    void configuredThemeChanged(int configuredTheme);
+
+private:
+    bool DarkTheme;
+    int  ConfiguredTheme;
 };
 
 #endif // UIHELPER_H

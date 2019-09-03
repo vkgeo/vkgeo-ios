@@ -9,8 +9,9 @@ import "../Misc"
 
 import "../../Util.js" as UtilScript
 
-Item {
-    id: friendsSwipe
+Rectangle {
+    id:    friendsSwipe
+    color: "transparent"
 
     readonly property int nearbyDistance: 500
 
@@ -156,10 +157,10 @@ Item {
                     id:           friendDelegate
                     width:        listView.width
                     height:       UtilScript.pt(80)
-                    color:        "white"
+                    color:        "transparent"
                     clip:         true
                     border.width: UtilScript.pt(1)
-                    border.color: "lightsteelblue"
+                    border.color: UIHelper.darkTheme ? "midnightblue" : "deepskyblue"
 
                     readonly property var listView: ListView.view
 
@@ -211,6 +212,7 @@ Item {
 
                             MouseArea {
                                 anchors.fill: parent
+                                z:            2
 
                                 onClicked: {
                                     friendDelegate.listView.openProfilePage(userId);
@@ -220,7 +222,7 @@ Item {
 
                         Text {
                             text:                "%1 %2".arg(firstName).arg(lastName)
-                            color:               "black"
+                            color:               UIHelper.darkTheme ? "white" : "black"
                             font.pointSize:      16
                             font.family:         "Helvetica"
                             horizontalAlignment: Text.AlignLeft
@@ -228,6 +230,7 @@ Item {
                             wrapMode:            Text.Wrap
                             fontSizeMode:        Text.Fit
                             minimumPointSize:    8
+                            textFormat:          Text.PlainText
                             Layout.fillWidth:    true
                             Layout.fillHeight:   true
                         }

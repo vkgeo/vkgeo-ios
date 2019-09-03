@@ -2,6 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtQuick.LocalStorage 2.12
 import QtPurchasing 1.0
+import UIHelper 1.0
 import VKHelper 1.0
 
 import "Core/Dialog"
@@ -20,6 +21,7 @@ ApplicationWindow {
     property bool enableTrackedFriends:     false
     property bool increaseTrackingLimits:   false
 
+    property string configuredTheme:        ""
     property string adMobConsent:           ""
 
     property var loginPage:                 null
@@ -76,6 +78,12 @@ ApplicationWindow {
 
     onIncreaseTrackingLimitsChanged: {
         setSetting("IncreaseTrackingLimits", increaseTrackingLimits ? "true" : "false");
+
+        updateFeatures();
+    }
+
+    onConfiguredThemeChanged: {
+        setSetting("ConfiguredTheme", configuredTheme);
 
         updateFeatures();
     }
@@ -165,6 +173,14 @@ ApplicationWindow {
             }
         } else {
             VKHelper.maxTrackedFriendsCount = 0;
+        }
+
+        if (configuredTheme === "LIGHT") {
+            UIHelper.configuredTheme = UITheme.ThemeLight;
+        } else if (configuredTheme === "DARK") {
+            UIHelper.configuredTheme = UITheme.ThemeDark;
+        } else {
+            UIHelper.configuredTheme = UITheme.ThemeAuto;
         }
     }
 
@@ -301,6 +317,7 @@ ApplicationWindow {
         disableAds             = (getSetting("DisableAds",             "false") === "true");
         enableTrackedFriends   = (getSetting("EnableTrackedFriends",   "false") === "true");
         increaseTrackingLimits = (getSetting("IncreaseTrackingLimits", "false") === "true");
+        configuredTheme        =  getSetting("ConfiguredTheme",        "");
         adMobConsent           =  getSetting("AdMobConsent",           "");
 
         updateFeatures();

@@ -30,6 +30,7 @@ int main(int argc, char *argv[])
 
     InitializeVKGeoApplicationDelegate();
 
+    qmlRegisterType<UITheme>    ("UIHelper", 1, 0, "UITheme");
     qmlRegisterType<VKAuthState>("VKHelper", 1, 0, "VKAuthState");
 
     QQmlApplicationEngine engine;
