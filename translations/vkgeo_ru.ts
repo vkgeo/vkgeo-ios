@@ -146,8 +146,20 @@
         <translation>Список отслеживаемых друзей</translation>
     </message>
     <message>
-        <source>Dark theme</source>
-        <translation>Темная тема</translation>
+        <source>light</source>
+        <translation>светлая</translation>
+    </message>
+    <message>
+        <source>dark</source>
+        <translation>темная</translation>
+    </message>
+    <message>
+        <source>auto</source>
+        <translation>авто</translation>
+    </message>
+    <message>
+        <source>Interface theme: %1</source>
+        <translation>Тема интерфейса: %1</translation>
     </message>
     <message>
         <source>Ad privacy settings</source>
@@ -211,6 +223,25 @@
     <message>
         <source>OK</source>
         <translation>OK</translation>
+    </message>
+</context>
+<context>
+    <name>ThemeSelectionDialog</name>
+    <message>
+        <source>Auto</source>
+        <translation>Авто</translation>
+    </message>
+    <message>
+        <source>Light theme</source>
+        <translation>Светлая тема</translation>
+    </message>
+    <message>
+        <source>Dark theme</source>
+        <translation>Темная тема</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Отменить</translation>
     </message>
 </context>
 <context>
