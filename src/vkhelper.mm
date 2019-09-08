@@ -312,9 +312,11 @@ int VKHelper::maxTrustedFriendsCount() const
 
 void VKHelper::setMaxTrustedFriendsCount(int count)
 {
-    MaxTrustedFriendsCount = count;
+    if (MaxTrustedFriendsCount != count) {
+        MaxTrustedFriendsCount = count;
 
-    emit maxTrustedFriendsCountChanged(MaxTrustedFriendsCount);
+        emit maxTrustedFriendsCountChanged(MaxTrustedFriendsCount);
+    }
 }
 
 int VKHelper::maxTrackedFriendsCount() const
@@ -324,9 +326,11 @@ int VKHelper::maxTrackedFriendsCount() const
 
 void VKHelper::setMaxTrackedFriendsCount(int count)
 {
-    MaxTrackedFriendsCount = count;
+    if (MaxTrackedFriendsCount != count) {
+        MaxTrackedFriendsCount = count;
 
-    emit maxTrackedFriendsCountChanged(MaxTrackedFriendsCount);
+        emit maxTrackedFriendsCountChanged(MaxTrackedFriendsCount);
+    }
 }
 
 void VKHelper::login()
@@ -551,54 +555,86 @@ void VKHelper::joinGroup(const QString &group_id)
 
 void VKHelper::setAuthState(int state)
 {
-    AuthState = state;
+    if (AuthState != state) {
+        AuthState = state;
 
-    emit authStateChanged(AuthState);
+        emit authStateChanged(AuthState);
 
-    if (AuthState == VKAuthState::StateAuthorized) {
-        VKAccessToken *token = [VKSdk accessToken];
+        if (AuthState == VKAuthState::StateAuthorized) {
+            VKAccessToken *token = [VKSdk accessToken];
 
-        if (token != nil && token.localUser != nil && token.localUser.id != nil) {
-            UserId = QString::fromNSString(token.localUser.id.stringValue);
-        } else {
-            UserId = "";
+            if (token != nil && token.localUser != nil && token.localUser.id != nil) {
+                QString user_id = QString::fromNSString(token.localUser.id.stringValue);
+
+                if (UserId != user_id) {
+                    UserId = user_id;
+
+                    emit userIdChanged(UserId);
+                }
+            } else if (UserId != "") {
+                UserId = "";
+
+                emit userIdChanged(UserId);
+            }
+
+            if (token != nil && token.localUser != nil && token.localUser.first_name != nil) {
+                QString first_name = QString::fromNSString(token.localUser.first_name);
+
+                if (FirstName != first_name) {
+                    FirstName = first_name;
+
+                    emit firstNameChanged(FirstName);
+                }
+            } else if (FirstName != "") {
+                FirstName = "";
+
+                emit firstNameChanged(FirstName);
+            }
+
+            if (token != nil && token.localUser != nil && token.localUser.last_name != nil) {
+                QString last_name = QString::fromNSString(token.localUser.last_name);
+
+                if (LastName != last_name) {
+                    LastName = last_name;
+
+                    emit lastNameChanged(LastName);
+                }
+            } else if (LastName != "") {
+                LastName = "";
+
+                emit lastNameChanged(LastName);
+            }
+
+            if (token != nil && token.localUser != nil && token.localUser.photo_100 != nil) {
+                QString photo_url = QString::fromNSString(token.localUser.photo_100);
+
+                if (PhotoUrl != photo_url) {
+                    PhotoUrl = photo_url;
+
+                    emit photoUrlChanged(PhotoUrl);
+                }
+            } else if (PhotoUrl != DEFAULT_PHOTO_URL) {
+                PhotoUrl = DEFAULT_PHOTO_URL;
+
+                emit photoUrlChanged(PhotoUrl);
+            }
+
+            if (token != nil && token.localUser != nil && token.localUser.photo_200 != nil) {
+                QString big_photo_url = QString::fromNSString(token.localUser.photo_200);
+
+                if (BigPhotoUrl != big_photo_url) {
+                    BigPhotoUrl = big_photo_url;
+
+                    emit bigPhotoUrlChanged(BigPhotoUrl);
+                }
+            } else if (BigPhotoUrl != DEFAULT_PHOTO_URL) {
+                BigPhotoUrl = DEFAULT_PHOTO_URL;
+
+                emit bigPhotoUrlChanged(BigPhotoUrl);
+            }
+        } else if (AuthState == VKAuthState::StateNotAuthorized) {
+            Cleanup();
         }
-
-        emit userIdChanged(UserId);
-
-        if (token != nil && token.localUser != nil && token.localUser.first_name != nil) {
-            FirstName = QString::fromNSString(token.localUser.first_name);
-        } else {
-            FirstName = "";
-        }
-
-        emit firstNameChanged(FirstName);
-
-        if (token != nil && token.localUser != nil && token.localUser.last_name != nil) {
-            LastName = QString::fromNSString(token.localUser.last_name);
-        } else {
-            LastName = "";
-        }
-
-        emit lastNameChanged(LastName);
-
-        if (token != nil && token.localUser != nil && token.localUser.photo_100 != nil) {
-            PhotoUrl = QString::fromNSString(token.localUser.photo_100);
-        } else {
-            PhotoUrl = DEFAULT_PHOTO_URL;
-        }
-
-        emit photoUrlChanged(PhotoUrl);
-
-        if (token != nil && token.localUser != nil && token.localUser.photo_200 != nil) {
-            BigPhotoUrl = QString::fromNSString(token.localUser.photo_200);
-        } else {
-            BigPhotoUrl = DEFAULT_PHOTO_URL;
-        }
-
-        emit bigPhotoUrlChanged(BigPhotoUrl);
-    } else if (AuthState == VKAuthState::StateNotAuthorized) {
-        Cleanup();
     }
 }
 
@@ -722,19 +758,38 @@ void VKHelper::Cleanup()
     LastSendDataTime                 = 0;
     LastUpdateTrackedFriendsDataTime = 0;
     NextRequestQueueTimerTimeout     = QDateTime::currentMSecsSinceEpoch() + REQUEST_QUEUE_TIMER_INTERVAL;
-    UserId                           = "";
-    FirstName                        = "";
-    LastName                         = "";
-    PhotoUrl                         = DEFAULT_PHOTO_URL;
-    BigPhotoUrl                      = DEFAULT_PHOTO_URL;
     TrustedFriendsListId             = "";
     TrackedFriendsListId             = "";
 
-    emit userIdChanged(UserId);
-    emit firstNameChanged(FirstName);
-    emit lastNameChanged(LastName);
-    emit photoUrlChanged(PhotoUrl);
-    emit bigPhotoUrlChanged(BigPhotoUrl);
+    if (UserId != "") {
+        UserId = "";
+
+        emit userIdChanged(UserId);
+    }
+
+    if (FirstName != "") {
+        FirstName = "";
+
+        emit firstNameChanged(FirstName);
+    }
+
+    if (LastName != "") {
+        LastName = "";
+
+        emit lastNameChanged(LastName);
+    }
+
+    if (PhotoUrl != DEFAULT_PHOTO_URL) {
+        PhotoUrl = DEFAULT_PHOTO_URL;
+
+        emit photoUrlChanged(PhotoUrl);
+    }
+
+    if (BigPhotoUrl != DEFAULT_PHOTO_URL) {
+        BigPhotoUrl = DEFAULT_PHOTO_URL;
+
+        emit bigPhotoUrlChanged(BigPhotoUrl);
+    }
 
     while (!RequestQueue.isEmpty()) {
         QVariantMap request = RequestQueue.dequeue();
@@ -748,10 +803,15 @@ void VKHelper::Cleanup()
         [vk_request cancel];
     }
 
+    int prev_friends_count = FriendsData.count();
+
     FriendsData.clear();
     FriendsDataTmp.clear();
 
-    emit friendsCountChanged(FriendsData.count());
+    if (FriendsData.count() != prev_friends_count) {
+        emit friendsCountChanged(FriendsData.count());
+    }
+
     emit friendsUpdated();
 }
 
@@ -1313,9 +1373,14 @@ void VKHelper::HandleFriendsGetResponse(const QString &response, const QVariantM
                 }
 
                 if (!ContextHasActiveRequests(resp_request["context"].toString())) {
+                    int prev_friends_count = FriendsData.count();
+
                     FriendsData = FriendsDataTmp;
 
-                    emit friendsCountChanged(FriendsData.count());
+                    if (FriendsData.count() != prev_friends_count) {
+                        emit friendsCountChanged(FriendsData.count());
+                    }
+
                     emit friendsUpdated();
                 }
             } else {
@@ -1446,9 +1511,14 @@ void VKHelper::HandleFriendsGetListsResponse(const QString &response, const QVar
                 }
 
                 if (!ContextHasActiveRequests(resp_request["context"].toString())) {
+                    int prev_friends_count = FriendsData.count();
+
                     FriendsData = FriendsDataTmp;
 
-                    emit friendsCountChanged(FriendsData.count());
+                    if (FriendsData.count() != prev_friends_count) {
+                        emit friendsCountChanged(FriendsData.count());
+                    }
+
                     emit friendsUpdated();
                 }
             } else {

@@ -375,9 +375,11 @@ void AdMobHelper::showBannerView()
     if (Initialized) {
         [BannerViewDelegateInstance removeHelperAndAutorelease];
 
-        BannerViewHeight = 0;
+        if (BannerViewHeight != 0) {
+            BannerViewHeight = 0;
 
-        emit bannerViewHeightChanged(BannerViewHeight);
+            emit bannerViewHeightChanged(BannerViewHeight);
+        }
 
         BannerViewDelegateInstance = [[BannerViewDelegate alloc] initWithHelper:this];
 
@@ -391,9 +393,11 @@ void AdMobHelper::hideBannerView()
     if (Initialized) {
         [BannerViewDelegateInstance removeHelperAndAutorelease];
 
-        BannerViewHeight = 0;
+        if (BannerViewHeight != 0) {
+            BannerViewHeight = 0;
 
-        emit bannerViewHeightChanged(BannerViewHeight);
+            emit bannerViewHeightChanged(BannerViewHeight);
+        }
 
         BannerViewDelegateInstance = nil;
     }
@@ -408,14 +412,18 @@ void AdMobHelper::showInterstitial()
 
 void AdMobHelper::setInterstitialActive(bool active)
 {
-    InterstitialActive = active;
+    if (InterstitialActive != active) {
+        InterstitialActive = active;
 
-    emit interstitialActiveChanged(InterstitialActive);
+        emit interstitialActiveChanged(InterstitialActive);
+    }
 }
 
 void AdMobHelper::setBannerViewHeight(int height)
 {
-    BannerViewHeight = height;
+    if (BannerViewHeight != height) {
+        BannerViewHeight = height;
 
-    emit bannerViewHeightChanged(BannerViewHeight);
+        emit bannerViewHeightChanged(BannerViewHeight);
+    }
 }

@@ -30,19 +30,27 @@ int UIHelper::configuredTheme() const
 
 void UIHelper::setConfiguredTheme(int theme)
 {
-    ConfiguredTheme = theme;
+    if (ConfiguredTheme != theme) {
+        ConfiguredTheme = theme;
 
-    emit configuredThemeChanged(ConfiguredTheme);
+        emit configuredThemeChanged(ConfiguredTheme);
 
-    if (ConfiguredTheme == UITheme::ThemeLight) {
-        DarkTheme = false;
-    } else if (ConfiguredTheme == UITheme::ThemeDark) {
-        DarkTheme = true;
-    } else {
-        DarkTheme = false;
+        bool dark_theme;
+
+        if (ConfiguredTheme == UITheme::ThemeLight) {
+            dark_theme = false;
+        } else if (ConfiguredTheme == UITheme::ThemeDark) {
+            dark_theme = true;
+        } else {
+            dark_theme = false;
+        }
+
+        if (DarkTheme != dark_theme) {
+            DarkTheme = dark_theme;
+
+            emit darkThemeChanged(DarkTheme);
+        }
     }
-
-    emit darkThemeChanged(DarkTheme);
 }
 
 QString UIHelper::getAppSettingsUrl()
