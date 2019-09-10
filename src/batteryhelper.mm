@@ -22,11 +22,11 @@ QString BatteryHelper::getBatteryStatus()
 
     if (battery_state == UIDeviceBatteryStateCharging ||
         battery_state == UIDeviceBatteryStateFull) {
-        return "CHARGING";
+        return QStringLiteral("CHARGING");
     } else if (battery_state == UIDeviceBatteryStateUnplugged) {
-        return "DISCHARGING";
+        return QStringLiteral("DISCHARGING");
     } else {
-        return "UNKNOWN";
+        return QStringLiteral("UNKNOWN");
     }
 }
 
