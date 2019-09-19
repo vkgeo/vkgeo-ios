@@ -23,6 +23,11 @@ bool UIHelper::darkTheme() const
     return DarkTheme;
 }
 
+int UIHelper::screenDpi() const
+{
+    return 160;
+}
+
 int UIHelper::configuredTheme() const
 {
     return ConfiguredTheme;

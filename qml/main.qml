@@ -14,6 +14,7 @@ ApplicationWindow {
 
     readonly property bool appInForeground: Qt.application.state === Qt.ApplicationActive
 
+    readonly property int screenDpi:        UIHelper.screenDpi
     readonly property int vkAuthState:      VKHelper.authState
 
     property bool componentCompleted:       false
@@ -33,6 +34,18 @@ ApplicationWindow {
             if (!disableAds && adMobConsent !== "PERSONALIZED" && adMobConsent !== "NON_PERSONALIZED") {
                 adMobConsentDialog.open();
             }
+        }
+    }
+
+    onScreenDpiChanged: {
+        if (mainStackView.depth > 0 && typeof mainStackView.currentItem.bannerViewHeight === "number") {
+            if (disableAds) {
+                AdMobHelper.hideBannerView();
+            } else {
+                AdMobHelper.showBannerView();
+            }
+        } else {
+            AdMobHelper.hideBannerView();
         }
     }
 
