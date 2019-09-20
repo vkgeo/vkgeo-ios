@@ -83,12 +83,12 @@ Rectangle {
 
     ColumnLayout {
         anchors.fill:      parent
-        anchors.topMargin: UtilScript.pt(UIHelper.screenDpi, 4)
-        spacing:           UtilScript.pt(UIHelper.screenDpi, 4)
+        anchors.topMargin: UtilScript.dp(UIHelper.screenDpi, 4)
+        spacing:           UtilScript.dp(UIHelper.screenDpi, 4)
 
         RowLayout {
-            spacing:           UtilScript.pt(UIHelper.screenDpi, 4)
-            Layout.leftMargin: UtilScript.pt(UIHelper.screenDpi, 8)
+            spacing:           UtilScript.dp(UIHelper.screenDpi, 4)
+            Layout.leftMargin: UtilScript.dp(UIHelper.screenDpi, 8)
             Layout.fillWidth:  true
             Layout.alignment:  Qt.AlignVCenter
 
@@ -155,23 +155,23 @@ Rectangle {
                 delegate: Rectangle {
                     id:           friendDelegate
                     width:        listView.width
-                    height:       UtilScript.pt(UIHelper.screenDpi, 80)
+                    height:       UtilScript.dp(UIHelper.screenDpi, 80)
                     color:        "transparent"
                     clip:         true
-                    border.width: UtilScript.pt(UIHelper.screenDpi, 1)
+                    border.width: UtilScript.dp(UIHelper.screenDpi, 1)
                     border.color: UIHelper.darkTheme ? "midnightblue" : "lightsteelblue"
 
                     readonly property var listView: ListView.view
 
                     RowLayout {
                         anchors.fill:        parent
-                        anchors.leftMargin:  UtilScript.pt(UIHelper.screenDpi, 16)
-                        anchors.rightMargin: UtilScript.pt(UIHelper.screenDpi, 16)
-                        spacing:             UtilScript.pt(UIHelper.screenDpi, 8)
+                        anchors.leftMargin:  UtilScript.dp(UIHelper.screenDpi, 16)
+                        anchors.rightMargin: UtilScript.dp(UIHelper.screenDpi, 16)
+                        spacing:             UtilScript.dp(UIHelper.screenDpi, 8)
 
                         Rectangle {
-                            implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 64)
-                            implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 64)
+                            implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 64)
+                            implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
                             color:            "transparent"
                             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
@@ -200,8 +200,8 @@ Rectangle {
                                 x:        opacityMask.width  / 2 + opacityMask.width  / 2 * Math.sin(angle) - width  / 2
                                 y:        opacityMask.height / 2 + opacityMask.height / 2 * Math.cos(angle) - height / 2
                                 z:        1
-                                width:    UtilScript.pt(UIHelper.screenDpi, 16)
-                                height:   UtilScript.pt(UIHelper.screenDpi, 16)
+                                width:    UtilScript.dp(UIHelper.screenDpi, 16)
+                                height:   UtilScript.dp(UIHelper.screenDpi, 16)
                                 source:   "qrc:/resources/images/main/avatar_online_label.png"
                                 fillMode: Image.PreserveAspectFit
                                 visible:  online
@@ -222,21 +222,21 @@ Rectangle {
                         Text {
                             text:                "%1 %2".arg(firstName).arg(lastName)
                             color:               UIHelper.darkTheme ? "white" : "black"
-                            font.pointSize:      16
+                            font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 16)
                             font.family:         "Helvetica"
                             horizontalAlignment: Text.AlignLeft
                             verticalAlignment:   Text.AlignVCenter
                             wrapMode:            Text.Wrap
                             fontSizeMode:        Text.Fit
-                            minimumPointSize:    8
+                            minimumPixelSize:    UtilScript.dp(UIHelper.screenDpi, 8)
                             textFormat:          Text.PlainText
                             Layout.fillWidth:    true
                             Layout.fillHeight:   true
                         }
 
                         Rectangle {
-                            implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 48)
-                            implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 48)
+                            implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 48)
+                            implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 48)
                             color:            "transparent"
                             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 

@@ -18,9 +18,9 @@ Rectangle {
         anchors.top:     parent.top
         anchors.left:    parent.left
         anchors.right:   parent.right
-        anchors.margins: UtilScript.pt(UIHelper.screenDpi, 4)
+        anchors.margins: UtilScript.dp(UIHelper.screenDpi, 4)
         z:               1
-        height:          UtilScript.pt(UIHelper.screenDpi, 48)
+        height:          UtilScript.dp(UIHelper.screenDpi, 48)
         text:            qsTr("Settings has been updated successfully")
     }
 
@@ -29,9 +29,9 @@ Rectangle {
         anchors.top:     parent.top
         anchors.left:    parent.left
         anchors.right:   parent.right
-        anchors.margins: UtilScript.pt(UIHelper.screenDpi, 4)
+        anchors.margins: UtilScript.dp(UIHelper.screenDpi, 4)
         z:               1
-        height:          UtilScript.pt(UIHelper.screenDpi, 48)
+        height:          UtilScript.dp(UIHelper.screenDpi, 48)
         text:            qsTr("Failed to update settings, please try again later")
         backgroundColor: "red"
     }
@@ -41,9 +41,9 @@ Rectangle {
         anchors.top:     parent.top
         anchors.left:    parent.left
         anchors.right:   parent.right
-        anchors.margins: UtilScript.pt(UIHelper.screenDpi, 4)
+        anchors.margins: UtilScript.dp(UIHelper.screenDpi, 4)
         z:               1
-        height:          UtilScript.pt(UIHelper.screenDpi, 48)
+        height:          UtilScript.dp(UIHelper.screenDpi, 48)
         text:            qsTr("You have successfully joined the group")
     }
 
@@ -52,9 +52,9 @@ Rectangle {
         anchors.top:     parent.top
         anchors.left:    parent.left
         anchors.right:   parent.right
-        anchors.margins: UtilScript.pt(UIHelper.screenDpi, 4)
+        anchors.margins: UtilScript.dp(UIHelper.screenDpi, 4)
         z:               1
-        height:          UtilScript.pt(UIHelper.screenDpi, 48)
+        height:          UtilScript.dp(UIHelper.screenDpi, 48)
         text:            qsTr("Failed to join group, please try again later")
         backgroundColor: "red"
     }
@@ -62,8 +62,8 @@ Rectangle {
     Flickable {
         id:                   settingsFlickable
         anchors.fill:         parent
-        anchors.topMargin:    UtilScript.pt(UIHelper.screenDpi, 16)
-        anchors.bottomMargin: UtilScript.pt(UIHelper.screenDpi, 16)
+        anchors.topMargin:    UtilScript.dp(UIHelper.screenDpi, 16)
+        anchors.bottomMargin: UtilScript.dp(UIHelper.screenDpi, 16)
         contentWidth:         settingsLayout.width
         contentHeight:        settingsLayout.height
         clip:                 true
@@ -75,38 +75,38 @@ Rectangle {
         ColumnLayout {
             id:      settingsLayout
             width:   settingsFlickable.width
-            spacing: UtilScript.pt(UIHelper.screenDpi, 16)
+            spacing: UtilScript.dp(UIHelper.screenDpi, 16)
 
             Text {
-                leftPadding:         UtilScript.pt(UIHelper.screenDpi, 16)
-                rightPadding:        UtilScript.pt(UIHelper.screenDpi, 16)
+                leftPadding:         UtilScript.dp(UIHelper.screenDpi, 16)
+                rightPadding:        UtilScript.dp(UIHelper.screenDpi, 16)
                 text:                qsTr("You can see the location of trusted friends, if they also treat you as a trusted friend, and they <b>can see your location</b>.")
                 color:               UIHelper.darkTheme ? "white"     : "black"
                 linkColor:           UIHelper.darkTheme ? "lightblue" : "blue"
-                font.pointSize:      16
+                font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 16)
                 font.family:         "Helvetica"
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment:   Text.AlignVCenter
                 wrapMode:            Text.Wrap
                 fontSizeMode:        Text.Fit
-                minimumPointSize:    8
+                minimumPixelSize:    UtilScript.dp(UIHelper.screenDpi, 8)
                 textFormat:          Text.StyledText
                 Layout.fillWidth:    true
                 Layout.alignment:    Qt.AlignVCenter
             }
 
             Text {
-                leftPadding:         UtilScript.pt(UIHelper.screenDpi, 16)
-                rightPadding:        UtilScript.pt(UIHelper.screenDpi, 16)
+                leftPadding:         UtilScript.dp(UIHelper.screenDpi, 16)
+                rightPadding:        UtilScript.dp(UIHelper.screenDpi, 16)
                 text:                textText(VKHelper.maxTrustedFriendsCount)
                 color:               UIHelper.darkTheme ? "white" : "black"
-                font.pointSize:      16
+                font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 16)
                 font.family:         "Helvetica"
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment:   Text.AlignVCenter
                 wrapMode:            Text.Wrap
                 fontSizeMode:        Text.Fit
-                minimumPointSize:    8
+                minimumPixelSize:    UtilScript.dp(UIHelper.screenDpi, 8)
                 Layout.fillWidth:    true
                 Layout.alignment:    Qt.AlignVCenter
 
@@ -120,8 +120,8 @@ Rectangle {
             }
 
             VKButton {
-                implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 280)
-                implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 64)
+                implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
+                implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
                 text:             qsTr("Trusted friends list")
                 enabled:          VKHelper.friendsCount > 0 && VKHelper.maxTrustedFriendsCount > 0
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -148,35 +148,35 @@ Rectangle {
             }
 
             Text {
-                leftPadding:         UtilScript.pt(UIHelper.screenDpi, 16)
-                rightPadding:        UtilScript.pt(UIHelper.screenDpi, 16)
+                leftPadding:         UtilScript.dp(UIHelper.screenDpi, 16)
+                rightPadding:        UtilScript.dp(UIHelper.screenDpi, 16)
                 text:                qsTr("You can see the location of tracked friends, if they treat you as a trusted friend, but they <b>cannot see your location</b>.")
                 color:               UIHelper.darkTheme ? "white"     : "black"
                 linkColor:           UIHelper.darkTheme ? "lightblue" : "blue"
-                font.pointSize:      16
+                font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 16)
                 font.family:         "Helvetica"
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment:   Text.AlignVCenter
                 wrapMode:            Text.Wrap
                 fontSizeMode:        Text.Fit
-                minimumPointSize:    8
+                minimumPixelSize:    UtilScript.dp(UIHelper.screenDpi, 8)
                 textFormat:          Text.StyledText
                 Layout.fillWidth:    true
                 Layout.alignment:    Qt.AlignVCenter
             }
 
             Text {
-                leftPadding:         UtilScript.pt(UIHelper.screenDpi, 16)
-                rightPadding:        UtilScript.pt(UIHelper.screenDpi, 16)
+                leftPadding:         UtilScript.dp(UIHelper.screenDpi, 16)
+                rightPadding:        UtilScript.dp(UIHelper.screenDpi, 16)
                 text:                textText(VKHelper.maxTrackedFriendsCount)
                 color:               UIHelper.darkTheme ? "white" : "black"
-                font.pointSize:      16
+                font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 16)
                 font.family:         "Helvetica"
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment:   Text.AlignVCenter
                 wrapMode:            Text.Wrap
                 fontSizeMode:        Text.Fit
-                minimumPointSize:    8
+                minimumPixelSize:    UtilScript.dp(UIHelper.screenDpi, 8)
                 Layout.fillWidth:    true
                 Layout.alignment:    Qt.AlignVCenter
 
@@ -190,8 +190,8 @@ Rectangle {
             }
 
             VKButton {
-                implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 280)
-                implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 64)
+                implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
+                implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
                 text:             qsTr("Tracked friends list")
                 enabled:          VKHelper.friendsCount > 0 && VKHelper.maxTrackedFriendsCount > 0
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -218,8 +218,8 @@ Rectangle {
             }
 
             VKButton {
-                implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 280)
-                implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 64)
+                implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
+                implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
                 text:             buttonText(mainWindow.configuredTheme)
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
@@ -243,8 +243,8 @@ Rectangle {
             }
 
             VKButton {
-                implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 280)
-                implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 64)
+                implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
+                implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
                 text:             qsTr("Ad privacy settings")
                 enabled:          !mainWindow.disableAds
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -255,8 +255,8 @@ Rectangle {
             }
 
             VKButton {
-                implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 280)
-                implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 64)
+                implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
+                implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
                 text:             qsTr("Additional settings")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
@@ -266,8 +266,8 @@ Rectangle {
             }
 
             VKButton {
-                implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 280)
-                implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 64)
+                implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
+                implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
                 text:             qsTr("Store")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
@@ -289,8 +289,8 @@ Rectangle {
             }
 
             VKButton {
-                implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 280)
-                implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 64)
+                implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
+                implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
                 text:             qsTr("Support")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
@@ -306,8 +306,8 @@ Rectangle {
             }
 
             VKButton {
-                implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 280)
-                implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 64)
+                implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
+                implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
                 text:             qsTr("Join VKGeo Friends on Map group")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
@@ -323,8 +323,8 @@ Rectangle {
             }
 
             VKButton {
-                implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 280)
-                implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 64)
+                implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
+                implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
                 text:             qsTr("View my VK profile")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
@@ -351,8 +351,8 @@ Rectangle {
             }
 
             VKButton {
-                implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 280)
-                implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 64)
+                implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
+                implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
                 text:             qsTr("Log out of VK")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 

@@ -28,8 +28,8 @@ Page {
     Flickable {
         id:                   storeFlickable
         anchors.fill:         parent
-        anchors.topMargin:    UtilScript.pt(UIHelper.screenDpi, 16)
-        anchors.bottomMargin: UtilScript.pt(UIHelper.screenDpi, 16)
+        anchors.topMargin:    UtilScript.dp(UIHelper.screenDpi, 16)
+        anchors.bottomMargin: UtilScript.dp(UIHelper.screenDpi, 16)
         contentWidth:         storeLayout.width
         contentHeight:        storeLayout.height
         clip:                 true
@@ -41,40 +41,40 @@ Page {
         ColumnLayout {
             id:      storeLayout
             width:   storeFlickable.width
-            spacing: UtilScript.pt(UIHelper.screenDpi, 16)
+            spacing: UtilScript.dp(UIHelper.screenDpi, 16)
 
             Rectangle {
-                implicitHeight:     UtilScript.pt(UIHelper.screenDpi, 64)
+                implicitHeight:     UtilScript.dp(UIHelper.screenDpi, 64)
                 color:              UIHelper.darkTheme ? "midnightblue" : "lightsteelblue"
-                radius:             UtilScript.pt(UIHelper.screenDpi, 8)
+                radius:             UtilScript.dp(UIHelper.screenDpi, 8)
                 visible:            !mainWindow.enableTrackedFriends
-                Layout.leftMargin:  UtilScript.pt(UIHelper.screenDpi, 16)
-                Layout.rightMargin: UtilScript.pt(UIHelper.screenDpi, 16)
+                Layout.leftMargin:  UtilScript.dp(UIHelper.screenDpi, 16)
+                Layout.rightMargin: UtilScript.dp(UIHelper.screenDpi, 16)
                 Layout.fillWidth:   true
                 Layout.alignment:   Qt.AlignVCenter
 
                 RowLayout {
                     anchors.fill:    parent
-                    anchors.margins: UtilScript.pt(UIHelper.screenDpi, 16)
-                    spacing:         UtilScript.pt(UIHelper.screenDpi, 4)
+                    anchors.margins: UtilScript.dp(UIHelper.screenDpi, 16)
+                    spacing:         UtilScript.dp(UIHelper.screenDpi, 4)
 
                     Text {
                         text:                qsTr("Tracked friends")
                         color:               UIHelper.darkTheme ? "white" : "black"
-                        font.pointSize:      16
+                        font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 16)
                         font.family:         "Helvetica"
                         horizontalAlignment: Text.AlignLeft
                         verticalAlignment:   Text.AlignVCenter
                         wrapMode:            Text.Wrap
                         fontSizeMode:        Text.Fit
-                        minimumPointSize:    8
+                        minimumPixelSize:    UtilScript.dp(UIHelper.screenDpi, 8)
                         Layout.fillWidth:    true
                         Layout.fillHeight:   true
                     }
 
                     VKButton {
-                        implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 80)
-                        implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 32)
+                        implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 80)
+                        implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 32)
                         text:             store.getPrice(trackedFriendsProduct.status,
                                                          trackedFriendsProduct.price)
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -87,37 +87,37 @@ Page {
             }
 
             Rectangle {
-                implicitHeight:     UtilScript.pt(UIHelper.screenDpi, 64)
+                implicitHeight:     UtilScript.dp(UIHelper.screenDpi, 64)
                 color:              UIHelper.darkTheme ? "midnightblue" : "lightsteelblue"
-                radius:             UtilScript.pt(UIHelper.screenDpi, 8)
+                radius:             UtilScript.dp(UIHelper.screenDpi, 8)
                 visible:            !mainWindow.increaseTrackingLimits
-                Layout.leftMargin:  UtilScript.pt(UIHelper.screenDpi, 16)
-                Layout.rightMargin: UtilScript.pt(UIHelper.screenDpi, 16)
+                Layout.leftMargin:  UtilScript.dp(UIHelper.screenDpi, 16)
+                Layout.rightMargin: UtilScript.dp(UIHelper.screenDpi, 16)
                 Layout.fillWidth:   true
                 Layout.alignment:   Qt.AlignVCenter
 
                 RowLayout {
                     anchors.fill:    parent
-                    anchors.margins: UtilScript.pt(UIHelper.screenDpi, 16)
-                    spacing:         UtilScript.pt(UIHelper.screenDpi, 4)
+                    anchors.margins: UtilScript.dp(UIHelper.screenDpi, 16)
+                    spacing:         UtilScript.dp(UIHelper.screenDpi, 4)
 
                     Text {
                         text:                qsTr("Tracking limits x 3")
                         color:               UIHelper.darkTheme ? "white" : "black"
-                        font.pointSize:      16
+                        font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 16)
                         font.family:         "Helvetica"
                         horizontalAlignment: Text.AlignLeft
                         verticalAlignment:   Text.AlignVCenter
                         wrapMode:            Text.Wrap
                         fontSizeMode:        Text.Fit
-                        minimumPointSize:    8
+                        minimumPixelSize:    UtilScript.dp(UIHelper.screenDpi, 8)
                         Layout.fillWidth:    true
                         Layout.fillHeight:   true
                     }
 
                     VKButton {
-                        implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 80)
-                        implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 32)
+                        implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 80)
+                        implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 32)
                         text:             store.getPrice(increasedLimitsProduct.status,
                                                          increasedLimitsProduct.price)
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -130,36 +130,36 @@ Page {
             }
 
             Rectangle {
-                implicitHeight:     UtilScript.pt(UIHelper.screenDpi, 64)
+                implicitHeight:     UtilScript.dp(UIHelper.screenDpi, 64)
                 color:              UIHelper.darkTheme ? "midnightblue" : "lightsteelblue"
-                radius:             UtilScript.pt(UIHelper.screenDpi, 8)
-                Layout.leftMargin:  UtilScript.pt(UIHelper.screenDpi, 16)
-                Layout.rightMargin: UtilScript.pt(UIHelper.screenDpi, 16)
+                radius:             UtilScript.dp(UIHelper.screenDpi, 8)
+                Layout.leftMargin:  UtilScript.dp(UIHelper.screenDpi, 16)
+                Layout.rightMargin: UtilScript.dp(UIHelper.screenDpi, 16)
                 Layout.fillWidth:   true
                 Layout.alignment:   Qt.AlignVCenter
 
                 RowLayout {
                     anchors.fill:    parent
-                    anchors.margins: UtilScript.pt(UIHelper.screenDpi, 16)
-                    spacing:         UtilScript.pt(UIHelper.screenDpi, 4)
+                    anchors.margins: UtilScript.dp(UIHelper.screenDpi, 16)
+                    spacing:         UtilScript.dp(UIHelper.screenDpi, 4)
 
                     Text {
                         text:                qsTr("Restore purchases")
                         color:               UIHelper.darkTheme ? "white" : "black"
-                        font.pointSize:      16
+                        font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 16)
                         font.family:         "Helvetica"
                         horizontalAlignment: Text.AlignLeft
                         verticalAlignment:   Text.AlignVCenter
                         wrapMode:            Text.Wrap
                         fontSizeMode:        Text.Fit
-                        minimumPointSize:    8
+                        minimumPixelSize:    UtilScript.dp(UIHelper.screenDpi, 8)
                         Layout.fillWidth:    true
                         Layout.fillHeight:   true
                     }
 
                     VKButton {
-                        implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 80)
-                        implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 32)
+                        implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 80)
+                        implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 32)
                         text:             qsTr("OK")
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 

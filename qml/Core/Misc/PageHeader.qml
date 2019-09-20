@@ -27,20 +27,20 @@ ColumnLayout {
     }
 
     Rectangle {
-        implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 48)
+        implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 48)
         color:            "steelblue"
         Layout.fillWidth: true
         Layout.alignment: Qt.AlignVCenter
 
         RowLayout {
             anchors.fill:        parent
-            anchors.leftMargin:  UtilScript.pt(UIHelper.screenDpi, 8)
-            anchors.rightMargin: UtilScript.pt(UIHelper.screenDpi, 8)
-            spacing:             UtilScript.pt(UIHelper.screenDpi, 4)
+            anchors.leftMargin:  UtilScript.dp(UIHelper.screenDpi, 8)
+            anchors.rightMargin: UtilScript.dp(UIHelper.screenDpi, 8)
+            spacing:             UtilScript.dp(UIHelper.screenDpi, 4)
 
             VKBackButton {
-                implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 32)
-                implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 32)
+                implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 32)
+                implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 32)
                 visible:          pageHeader.backButtonVisible
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
@@ -50,7 +50,7 @@ ColumnLayout {
             }
 
             Rectangle {
-                implicitWidth:     UtilScript.pt(UIHelper.screenDpi, 32)
+                implicitWidth:     UtilScript.dp(UIHelper.screenDpi, 32)
                 color:             "transparent"
                 visible:           !pageHeader.backButtonVisible
                 Layout.fillHeight: true
@@ -60,21 +60,21 @@ ColumnLayout {
             Text {
                 text:                pageHeader.text
                 color:               "white"
-                font.pointSize:      16
+                font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 16)
                 font.family:         "Helvetica"
                 font.bold:           true
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment:   Text.AlignVCenter
                 wrapMode:            Text.Wrap
                 fontSizeMode:        Text.Fit
-                minimumPointSize:    8
+                minimumPixelSize:    UtilScript.dp(UIHelper.screenDpi, 8)
                 Layout.fillWidth:    true
                 Layout.fillHeight:   true
             }
 
             VKDoneButton {
-                implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 32)
-                implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 32)
+                implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 32)
+                implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 32)
                 visible:          pageHeader.doneButtonVisible
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
@@ -84,7 +84,7 @@ ColumnLayout {
             }
 
             Rectangle {
-                implicitWidth:     UtilScript.pt(UIHelper.screenDpi, 32)
+                implicitWidth:     UtilScript.dp(UIHelper.screenDpi, 32)
                 color:             "transparent"
                 visible:           !pageHeader.doneButtonVisible
                 Layout.fillHeight: true

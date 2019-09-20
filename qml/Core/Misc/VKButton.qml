@@ -5,7 +5,7 @@ import "../../Util.js" as UtilScript
 Rectangle {
     id:     vkButton
     color:  enabled ? "steelblue" : "gray"
-    radius: UtilScript.pt(UIHelper.screenDpi, 8)
+    radius: UtilScript.dp(UIHelper.screenDpi, 8)
 
     property string text: ""
 
@@ -13,17 +13,17 @@ Rectangle {
 
     Text {
         anchors.fill:        parent
-        anchors.margins:     UtilScript.pt(UIHelper.screenDpi, 2)
+        anchors.margins:     UtilScript.dp(UIHelper.screenDpi, 2)
         text:                vkButton.text
         color:               "white"
-        font.pointSize:      16
+        font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 16)
         font.family:         "Helvetica"
         font.bold:           true
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment:   Text.AlignVCenter
         wrapMode:            Text.NoWrap
         fontSizeMode:        Text.Fit
-        minimumPointSize:    8
+        minimumPixelSize:    UtilScript.dp(UIHelper.screenDpi, 8)
 
         MouseArea {
             anchors.fill: parent

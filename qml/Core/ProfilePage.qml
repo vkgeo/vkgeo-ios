@@ -50,8 +50,8 @@ Page {
     Flickable {
         id:                   profileFlickable
         anchors.fill:         parent
-        anchors.topMargin:    UtilScript.pt(UIHelper.screenDpi, 16)
-        anchors.bottomMargin: UtilScript.pt(UIHelper.screenDpi, 16)
+        anchors.topMargin:    UtilScript.dp(UIHelper.screenDpi, 16)
+        anchors.bottomMargin: UtilScript.dp(UIHelper.screenDpi, 16)
         contentWidth:         profileLayout.width
         contentHeight:        profileLayout.height
         clip:                 true
@@ -63,11 +63,11 @@ Page {
         ColumnLayout {
             id:      profileLayout
             width:   profileFlickable.width
-            spacing: UtilScript.pt(UIHelper.screenDpi, 16)
+            spacing: UtilScript.dp(UIHelper.screenDpi, 16)
 
             Rectangle {
-                implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 128)
-                implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 128)
+                implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 128)
+                implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 128)
                 color:            "transparent"
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
@@ -96,8 +96,8 @@ Page {
                     x:        opacityMask.width  / 2 + opacityMask.width  / 2 * Math.sin(angle) - width  / 2
                     y:        opacityMask.height / 2 + opacityMask.height / 2 * Math.cos(angle) - height / 2
                     z:        1
-                    width:    UtilScript.pt(UIHelper.screenDpi, 16)
-                    height:   UtilScript.pt(UIHelper.screenDpi, 16)
+                    width:    UtilScript.dp(UIHelper.screenDpi, 16)
+                    height:   UtilScript.dp(UIHelper.screenDpi, 16)
                     source:   "qrc:/resources/images/main/avatar_online_label.png"
                     fillMode: Image.PreserveAspectFit
                     visible:  profilePage.online
@@ -109,8 +109,8 @@ Page {
                     x:        opacityMask.width  / 2 + opacityMask.width  / 2 * Math.sin(angle) - width  / 2
                     y:        opacityMask.height / 2 + opacityMask.height / 2 * Math.cos(angle) - height / 2
                     z:        1
-                    width:    UtilScript.pt(UIHelper.screenDpi, 16)
-                    height:   UtilScript.pt(UIHelper.screenDpi, 24)
+                    width:    UtilScript.dp(UIHelper.screenDpi, 16)
+                    height:   UtilScript.dp(UIHelper.screenDpi, 24)
                     source:   imageSource(profilePage.batteryStatus, profilePage.batteryLevel)
                     fillMode: Image.PreserveAspectFit
                     visible:  imageVisible(profilePage.batteryStatus)
@@ -152,35 +152,35 @@ Page {
             }
 
             Text {
-                leftPadding:         UtilScript.pt(UIHelper.screenDpi, 16)
-                rightPadding:        UtilScript.pt(UIHelper.screenDpi, 16)
+                leftPadding:         UtilScript.dp(UIHelper.screenDpi, 16)
+                rightPadding:        UtilScript.dp(UIHelper.screenDpi, 16)
                 text:                "%1 %2".arg(profilePage.firstName).arg(profilePage.lastName)
                 color:               UIHelper.darkTheme ? "white" : "black"
-                font.pointSize:      24
+                font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 24)
                 font.family:         "Helvetica"
                 font.bold:           true
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment:   Text.AlignVCenter
                 wrapMode:            Text.Wrap
                 fontSizeMode:        Text.Fit
-                minimumPointSize:    8
+                minimumPixelSize:    UtilScript.dp(UIHelper.screenDpi, 8)
                 textFormat:          Text.PlainText
                 Layout.fillWidth:    true
                 Layout.alignment:    Qt.AlignVCenter
             }
 
             Text {
-                leftPadding:         UtilScript.pt(UIHelper.screenDpi, 16)
-                rightPadding:        UtilScript.pt(UIHelper.screenDpi, 16)
+                leftPadding:         UtilScript.dp(UIHelper.screenDpi, 16)
+                rightPadding:        UtilScript.dp(UIHelper.screenDpi, 16)
                 text:                profilePage.status
                 color:               UIHelper.darkTheme ? "white" : "black"
-                font.pointSize:      16
+                font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 16)
                 font.family:         "Helvetica"
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment:   Text.AlignVCenter
                 wrapMode:            Text.Wrap
                 fontSizeMode:        Text.Fit
-                minimumPointSize:    8
+                minimumPixelSize:    UtilScript.dp(UIHelper.screenDpi, 8)
                 textFormat:          Text.PlainText
                 visible:             profilePage.status !== ""
                 Layout.fillWidth:    true
@@ -188,27 +188,27 @@ Page {
             }
 
             Text {
-                leftPadding:         UtilScript.pt(UIHelper.screenDpi, 16)
-                rightPadding:        UtilScript.pt(UIHelper.screenDpi, 16)
+                leftPadding:         UtilScript.dp(UIHelper.screenDpi, 16)
+                rightPadding:        UtilScript.dp(UIHelper.screenDpi, 16)
                 text:                qsTr("Last update at: %1").arg((new Date(profilePage.updateTime * 1000))
                                                                          .toLocaleString())
                 color:               UIHelper.darkTheme ? "white" : "black"
-                font.pointSize:      16
+                font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 16)
                 font.family:         "Helvetica"
                 font.italic:         true
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment:   Text.AlignVCenter
                 wrapMode:            Text.Wrap
                 fontSizeMode:        Text.Fit
-                minimumPointSize:    8
+                minimumPixelSize:    UtilScript.dp(UIHelper.screenDpi, 8)
                 visible:             profilePage.dataAvailable
                 Layout.fillWidth:    true
                 Layout.alignment:    Qt.AlignVCenter
             }
 
             VKButton {
-                implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 280)
-                implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 64)
+                implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
+                implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
                 text:             qsTr("Locate on map")
                 visible:          profilePage.locationAvailable
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -221,8 +221,8 @@ Page {
             }
 
             VKButton {
-                implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 280)
-                implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 64)
+                implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
+                implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
                 text:             qsTr("Get directions")
                 visible:          profilePage.locationAvailable
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -235,8 +235,8 @@ Page {
             }
 
             VKButton {
-                implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 280)
-                implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 64)
+                implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
+                implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
                 text:             qsTr("Open profile")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 

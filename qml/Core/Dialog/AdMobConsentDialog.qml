@@ -9,7 +9,7 @@ import "../../Util.js" as UtilScript
 Popup {
     id:               adMobConsentDialog
     anchors.centerIn: Overlay.overlay
-    padding:          UtilScript.pt(UIHelper.screenDpi, 8)
+    padding:          UtilScript.dp(UIHelper.screenDpi, 8)
     modal:            true
     closePolicy:      Popup.NoAutoClose
 
@@ -18,31 +18,31 @@ Popup {
 
     background: Rectangle {
         color:        UIHelper.darkTheme ? "black" : "white"
-        radius:       UtilScript.pt(UIHelper.screenDpi, 8)
-        border.width: UtilScript.pt(UIHelper.screenDpi, 2)
+        radius:       UtilScript.dp(UIHelper.screenDpi, 8)
+        border.width: UtilScript.dp(UIHelper.screenDpi, 2)
         border.color: "steelblue"
     }
 
     contentItem: Rectangle {
-        implicitWidth:  UtilScript.pt(UIHelper.screenDpi, 300)
-        implicitHeight: UtilScript.pt(UIHelper.screenDpi, 300)
+        implicitWidth:  UtilScript.dp(UIHelper.screenDpi, 300)
+        implicitHeight: UtilScript.dp(UIHelper.screenDpi, 300)
         color:          "transparent"
 
         ColumnLayout {
             anchors.fill: parent
-            spacing:      UtilScript.pt(UIHelper.screenDpi, 8)
+            spacing:      UtilScript.dp(UIHelper.screenDpi, 8)
 
             Text {
                 text:                qsTr("We keep this app free by showing ads. Ad network will <a href=\"https://policies.google.com/technologies/ads\">collect data and use a unique identifier on your device</a> to show you ads. <b>Do you allow to use your data to tailor ads for you?</b>")
                 color:               UIHelper.darkTheme ? "white"     : "black"
                 linkColor:           UIHelper.darkTheme ? "lightblue" : "blue"
-                font.pointSize:      16
+                font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 16)
                 font.family:         "Helvetica"
                 horizontalAlignment: Text.AlignJustify
                 verticalAlignment:   Text.AlignVCenter
                 wrapMode:            Text.Wrap
                 fontSizeMode:        Text.Fit
-                minimumPointSize:    8
+                minimumPixelSize:    UtilScript.dp(UIHelper.screenDpi, 8)
                 textFormat:          Text.StyledText
                 Layout.fillWidth:    true
                 Layout.fillHeight:   true
@@ -53,8 +53,8 @@ Popup {
             }
 
             VKButton {
-                implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 280)
-                implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 64)
+                implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
+                implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
                 text:             qsTr("Yes, show me relevant ads")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
@@ -65,8 +65,8 @@ Popup {
             }
 
             VKButton {
-                implicitWidth:    UtilScript.pt(UIHelper.screenDpi, 280)
-                implicitHeight:   UtilScript.pt(UIHelper.screenDpi, 64)
+                implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
+                implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
                 text:             qsTr("No, show me ads that are less relevant")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
