@@ -7,8 +7,13 @@
 
 UIHelper::UIHelper(QObject *parent) : QObject(parent)
 {
-    DarkTheme       = false;
     ConfiguredTheme = UITheme::ThemeAuto;
+
+    if (@available(iOS 13, *)) {
+        DarkTheme = (UITraitCollection.currentTraitCollection.userInterfaceStyle == UIUserInterfaceStyleDark);
+    } else {
+        DarkTheme = false;
+    }
 }
 
 UIHelper &UIHelper::GetInstance()
@@ -46,6 +51,8 @@ void UIHelper::setConfiguredTheme(int theme)
             dark_theme = false;
         } else if (ConfiguredTheme == UITheme::ThemeDark) {
             dark_theme = true;
+        } else if (@available(iOS 13, *)) {
+            dark_theme = (UITraitCollection.currentTraitCollection.userInterfaceStyle == UIUserInterfaceStyleDark);
         } else {
             dark_theme = false;
         }
@@ -89,5 +96,25 @@ void UIHelper::sendInvitation(const QString &text)
         [root_view_controller presentViewController:activity_view_controller animated:YES completion:nil];
     } else {
         assert(0);
+    }
+}
+
+void UIHelper::handleTraitCollectionUpdate()
+{
+    if (ConfiguredTheme != UITheme::ThemeLight &&
+        ConfiguredTheme != UITheme::ThemeDark) {
+        bool dark_theme;
+
+        if (@available(iOS 13, *)) {
+            dark_theme = (UITraitCollection.currentTraitCollection.userInterfaceStyle == UIUserInterfaceStyleDark);
+        } else {
+            dark_theme = false;
+        }
+
+        if (DarkTheme != dark_theme) {
+            DarkTheme = dark_theme;
+
+            emit darkThemeChanged(DarkTheme);
+        }
     }
 }

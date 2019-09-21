@@ -49,6 +49,8 @@ public:
 
     Q_INVOKABLE void sendInvitation(const QString &text);
 
+    void handleTraitCollectionUpdate();
+
 signals:
     void darkThemeChanged(bool darkTheme);
     void screenDpiChanged(int screenDpi);

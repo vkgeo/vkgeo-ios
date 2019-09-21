@@ -10,6 +10,7 @@ SOURCES += src/main.cpp
 
 OBJECTIVE_SOURCES += \
     src/vkgeoapplicationdelegate.mm \
+    src/vkgeoviewcontroller.mm \
     src/locationmanagerdelegate.mm \
     src/admobhelper.mm \
     src/storehelper.mm \
