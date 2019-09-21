@@ -12,7 +12,7 @@
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection API_AVAILABLE(ios(8))
 {
-    [super traitCollectionDidChange: previousTraitCollection];
+    [super traitCollectionDidChange:previousTraitCollection];
 
     UIHelper::GetInstance().handleTraitCollectionUpdate();
 }
