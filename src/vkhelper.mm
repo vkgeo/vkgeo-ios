@@ -560,80 +560,82 @@ void VKHelper::setAuthState(int state)
 
         emit authStateChanged(AuthState);
 
-        if (AuthState == VKAuthState::StateAuthorized) {
-            VKAccessToken *token = [VKSdk accessToken];
+        if (AuthState == VKAuthState::StateNotAuthorized) {
+            Cleanup();
+        }
+    }
 
-            if (token != nil && token.localUser != nil && token.localUser.id != nil) {
-                QString user_id = QString::fromNSString(token.localUser.id.stringValue);
+    if (AuthState == VKAuthState::StateAuthorized) {
+        VKAccessToken *token = [VKSdk accessToken];
 
-                if (UserId != user_id) {
-                    UserId = user_id;
+        if (token != nil && token.localUser != nil && token.localUser.id != nil) {
+            QString user_id = QString::fromNSString(token.localUser.id.stringValue);
 
-                    emit userIdChanged(UserId);
-                }
-            } else if (UserId != QStringLiteral("")) {
-                UserId = QStringLiteral("");
+            if (UserId != user_id) {
+                UserId = user_id;
 
                 emit userIdChanged(UserId);
             }
+        } else if (UserId != QStringLiteral("")) {
+            UserId = QStringLiteral("");
 
-            if (token != nil && token.localUser != nil && token.localUser.first_name != nil) {
-                QString first_name = QString::fromNSString(token.localUser.first_name);
+            emit userIdChanged(UserId);
+        }
 
-                if (FirstName != first_name) {
-                    FirstName = first_name;
+        if (token != nil && token.localUser != nil && token.localUser.first_name != nil) {
+            QString first_name = QString::fromNSString(token.localUser.first_name);
 
-                    emit firstNameChanged(FirstName);
-                }
-            } else if (FirstName != QStringLiteral("")) {
-                FirstName = QStringLiteral("");
+            if (FirstName != first_name) {
+                FirstName = first_name;
 
                 emit firstNameChanged(FirstName);
             }
+        } else if (FirstName != QStringLiteral("")) {
+            FirstName = QStringLiteral("");
 
-            if (token != nil && token.localUser != nil && token.localUser.last_name != nil) {
-                QString last_name = QString::fromNSString(token.localUser.last_name);
+            emit firstNameChanged(FirstName);
+        }
 
-                if (LastName != last_name) {
-                    LastName = last_name;
+        if (token != nil && token.localUser != nil && token.localUser.last_name != nil) {
+            QString last_name = QString::fromNSString(token.localUser.last_name);
 
-                    emit lastNameChanged(LastName);
-                }
-            } else if (LastName != QStringLiteral("")) {
-                LastName = QStringLiteral("");
+            if (LastName != last_name) {
+                LastName = last_name;
 
                 emit lastNameChanged(LastName);
             }
+        } else if (LastName != QStringLiteral("")) {
+            LastName = QStringLiteral("");
 
-            if (token != nil && token.localUser != nil && token.localUser.photo_100 != nil) {
-                QString photo_url = QString::fromNSString(token.localUser.photo_100);
+            emit lastNameChanged(LastName);
+        }
 
-                if (PhotoUrl != photo_url) {
-                    PhotoUrl = photo_url;
+        if (token != nil && token.localUser != nil && token.localUser.photo_100 != nil) {
+            QString photo_url = QString::fromNSString(token.localUser.photo_100);
 
-                    emit photoUrlChanged(PhotoUrl);
-                }
-            } else if (PhotoUrl != DEFAULT_PHOTO_URL) {
-                PhotoUrl = DEFAULT_PHOTO_URL;
+            if (PhotoUrl != photo_url) {
+                PhotoUrl = photo_url;
 
                 emit photoUrlChanged(PhotoUrl);
             }
+        } else if (PhotoUrl != DEFAULT_PHOTO_URL) {
+            PhotoUrl = DEFAULT_PHOTO_URL;
 
-            if (token != nil && token.localUser != nil && token.localUser.photo_200 != nil) {
-                QString big_photo_url = QString::fromNSString(token.localUser.photo_200);
+            emit photoUrlChanged(PhotoUrl);
+        }
 
-                if (BigPhotoUrl != big_photo_url) {
-                    BigPhotoUrl = big_photo_url;
+        if (token != nil && token.localUser != nil && token.localUser.photo_200 != nil) {
+            QString big_photo_url = QString::fromNSString(token.localUser.photo_200);
 
-                    emit bigPhotoUrlChanged(BigPhotoUrl);
-                }
-            } else if (BigPhotoUrl != DEFAULT_PHOTO_URL) {
-                BigPhotoUrl = DEFAULT_PHOTO_URL;
+            if (BigPhotoUrl != big_photo_url) {
+                BigPhotoUrl = big_photo_url;
 
                 emit bigPhotoUrlChanged(BigPhotoUrl);
             }
-        } else if (AuthState == VKAuthState::StateNotAuthorized) {
-            Cleanup();
+        } else if (BigPhotoUrl != DEFAULT_PHOTO_URL) {
+            BigPhotoUrl = DEFAULT_PHOTO_URL;
+
+            emit bigPhotoUrlChanged(BigPhotoUrl);
         }
     }
 }
