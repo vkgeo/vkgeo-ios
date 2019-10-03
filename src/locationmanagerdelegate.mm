@@ -1,6 +1,7 @@
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 
+#include <cstdlib>
 #include <ctime>
 
 #include <QtCore/QtGlobal>
@@ -30,7 +31,7 @@ static qint64 elapsedNanos()
             return 0;
         }
     } else {
-        assert(0);
+        abort();
     }
 }
 
@@ -78,7 +79,7 @@ static qint64 elapsedNanos()
                 }
             }
         } else {
-            assert(0);
+            abort();
         }
 
         [self performSelector:@selector(adjustDesiredAccuracy) withObject:nil afterDelay:LOCATION_ACCURACY_ADJUSTMENT_INTERVAL];
@@ -130,7 +131,7 @@ static qint64 elapsedNanos()
                 CentralLocationChanged = true;
             }
         } else {
-            assert(0);
+            abort();
         }
     }
 }
@@ -149,7 +150,7 @@ static qint64 elapsedNanos()
             if (@available(iOS 6, *)) {
                 [self locationManager:LocationManager didUpdateLocations:@[location]];
             } else {
-                assert(0);
+                abort();
             }
         }
     }
@@ -190,7 +191,7 @@ static qint64 elapsedNanos()
             }
         }
     } else {
-        assert(0);
+        abort();
     }
 }
 

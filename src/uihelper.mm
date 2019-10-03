@@ -1,5 +1,7 @@
 #import <UIKit/UIKit.h>
 
+#include <cstdlib>
+
 #include <QtCore/QtGlobal>
 #include <QtCore/QtMath>
 
@@ -70,7 +72,7 @@ QString UIHelper::getAppSettingsUrl()
     if (@available(iOS 8, *)) {
         return QString::fromNSString(UIApplicationOpenSettingsURLString);
     } else {
-        assert(0);
+        abort();
     }
 }
 
@@ -95,7 +97,7 @@ void UIHelper::sendInvitation(const QString &text)
 
         [root_view_controller presentViewController:activity_view_controller animated:YES completion:nil];
     } else {
-        assert(0);
+        abort();
     }
 }
 

@@ -1,5 +1,7 @@
 #import <UserNotifications/UserNotifications.h>
 
+#include <cstdlib>
+
 #include <QtCore/QDebug>
 
 #include "notificationhelper.h"
@@ -16,7 +18,7 @@ NotificationHelper::NotificationHelper(QObject *parent) : QObject(parent)
             }
         }];
     } else {
-        assert(0);
+        abort();
     }
 }
 
@@ -52,7 +54,7 @@ void NotificationHelper::showNotification(const QString &id, const QString &titl
             }
         }];
     } else {
-        assert(0);
+        abort();
     }
 }
 
@@ -67,6 +69,6 @@ void NotificationHelper::hideNotification(const QString &id)
             }
         }];
     } else {
-        assert(0);
+        abort();
     }
 }
