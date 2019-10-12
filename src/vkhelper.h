@@ -6,6 +6,7 @@
 #include <QtCore/QString>
 #include <QtCore/QQueue>
 #include <QtCore/QVariantList>
+#include <QtCore/QSet>
 #include <QtCore/QMap>
 #include <QtCore/QVariantMap>
 #include <QtCore/QTimer>
@@ -189,25 +190,25 @@ private:
         DataUpdatedAndSent
     };
 
-    int                     CurrentDataState, AuthState, MaxTrustedFriendsCount,
-                            MaxTrackedFriendsCount, SendDataTryNumber;
-    qint64                  LastSendDataTime, LastUpdateTrackedFriendsDataTime,
-                            NextRequestQueueTimerTimeout;
-    QString                 UserId, FirstName, LastName, PhotoUrl, BigPhotoUrl,
-                            TrustedFriendsListId, TrackedFriendsListId;
-    QTimer                  RequestQueueTimer, SendDataOnUpdateTimer, SendDataTimer;
-    QQueue<QVariantMap>     RequestQueue;
-    QMap<QString, int>      ContextTracker;
+    int                 CurrentDataState, AuthState, MaxTrustedFriendsCount,
+                        MaxTrackedFriendsCount, SendDataTryNumber;
+    qint64              LastSendDataTime, LastUpdateTrackedFriendsDataTime,
+                        NextRequestQueueTimerTimeout;
+    QString             UserId, FirstName, LastName, PhotoUrl, BigPhotoUrl,
+                        TrustedFriendsListId, TrackedFriendsListId;
+    QTimer              RequestQueueTimer, SendDataOnUpdateTimer, SendDataTimer;
+    QQueue<QVariantMap> RequestQueue;
+    QMap<QString, int>  ContextTracker;
 #ifdef __OBJC__
-    QMap<VKRequest *, bool> VKRequestTracker;
+    QSet<VKRequest *>   VKRequestTracker;
 #else
-    QMap<void *, bool>      VKRequestTracker;
+    QSet<void *>        VKRequestTracker;
 #endif
-    QVariantMap             CurrentData, FriendsData, FriendsDataTmp;
+    QVariantMap         CurrentData, FriendsData, FriendsDataTmp;
 #ifdef __OBJC__
-    VKDelegate             *VKDelegateInstance;
+    VKDelegate         *VKDelegateInstance;
 #else
-    void                   *VKDelegateInstance;
+    void               *VKDelegateInstance;
 #endif
 };
 

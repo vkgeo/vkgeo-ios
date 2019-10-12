@@ -683,7 +683,7 @@ void VKHelper::handleRequestQueueTimerTimeout()
 
             VKRequest *vk_request = [VKRequest requestWithMethod:@"execute" parameters:@{@"code": execute_code.toNSString()}];
 
-            VKRequestTracker[vk_request] = true;
+            VKRequestTracker.insert(vk_request);
 
             [vk_request executeWithResultBlock:^(VKResponse *response) {
                 if (VKRequestTracker.contains(vk_request)) {
@@ -801,7 +801,7 @@ void VKHelper::Cleanup()
 
     RequestQueueTimer.stop();
 
-    for (VKRequest *vk_request : VKRequestTracker.keys()) {
+    for (VKRequest *vk_request : VKRequestTracker.values()) {
         [vk_request cancel];
     }
 
