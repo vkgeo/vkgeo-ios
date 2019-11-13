@@ -6,13 +6,13 @@
 #include <QtQml/QQmlContext>
 #include <QtQuickControls2/QQuickStyle>
 
-#include "vkgeoapplicationdelegate.h"
-#include "appinitialized.h"
 #include "admobhelper.h"
-#include "storehelper.h"
+#include "appinitialized.h"
 #include "batteryhelper.h"
-#include "uihelper.h"
 #include "notificationhelper.h"
+#include "storehelper.h"
+#include "uihelper.h"
+#include "vkgeoapplicationdelegate.h"
 #include "vkhelper.h"
 
 bool AppInitialized = false;
@@ -36,10 +36,10 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
     engine.rootContext()->setContextProperty(QStringLiteral("AdMobHelper"), &AdMobHelper::GetInstance());
-    engine.rootContext()->setContextProperty(QStringLiteral("StoreHelper"), &StoreHelper::GetInstance());
     engine.rootContext()->setContextProperty(QStringLiteral("BatteryHelper"), &BatteryHelper::GetInstance());
-    engine.rootContext()->setContextProperty(QStringLiteral("UIHelper"), &UIHelper::GetInstance());
     engine.rootContext()->setContextProperty(QStringLiteral("NotificationHelper"), &NotificationHelper::GetInstance());
+    engine.rootContext()->setContextProperty(QStringLiteral("StoreHelper"), &StoreHelper::GetInstance());
+    engine.rootContext()->setContextProperty(QStringLiteral("UIHelper"), &UIHelper::GetInstance());
     engine.rootContext()->setContextProperty(QStringLiteral("VKHelper"), &VKHelper::GetInstance());
 
     QQuickStyle::setStyle(QStringLiteral("Default"));
