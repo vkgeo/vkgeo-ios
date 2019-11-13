@@ -9,25 +9,25 @@ DEFINES += QT_DEPRECATED_WARNINGS QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII
 SOURCES += src/main.cpp
 
 OBJECTIVE_SOURCES += \
+    src/admobhelper.mm \
+    src/batteryhelper.mm \
+    src/locationmanagerdelegate.mm \
+    src/notificationhelper.mm \
+    src/storehelper.mm \
+    src/uihelper.mm \
     src/vkgeoapplicationdelegate.mm \
     src/vkgeoviewcontroller.mm \
-    src/locationmanagerdelegate.mm \
-    src/admobhelper.mm \
-    src/storehelper.mm \
-    src/batteryhelper.mm \
-    src/uihelper.mm \
-    src/notificationhelper.mm \
     src/vkhelper.mm
 
 HEADERS += \
-    src/appinitialized.h \
-    src/vkgeoapplicationdelegate.h \
-    src/locationmanagerdelegate.h \
     src/admobhelper.h \
-    src/storehelper.h \
+    src/appinitialized.h \
     src/batteryhelper.h \
-    src/uihelper.h \
+    src/locationmanagerdelegate.h \
     src/notificationhelper.h \
+    src/storehelper.h \
+    src/uihelper.h \
+    src/vkgeoapplicationdelegate.h \
     src/vkhelper.h
 
 RESOURCES += \
