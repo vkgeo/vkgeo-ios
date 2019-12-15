@@ -56,6 +56,7 @@ ios {
             -framework GoogleUtilities \
             -framework nanopb \
             -framework VKSdkFramework \
+            -framework Foundation \
             -framework UIKit \
             -framework StoreKit \
             -framework CoreLocation \
