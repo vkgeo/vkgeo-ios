@@ -1,4 +1,3 @@
-#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <GoogleMobileAds/GoogleMobileAds.h>
 
@@ -362,12 +361,6 @@ void AdMobHelper::initAds()
 void AdMobHelper::setPersonalization(bool personalized)
 {
     ShowPersonalizedAds = personalized;
-
-    if (ShowPersonalizedAds) {
-        [NSUserDefaults.standardUserDefaults removeObjectForKey:@"gad_rdp"];
-    } else {
-        [NSUserDefaults.standardUserDefaults setBool:YES forKey:@"gad_rdp"];
-    }
 
     if (Initialized) {
         [BannerViewDelegateInstance   setPersonalization:ShowPersonalizedAds];
