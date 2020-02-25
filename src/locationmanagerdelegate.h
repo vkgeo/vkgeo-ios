@@ -12,6 +12,6 @@
 
 @end
 
-#endif
+#endif // __OBJC__
 
 #endif // LOCATIONMANAGERDELEGATE_H
