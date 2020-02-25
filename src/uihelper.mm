@@ -67,7 +67,7 @@ void UIHelper::setConfiguredTheme(int theme)
     }
 }
 
-QString UIHelper::getAppSettingsUrl()
+QString UIHelper::getAppSettingsUrl() const
 {
     if (@available(iOS 8, *)) {
         return QString::fromNSString(UIApplicationOpenSettingsURLString);
@@ -76,7 +76,7 @@ QString UIHelper::getAppSettingsUrl()
     }
 }
 
-void UIHelper::sendInvitation(const QString &text)
+void UIHelper::sendInvitation(const QString &text) const
 {
     UIViewController * __block root_view_controller = nil;
 

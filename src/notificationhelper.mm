@@ -29,7 +29,7 @@ NotificationHelper &NotificationHelper::GetInstance()
     return instance;
 }
 
-void NotificationHelper::showNotification(const QString &id, const QString &title, const QString &body)
+void NotificationHelper::showNotification(const QString &id, const QString &title, const QString &body) const
 {
     NSString *ns_id    = id.toNSString();
     NSString *ns_title = title.toNSString();
@@ -58,7 +58,7 @@ void NotificationHelper::showNotification(const QString &id, const QString &titl
     }
 }
 
-void NotificationHelper::hideNotification(const QString &id)
+void NotificationHelper::hideNotification(const QString &id) const
 {
     NSString *ns_id = id.toNSString();
 

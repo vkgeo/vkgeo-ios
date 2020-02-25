@@ -401,7 +401,7 @@ void AdMobHelper::hideBannerView()
     }
 }
 
-void AdMobHelper::showInterstitial()
+void AdMobHelper::showInterstitial() const
 {
     if (Initialized) {
         [InterstitialDelegateInstance show];

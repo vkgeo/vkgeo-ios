@@ -45,9 +45,9 @@ public:
     int configuredTheme() const;
     void setConfiguredTheme(int theme);
 
-    Q_INVOKABLE QString getAppSettingsUrl();
+    Q_INVOKABLE QString getAppSettingsUrl() const;
 
-    Q_INVOKABLE void sendInvitation(const QString &text);
+    Q_INVOKABLE void sendInvitation(const QString &text) const;
 
     void handleTraitCollectionUpdate();
 

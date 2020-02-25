@@ -332,7 +332,7 @@ void VKHelper::setMaxTrackedFriendsCount(int count)
     }
 }
 
-void VKHelper::login()
+void VKHelper::login() const
 {
     [VKSdk authorize:AUTH_SCOPE];
 }
@@ -391,12 +391,12 @@ void VKHelper::updateFriends()
     }
 }
 
-QVariantMap VKHelper::getFriends()
+QVariantMap VKHelper::getFriends() const
 {
     return FriendsData;
 }
 
-QVariantList VKHelper::getFriendsList()
+QVariantList VKHelper::getFriendsList() const
 {
     QVariantList friends_list = FriendsData.values();
 
@@ -898,7 +898,7 @@ void VKHelper::ContextTrackerDelRequest(const QVariantMap &request)
     }
 }
 
-bool VKHelper::ContextHasActiveRequests(const QString &context)
+bool VKHelper::ContextHasActiveRequests(const QString &context) const
 {
     return (ContextTracker.contains(context) && ContextTracker[context] > 0);
 }

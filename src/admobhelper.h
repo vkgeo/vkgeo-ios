@@ -45,7 +45,7 @@ public:
     Q_INVOKABLE void showBannerView();
     Q_INVOKABLE void hideBannerView();
 
-    Q_INVOKABLE void showInterstitial();
+    Q_INVOKABLE void showInterstitial() const;
 
     void setInterstitialActive(bool active);
     void setBannerViewHeight(int height);

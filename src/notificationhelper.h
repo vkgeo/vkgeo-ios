@@ -21,8 +21,8 @@ public:
 
     static NotificationHelper &GetInstance();
 
-    Q_INVOKABLE void showNotification(const QString &id, const QString &title, const QString &body);
-    Q_INVOKABLE void hideNotification(const QString &id);
+    Q_INVOKABLE void showNotification(const QString &id, const QString &title, const QString &body) const;
+    Q_INVOKABLE void hideNotification(const QString &id) const;
 };
 
 #endif // NOTIFICATIONHELPER_H

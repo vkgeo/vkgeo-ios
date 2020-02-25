@@ -16,7 +16,7 @@ BatteryHelper &BatteryHelper::GetInstance()
     return instance;
 }
 
-QString BatteryHelper::getBatteryStatus()
+QString BatteryHelper::getBatteryStatus() const
 {
     UIDeviceBatteryState battery_state = UIDevice.currentDevice.batteryState;
 
@@ -30,7 +30,7 @@ QString BatteryHelper::getBatteryStatus()
     }
 }
 
-int BatteryHelper::getBatteryLevel()
+int BatteryHelper::getBatteryLevel() const
 {
     auto battery_level = static_cast<qreal>(UIDevice.currentDevice.batteryLevel);
 

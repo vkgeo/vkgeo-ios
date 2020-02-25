@@ -98,7 +98,7 @@ public:
     int maxTrackedFriendsCount() const;
     void setMaxTrackedFriendsCount(int count);
 
-    Q_INVOKABLE void login();
+    Q_INVOKABLE void login() const;
     Q_INVOKABLE void logout();
 
     Q_INVOKABLE void updateLocation(qreal latitude, qreal longitude);
@@ -106,8 +106,8 @@ public:
     Q_INVOKABLE void sendData();
 
     Q_INVOKABLE void updateFriends();
-    Q_INVOKABLE QVariantMap getFriends();
-    Q_INVOKABLE QVariantList getFriendsList();
+    Q_INVOKABLE QVariantMap getFriends() const;
+    Q_INVOKABLE QVariantList getFriendsList() const;
 
     Q_INVOKABLE void updateTrustedFriendsList(const QVariantList &trusted_friends_list);
     Q_INVOKABLE void updateTrackedFriendsList(const QVariantList &tracked_friends_list);
@@ -153,7 +153,7 @@ private:
     void ContextTrackerAddRequest(const QVariantMap &request);
     void ContextTrackerDelRequest(const QVariantMap &request);
 
-    bool ContextHasActiveRequests(const QString &context);
+    bool ContextHasActiveRequests(const QString &context) const;
 
     void EnqueueRequest(const QVariantMap &request);
 

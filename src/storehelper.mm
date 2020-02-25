@@ -15,7 +15,7 @@ StoreHelper &StoreHelper::GetInstance()
     return instance;
 }
 
-void StoreHelper::requestReview()
+void StoreHelper::requestReview() const
 {
     if (@available(iOS 10.3, *)) {
         [SKStoreReviewController requestReview];

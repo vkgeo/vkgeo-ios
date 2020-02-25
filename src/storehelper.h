@@ -20,7 +20,7 @@ public:
 
     static StoreHelper &GetInstance();
 
-    Q_INVOKABLE void requestReview();
+    Q_INVOKABLE void requestReview() const;
 };
 
 #endif // STOREHELPER_H
