@@ -2,8 +2,6 @@
 
 #import <VKSdkFramework/VKSdkFramework.h>
 
-#include <cstdlib>
-
 #include <QtCore/QtGlobal>
 #include <QtCore/QString>
 
@@ -45,12 +43,8 @@ static LocationManagerDelegate *LocationManagerDelegateInstance = nil;
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
-    if (@available(iOS 9, *)) {
-        return [VKSdk processOpenURL:url fromApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]] ||
-               [super application:application openURL:url options:options];
-    } else {
-        abort();
-    }
+    return [VKSdk processOpenURL:url fromApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]] ||
+           [super application:application openURL:url options:options];
 }
 
 @end

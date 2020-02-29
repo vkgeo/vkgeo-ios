@@ -1,7 +1,5 @@
 #import <UIKit/UIKit.h>
 
-#include <cstdlib>
-
 #include <QtCore/QtGlobal>
 #include <QtCore/QtMath>
 
@@ -69,11 +67,7 @@ void UIHelper::setConfiguredTheme(int theme)
 
 QString UIHelper::getAppSettingsUrl() const
 {
-    if (@available(iOS 8, *)) {
-        return QString::fromNSString(UIApplicationOpenSettingsURLString);
-    } else {
-        abort();
-    }
+    return QString::fromNSString(UIApplicationOpenSettingsURLString);
 }
 
 void UIHelper::sendInvitation(const QString &text) const
@@ -86,19 +80,15 @@ void UIHelper::sendInvitation(const QString &text) const
         *stop = (root_view_controller != nil);
     }];
 
-    if (@available(iOS 8, *)) {
-        UIActivityViewController *activity_view_controller = [[[UIActivityViewController alloc] initWithActivityItems:@[text.toNSString()] applicationActivities:nil] autorelease];
+    UIActivityViewController *activity_view_controller = [[[UIActivityViewController alloc] initWithActivityItems:@[text.toNSString()] applicationActivities:nil] autorelease];
 
-        activity_view_controller.excludedActivityTypes = @[];
+    activity_view_controller.excludedActivityTypes = @[];
 
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-            activity_view_controller.popoverPresentationController.sourceView = root_view_controller.view;
-        }
-
-        [root_view_controller presentViewController:activity_view_controller animated:YES completion:nil];
-    } else {
-        abort();
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        activity_view_controller.popoverPresentationController.sourceView = root_view_controller.view;
     }
+
+    [root_view_controller presentViewController:activity_view_controller animated:YES completion:nil];
 }
 
 void UIHelper::handleTraitCollectionUpdate()
