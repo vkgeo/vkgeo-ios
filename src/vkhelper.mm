@@ -687,7 +687,7 @@ void VKHelper::handleRequestQueueTimerTimeout()
 
             std::shared_ptr<bool> this_guard = ThisGuard;
 
-            VKRequest *vk_request = [VKRequest requestWithMethod:@"execute" parameters:@{@"code": execute_code.toNSString()}];
+            VKRequest * __block vk_request = [VKRequest requestWithMethod:@"execute" parameters:@{@"code": execute_code.toNSString()}];
 
             VKRequestTracker.insert(vk_request);
 
