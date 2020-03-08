@@ -205,6 +205,7 @@ VKHelper::VKHelper(QObject *parent) : QObject(parent)
     LastSendDataTime                 = 0;
     LastUpdateTrackedFriendsDataTime = 0;
     NextRequestQueueTimerTimeout     = 0;
+    ThisGuard                        = std::make_shared<bool>(true);
     PhotoUrl                         = DEFAULT_PHOTO_URL;
     BigPhotoUrl                      = DEFAULT_PHOTO_URL;
     VKDelegateInstance               = [[VKDelegate alloc] initWithHelper:this];
@@ -225,6 +226,10 @@ VKHelper::VKHelper(QObject *parent) : QObject(parent)
 
 VKHelper::~VKHelper() noexcept
 {
+    if (ThisGuard) {
+        *ThisGuard = false;
+    }
+
     [VKDelegateInstance removeHelperAndAutorelease];
 }
 
@@ -680,56 +685,66 @@ void VKHelper::handleRequestQueueTimerTimeout()
 
             execute_code = execute_code + QStringLiteral("];");
 
+            std::shared_ptr<bool> this_guard = ThisGuard;
+
             VKRequest *vk_request = [VKRequest requestWithMethod:@"execute" parameters:@{@"code": execute_code.toNSString()}];
 
             VKRequestTracker.insert(vk_request);
 
             [vk_request executeWithResultBlock:^(VKResponse *response) {
-                if (VKRequestTracker.contains(vk_request)) {
-                    VKRequestTracker.remove(vk_request);
+                if (this_guard && *this_guard) {
+                    if (VKRequestTracker.contains(vk_request)) {
+                        VKRequestTracker.remove(vk_request);
 
-                    QJsonDocument json_document = QJsonDocument::fromJson(QString::fromNSString(response.responseString).toUtf8());
+                        QJsonDocument json_document = QJsonDocument::fromJson(QString::fromNSString(response.responseString).toUtf8());
 
-                    if (json_document.object().contains(QStringLiteral("execute_errors"))) {
-                        QString    error_str                = QStringLiteral("");
-                        QJsonArray json_execute_errors_list = json_document.object().value(QStringLiteral("execute_errors")).toArray();
+                        if (json_document.object().contains(QStringLiteral("execute_errors"))) {
+                            QString    error_str                = QStringLiteral("");
+                            QJsonArray json_execute_errors_list = json_document.object().value(QStringLiteral("execute_errors")).toArray();
 
-                        if (json_execute_errors_list.count() > 0 && json_execute_errors_list.at(0).toObject().contains(QStringLiteral("error_msg"))) {
-                            error_str = json_execute_errors_list.at(0).toObject()[QStringLiteral("error_msg")].toString();
-                        } else {
-                            error_str = QStringLiteral("response has execute_errors without error_msg");
-                        }
-
-                        for (int i = 0; i < request_list.count(); i++) {
-                            HandleError(error_str, request_list[i].toMap());
-                        }
-                    } else if (json_document.object().contains(QStringLiteral("response"))) {
-                        QJsonArray json_response_list = json_document.object().value(QStringLiteral("response")).toArray();
-
-                        for (int i = 0; i < request_list.count(); i++) {
-                            if (i < json_response_list.count()) {
-                                QJsonObject json_response;
-
-                                json_response.insert(QStringLiteral("response"), json_response_list.at(i));
-
-                                HandleResponse(QString::fromUtf8(QJsonDocument(json_response).toJson(QJsonDocument::Compact)), request_list[i].toMap());
+                            if (json_execute_errors_list.count() > 0 && json_execute_errors_list.at(0).toObject().contains(QStringLiteral("error_msg"))) {
+                                error_str = json_execute_errors_list.at(0).toObject()[QStringLiteral("error_msg")].toString();
                             } else {
+                                error_str = QStringLiteral("response has execute_errors without error_msg");
+                            }
+
+                            for (int i = 0; i < request_list.count(); i++) {
+                                HandleError(error_str, request_list[i].toMap());
+                            }
+                        } else if (json_document.object().contains(QStringLiteral("response"))) {
+                            QJsonArray json_response_list = json_document.object().value(QStringLiteral("response")).toArray();
+
+                            for (int i = 0; i < request_list.count(); i++) {
+                                if (i < json_response_list.count()) {
+                                    QJsonObject json_response;
+
+                                    json_response.insert(QStringLiteral("response"), json_response_list.at(i));
+
+                                    HandleResponse(QString::fromUtf8(QJsonDocument(json_response).toJson(QJsonDocument::Compact)), request_list[i].toMap());
+                                } else {
+                                    HandleResponse(QStringLiteral(""), request_list[i].toMap());
+                                }
+                            }
+                        } else {
+                            for (int i = 0; i < request_list.count(); i++) {
                                 HandleResponse(QStringLiteral(""), request_list[i].toMap());
                             }
                         }
-                    } else {
-                        for (int i = 0; i < request_list.count(); i++) {
-                            HandleResponse(QStringLiteral(""), request_list[i].toMap());
-                        }
                     }
+                } else {
+                    qWarning() << "handleRequestQueueTimerTimeout() : block context has been destroyed";
                 }
             } errorBlock:^(NSError *error) {
-                if (VKRequestTracker.contains(vk_request)) {
-                    VKRequestTracker.remove(vk_request);
+                if (this_guard && *this_guard) {
+                    if (VKRequestTracker.contains(vk_request)) {
+                        VKRequestTracker.remove(vk_request);
 
-                    for (int i = 0; i < request_list.count(); i++) {
-                        HandleError(QString::fromNSString(error.localizedDescription), request_list[i].toMap());
+                        for (int i = 0; i < request_list.count(); i++) {
+                            HandleError(QString::fromNSString(error.localizedDescription), request_list[i].toMap());
+                        }
                     }
+                } else {
+                    qWarning() << "handleRequestQueueTimerTimeout() : block context has been destroyed";
                 }
             }];
         }

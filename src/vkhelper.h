@@ -1,6 +1,8 @@
 #ifndef VKHELPER_H
 #define VKHELPER_H
 
+#include <memory>
+
 #include <QtCore/QtGlobal>
 #include <QtCore/QObject>
 #include <QtCore/QString>
@@ -190,25 +192,26 @@ private:
         DataUpdatedAndSent
     };
 
-    int                 CurrentDataState, AuthState, MaxTrustedFriendsCount,
-                        MaxTrackedFriendsCount, SendDataTryNumber;
-    qint64              LastSendDataTime, LastUpdateTrackedFriendsDataTime,
-                        NextRequestQueueTimerTimeout;
-    QString             UserId, FirstName, LastName, PhotoUrl, BigPhotoUrl,
-                        TrustedFriendsListId, TrackedFriendsListId;
-    QTimer              RequestQueueTimer, SendDataOnUpdateTimer, SendDataTimer;
-    QQueue<QVariantMap> RequestQueue;
-    QMap<QString, int>  ContextTracker;
+    int                   CurrentDataState, AuthState, MaxTrustedFriendsCount,
+                          MaxTrackedFriendsCount, SendDataTryNumber;
+    qint64                LastSendDataTime, LastUpdateTrackedFriendsDataTime,
+                          NextRequestQueueTimerTimeout;
+    std::shared_ptr<bool> ThisGuard;
+    QString               UserId, FirstName, LastName, PhotoUrl, BigPhotoUrl,
+                          TrustedFriendsListId, TrackedFriendsListId;
+    QTimer                RequestQueueTimer, SendDataOnUpdateTimer, SendDataTimer;
+    QQueue<QVariantMap>   RequestQueue;
+    QMap<QString, int>    ContextTracker;
 #ifdef __OBJC__
-    QSet<VKRequest *>   VKRequestTracker;
+    QSet<VKRequest *>     VKRequestTracker;
 #else
-    QSet<void *>        VKRequestTracker;
+    QSet<void *>          VKRequestTracker;
 #endif // __OBJC__
-    QVariantMap         CurrentData, FriendsData, FriendsDataTmp;
+    QVariantMap           CurrentData, FriendsData, FriendsDataTmp;
 #ifdef __OBJC__
-    VKDelegate         *VKDelegateInstance;
+    VKDelegate           *VKDelegateInstance;
 #else
-    void               *VKDelegateInstance;
+    void                 *VKDelegateInstance;
 #endif // __OBJC__
 };
 
