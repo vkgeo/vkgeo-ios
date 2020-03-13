@@ -226,8 +226,6 @@ VKHelper::VKHelper(QObject *parent) :
 VKHelper::~VKHelper() noexcept
 {
     [VKDelegateInstance removeHelperAndAutorelease];
-
-    ThisGuard.Invalidate();
 }
 
 VKHelper &VKHelper::GetInstance()

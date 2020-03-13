@@ -6,21 +6,20 @@
 class ContextGuard
 {
 public:
-    explicit ContextGuard();
+    ContextGuard();
 
     ContextGuard(const ContextGuard &other);
-    ContextGuard(ContextGuard &&other) noexcept;
+    ContextGuard(ContextGuard &&other) noexcept = delete;
 
-    ContextGuard &operator=(const ContextGuard &other);
-    ContextGuard &operator=(ContextGuard &&other) noexcept;
+    ContextGuard &operator=(const ContextGuard &other) = delete;
+    ContextGuard &operator=(ContextGuard &&other) noexcept = delete;
 
-    virtual ~ContextGuard() noexcept = default;
+    virtual ~ContextGuard() noexcept;
 
     operator bool() const;
 
-    void Invalidate();
-
 private:
+    bool                  InitialInstance;
     std::shared_ptr<bool> GuardPtr;
 };
 

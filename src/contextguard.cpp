@@ -3,42 +3,25 @@
 #include "contextguard.h"
 
 ContextGuard::ContextGuard() :
-    GuardPtr(std::make_shared<bool>(true))
+    InitialInstance(true),
+    GuardPtr       (std::make_shared<bool>(true))
 {
 }
 
 ContextGuard::ContextGuard(const ContextGuard &other) :
-    GuardPtr(other.GuardPtr)
+    InitialInstance(false),
+    GuardPtr       (other.GuardPtr)
 {
 }
 
-ContextGuard::ContextGuard(ContextGuard &&other) noexcept :
-    GuardPtr(std::move(other.GuardPtr))
+ContextGuard::~ContextGuard() noexcept
 {
-}
-
-ContextGuard &ContextGuard::operator=(const ContextGuard &other)
-{
-    GuardPtr = other.GuardPtr;
-
-    return *this;
-}
-
-ContextGuard &ContextGuard::operator=(ContextGuard &&other) noexcept
-{
-    GuardPtr = std::move(other.GuardPtr);
-
-    return *this;
+    if (InitialInstance && GuardPtr) {
+        *GuardPtr = false;
+    }
 }
 
 ContextGuard::operator bool() const
 {
     return GuardPtr && *GuardPtr;
-}
-
-void ContextGuard::Invalidate()
-{
-    if (GuardPtr) {
-        *GuardPtr = false;
-    }
 }
