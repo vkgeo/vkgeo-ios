@@ -49,7 +49,7 @@ public:
 
     Q_INVOKABLE void sendInvitation(const QString &text) const;
 
-    void handleTraitCollectionUpdate();
+    void HandleTraitCollectionUpdate();
 
 signals:
     void darkThemeChanged(bool darkTheme);

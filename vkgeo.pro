@@ -6,7 +6,9 @@ CONFIG += c++11
 
 DEFINES += QT_DEPRECATED_WARNINGS QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII
 
-SOURCES += src/main.cpp
+SOURCES += \
+    src/contextguard.cpp \
+    src/main.cpp
 
 OBJECTIVE_SOURCES += \
     src/admobhelper.mm \
@@ -23,6 +25,7 @@ HEADERS += \
     src/admobhelper.h \
     src/appinitialized.h \
     src/batteryhelper.h \
+    src/contextguard.h \
     src/locationmanagerdelegate.h \
     src/notificationhelper.h \
     src/storehelper.h \

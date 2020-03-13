@@ -5,10 +5,10 @@
 
 #include "uihelper.h"
 
-UIHelper::UIHelper(QObject *parent) : QObject(parent)
+UIHelper::UIHelper(QObject *parent) :
+    QObject        (parent),
+    ConfiguredTheme(UITheme::ThemeAuto)
 {
-    ConfiguredTheme = UITheme::ThemeAuto;
-
     if (@available(iOS 13, *)) {
         DarkTheme = (UITraitCollection.currentTraitCollection.userInterfaceStyle == UIUserInterfaceStyleDark);
     } else {
@@ -91,7 +91,7 @@ void UIHelper::sendInvitation(const QString &text) const
     [root_view_controller presentViewController:activity_view_controller animated:YES completion:nil];
 }
 
-void UIHelper::handleTraitCollectionUpdate()
+void UIHelper::HandleTraitCollectionUpdate()
 {
     if (ConfiguredTheme != UITheme::ThemeLight &&
         ConfiguredTheme != UITheme::ThemeDark) {

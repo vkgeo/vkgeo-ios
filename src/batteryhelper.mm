@@ -4,7 +4,8 @@
 
 #include "batteryhelper.h"
 
-BatteryHelper::BatteryHelper(QObject *parent) : QObject(parent)
+BatteryHelper::BatteryHelper(QObject *parent) :
+    QObject(parent)
 {
     UIDevice.currentDevice.batteryMonitoringEnabled = YES;
 }

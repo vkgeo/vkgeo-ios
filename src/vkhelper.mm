@@ -48,15 +48,15 @@ static NSArray *AUTH_SCOPE = @[@"friends", @"notes", @"groups", @"offline"];
                 qWarning() << QString::fromNSString(error.localizedDescription);
 
                 if (VKHelperInstance != nullptr) {
-                    VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
+                    VKHelperInstance->SetAuthState(VKAuthState::StateNotAuthorized);
                 }
             } else if (state == VKAuthorizationAuthorized) {
                 if (VKHelperInstance != nullptr) {
-                    VKHelperInstance->setAuthState(VKAuthState::StateAuthorized);
+                    VKHelperInstance->SetAuthState(VKAuthState::StateAuthorized);
                 }
             } else {
                 if (VKHelperInstance != nullptr) {
-                    VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
+                    VKHelperInstance->SetAuthState(VKAuthState::StateNotAuthorized);
                 }
             }
         }];
@@ -78,15 +78,15 @@ static NSArray *AUTH_SCOPE = @[@"friends", @"notes", @"groups", @"offline"];
         qWarning() << QString::fromNSString(result.error.localizedDescription);
 
         if (VKHelperInstance != nullptr) {
-            VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
+            VKHelperInstance->SetAuthState(VKAuthState::StateNotAuthorized);
         }
     } else if (result.token != nil) {
         if (VKHelperInstance != nullptr) {
-            VKHelperInstance->setAuthState(VKAuthState::StateAuthorized);
+            VKHelperInstance->SetAuthState(VKAuthState::StateAuthorized);
         }
     } else {
         if (VKHelperInstance != nullptr) {
-            VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
+            VKHelperInstance->SetAuthState(VKAuthState::StateNotAuthorized);
         }
     }
 }
@@ -94,7 +94,7 @@ static NSArray *AUTH_SCOPE = @[@"friends", @"notes", @"groups", @"offline"];
 - (void)vkSdkUserAuthorizationFailed
 {
     if (VKHelperInstance != nullptr) {
-        VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
+        VKHelperInstance->SetAuthState(VKAuthState::StateNotAuthorized);
     }
 }
 
@@ -104,15 +104,15 @@ static NSArray *AUTH_SCOPE = @[@"friends", @"notes", @"groups", @"offline"];
         qWarning() << QString::fromNSString(result.error.localizedDescription);
 
         if (VKHelperInstance != nullptr) {
-            VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
+            VKHelperInstance->SetAuthState(VKAuthState::StateNotAuthorized);
         }
     } else if (result.token != nil) {
         if (VKHelperInstance != nullptr) {
-            VKHelperInstance->setAuthState(VKAuthState::StateAuthorized);
+            VKHelperInstance->SetAuthState(VKAuthState::StateAuthorized);
         }
     } else {
         if (VKHelperInstance != nullptr) {
-            VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
+            VKHelperInstance->SetAuthState(VKAuthState::StateNotAuthorized);
         }
     }
 }
@@ -122,7 +122,7 @@ static NSArray *AUTH_SCOPE = @[@"friends", @"notes", @"groups", @"offline"];
     Q_UNUSED(expiredToken)
 
     if (VKHelperInstance != nullptr) {
-        VKHelperInstance->setAuthState(VKAuthState::StateNotAuthorized);
+        VKHelperInstance->SetAuthState(VKAuthState::StateNotAuthorized);
     }
 }
 
@@ -195,21 +195,20 @@ bool compareFriends(const QVariant &friend_1, const QVariant &friend_2)
     }
 }
 
-VKHelper::VKHelper(QObject *parent) : QObject(parent)
+VKHelper::VKHelper(QObject *parent) :
+    QObject                         (parent),
+    CurrentDataState                (DataNotUpdated),
+    AuthState                       (VKAuthState::StateUnknown),
+    MaxTrustedFriendsCount          (DEFAULT_MAX_TRUSTED_FRIENDS_COUNT),
+    MaxTrackedFriendsCount          (DEFAULT_MAX_TRACKED_FRIENDS_COUNT),
+    SendDataTryNumber               (0),
+    LastSendDataTime                (0),
+    LastUpdateTrackedFriendsDataTime(0),
+    NextRequestQueueTimerTimeout    (0),
+    PhotoUrl                        (DEFAULT_PHOTO_URL),
+    BigPhotoUrl                     (DEFAULT_PHOTO_URL),
+    VKDelegateInstance              ([[VKDelegate alloc] initWithHelper:this])
 {
-    CurrentDataState                 = DataNotUpdated;
-    AuthState                        = VKAuthState::StateUnknown;
-    MaxTrustedFriendsCount           = DEFAULT_MAX_TRUSTED_FRIENDS_COUNT;
-    MaxTrackedFriendsCount           = DEFAULT_MAX_TRACKED_FRIENDS_COUNT;
-    SendDataTryNumber                = 0;
-    LastSendDataTime                 = 0;
-    LastUpdateTrackedFriendsDataTime = 0;
-    NextRequestQueueTimerTimeout     = 0;
-    ThisGuard                        = std::make_shared<bool>(true);
-    PhotoUrl                         = DEFAULT_PHOTO_URL;
-    BigPhotoUrl                      = DEFAULT_PHOTO_URL;
-    VKDelegateInstance               = [[VKDelegate alloc] initWithHelper:this];
-
     connect(&RequestQueueTimer, &QTimer::timeout, this, &VKHelper::handleRequestQueueTimerTimeout);
 
     RequestQueueTimer.setInterval(REQUEST_QUEUE_TIMER_INTERVAL);
@@ -226,11 +225,9 @@ VKHelper::VKHelper(QObject *parent) : QObject(parent)
 
 VKHelper::~VKHelper() noexcept
 {
-    if (ThisGuard) {
-        *ThisGuard = false;
-    }
-
     [VKDelegateInstance removeHelperAndAutorelease];
+
+    ThisGuard.Invalidate();
 }
 
 VKHelper &VKHelper::GetInstance()
@@ -346,7 +343,7 @@ void VKHelper::logout()
 {
     [VKSdk forceLogout];
 
-    setAuthState(VKAuthState::StateNotAuthorized);
+    SetAuthState(VKAuthState::StateNotAuthorized);
 }
 
 void VKHelper::updateLocation(qreal latitude, qreal longitude)
@@ -557,7 +554,7 @@ void VKHelper::joinGroup(const QString &group_id)
     EnqueueRequest(request);
 }
 
-void VKHelper::setAuthState(int state)
+void VKHelper::SetAuthState(int state)
 {
     if (AuthState != state) {
         AuthState = state;
@@ -685,14 +682,14 @@ void VKHelper::handleRequestQueueTimerTimeout()
 
             execute_code = execute_code + QStringLiteral("];");
 
-            std::shared_ptr<bool> this_guard = ThisGuard;
+            ContextGuard this_guard = ThisGuard;
 
             VKRequest * __block vk_request = [VKRequest requestWithMethod:@"execute" parameters:@{@"code": execute_code.toNSString()}];
 
             VKRequestTracker.insert(vk_request);
 
             [vk_request executeWithResultBlock:^(VKResponse *response) {
-                if (this_guard && *this_guard) {
+                if (this_guard) {
                     if (VKRequestTracker.contains(vk_request)) {
                         VKRequestTracker.remove(vk_request);
 
@@ -735,7 +732,7 @@ void VKHelper::handleRequestQueueTimerTimeout()
                     qWarning() << "handleRequestQueueTimerTimeout() : block context has been destroyed";
                 }
             } errorBlock:^(NSError *error) {
-                if (this_guard && *this_guard) {
+                if (this_guard) {
                     if (VKRequestTracker.contains(vk_request)) {
                         VKRequestTracker.remove(vk_request);
 

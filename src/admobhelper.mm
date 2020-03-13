@@ -68,7 +68,7 @@ static const NSTimeInterval AD_RELOAD_ON_FAILURE_DELAY = 60.0;
         CGFloat status_bar_height = qMin(status_bar_size.width, status_bar_size.height);
 
         if (AdMobHelperInstance != nullptr) {
-            AdMobHelperInstance->setBannerViewHeight(qFloor(BannerView.frame.size.height + root_view_controller.view.safeAreaInsets.top
+            AdMobHelperInstance->SetBannerViewHeight(qFloor(BannerView.frame.size.height + root_view_controller.view.safeAreaInsets.top
                                                                                          - status_bar_height));
         }
     }
@@ -249,7 +249,7 @@ static const NSTimeInterval AD_RELOAD_ON_FAILURE_DELAY = 60.0;
     Q_UNUSED(ad)
 
     if (AdMobHelperInstance != nullptr) {
-        AdMobHelperInstance->setInterstitialActive(true);
+        AdMobHelperInstance->SetInterstitialActive(true);
     }
 }
 
@@ -263,7 +263,7 @@ static const NSTimeInterval AD_RELOAD_ON_FAILURE_DELAY = 60.0;
     Q_UNUSED(ad)
 
     if (AdMobHelperInstance != nullptr) {
-        AdMobHelperInstance->setInterstitialActive(false);
+        AdMobHelperInstance->SetInterstitialActive(false);
     }
 
     [self performSelector:@selector(loadAd) withObject:nil afterDelay:0.0];
@@ -285,14 +285,15 @@ static const NSTimeInterval AD_RELOAD_ON_FAILURE_DELAY = 60.0;
 
 @end
 
-AdMobHelper::AdMobHelper(QObject *parent) : QObject(parent)
+AdMobHelper::AdMobHelper(QObject *parent) :
+    QObject                     (parent),
+    Initialized                 (false),
+    ShowPersonalizedAds         (false),
+    InterstitialActive          (false),
+    BannerViewHeight            (0),
+    BannerViewDelegateInstance  (nil),
+    InterstitialDelegateInstance(nil)
 {
-    Initialized                  = false;
-    ShowPersonalizedAds          = false;
-    InterstitialActive           = false;
-    BannerViewHeight             = 0;
-    BannerViewDelegateInstance   = nil;
-    InterstitialDelegateInstance = nil;
 }
 
 AdMobHelper::~AdMobHelper() noexcept
@@ -397,7 +398,7 @@ void AdMobHelper::showInterstitial() const
     }
 }
 
-void AdMobHelper::setInterstitialActive(bool active)
+void AdMobHelper::SetInterstitialActive(bool active)
 {
     if (InterstitialActive != active) {
         InterstitialActive = active;
@@ -406,7 +407,7 @@ void AdMobHelper::setInterstitialActive(bool active)
     }
 }
 
-void AdMobHelper::setBannerViewHeight(int height)
+void AdMobHelper::SetBannerViewHeight(int height)
 {
     if (BannerViewHeight != height) {
         BannerViewHeight = height;

@@ -14,7 +14,7 @@
 {
     [super traitCollectionDidChange:previousTraitCollection];
 
-    UIHelper::GetInstance().handleTraitCollectionUpdate();
+    UIHelper::GetInstance().HandleTraitCollectionUpdate();
 }
 
 @end

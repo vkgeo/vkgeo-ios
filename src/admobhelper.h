@@ -47,8 +47,8 @@ public:
 
     Q_INVOKABLE void showInterstitial() const;
 
-    void setInterstitialActive(bool active);
-    void setBannerViewHeight(int height);
+    void SetInterstitialActive(bool active);
+    void SetBannerViewHeight(int height);
 
 signals:
     void interstitialActiveChanged(bool interstitialActive);

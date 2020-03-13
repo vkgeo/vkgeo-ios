@@ -2,7 +2,8 @@
 
 #include "storehelper.h"
 
-StoreHelper::StoreHelper(QObject *parent) : QObject(parent)
+StoreHelper::StoreHelper(QObject *parent) :
+    QObject(parent)
 {
 }
 

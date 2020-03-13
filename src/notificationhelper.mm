@@ -4,7 +4,8 @@
 
 #include "notificationhelper.h"
 
-NotificationHelper::NotificationHelper(QObject *parent) : QObject(parent)
+NotificationHelper::NotificationHelper(QObject *parent) :
+    QObject(parent)
 {
     [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:(UNAuthorizationOptionSound)
                                                           completionHandler:^(BOOL granted, NSError * _Nullable error) {
