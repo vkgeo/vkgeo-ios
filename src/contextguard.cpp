@@ -1,5 +1,3 @@
-#include <utility>
-
 #include "contextguard.h"
 
 ContextGuard::ContextGuard() :
