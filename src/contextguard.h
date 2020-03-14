@@ -9,10 +9,10 @@ public:
     ContextGuard();
 
     ContextGuard(const ContextGuard &other);
-    ContextGuard(ContextGuard &&other) noexcept = delete;
+    ContextGuard(ContextGuard &&) noexcept = delete;
 
-    ContextGuard &operator=(const ContextGuard &other) = delete;
-    ContextGuard &operator=(ContextGuard &&other) noexcept = delete;
+    ContextGuard &operator=(const ContextGuard &) = delete;
+    ContextGuard &operator=(ContextGuard &&) noexcept = delete;
 
     virtual ~ContextGuard() noexcept;
 
