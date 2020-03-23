@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PATH=$PATH:~/Qt/5.13.0/ios/bin:~/SonarCloud/build-wrapper-macosx-x86:~/SonarCloud/sonar-scanner-3.3.0.1492-macosx/bin
+PATH=$PATH:~/Qt/5.12.7/ios/bin:~/SonarCloud/build-wrapper-macosx-x86:~/SonarCloud/sonar-scanner-3.3.0.1492-macosx/bin
 
 if [ "$#" = "1" ]; then
     cd .. && \
@@ -16,6 +16,7 @@ if [ "$#" = "1" ]; then
                   -Dsonar.sourceEncoding=UTF-8 \
                   -Dsonar.exclusions="qml_*.cpp,qrc_*.cpp,qml/**/*,translations/*" \
                   -Dsonar.cfamily.build-wrapper-output=.sonarbuild/bw-output \
+                  -Dsonar.cfamily.cache.enabled=false \
                   -Dsonar.cpp.file.suffixes=.cpp,.mm \
                   -Dsonar.host.url=https://sonarcloud.io \
                   -Dsonar.login="$1"
