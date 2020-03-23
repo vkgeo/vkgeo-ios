@@ -16,7 +16,7 @@ public:
 
     virtual ~ContextGuard() noexcept;
 
-    operator bool() const;
+    explicit operator bool() const;
 
 private:
     bool                  InitialInstance;
