@@ -1,6 +1,8 @@
 #import <UIKit/UIKit.h>
 #import <VKSdkFramework/VKSdkFramework.h>
 
+#include <algorithm>
+
 #include <QtCore/QByteArray>
 #include <QtCore/QDateTime>
 #include <QtCore/QVariant>
