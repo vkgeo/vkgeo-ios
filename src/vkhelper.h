@@ -16,7 +16,7 @@
 #ifdef __OBJC__
 @class VKRequest;
 @class VKDelegate;
-#endif // __OBJC__
+#endif
 
 class VKAuthState : public QObject
 {
@@ -205,13 +205,13 @@ private:
     QSet<VKRequest *>   VKRequestTracker;
 #else
     QSet<void *>        VKRequestTracker;
-#endif // __OBJC__
+#endif
     QVariantMap         CurrentData, FriendsData, FriendsDataTmp;
 #ifdef __OBJC__
     VKDelegate         *VKDelegateInstance;
 #else
     void               *VKDelegateInstance;
-#endif // __OBJC__
+#endif
     ContextGuard        ThisGuard;
 };
 
