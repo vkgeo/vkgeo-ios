@@ -9,7 +9,7 @@ if [ "$#" = "1" ]; then
     qmake ../vkgeo.pro && \
     build-wrapper-macosx-x86 --out-dir bw-output make clean debug-device && \
     cd .. && \
-    sonar-scanner -Dsonar.projectKey=vkgeo:vkgeo-ios \
+    sonar-scanner -Dsonar.projectKey=vkgeo_vkgeo-ios \
                   -Dsonar.projectName="VKGeo iOS" \
                   -Dsonar.organization=vkgeo-github \
                   -Dsonar.sources=. \
