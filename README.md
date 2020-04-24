@@ -16,12 +16,12 @@ VKGeo  –  лучшее мобильное приложение для опре
 
 ---
 
-[![SonarCloud Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=vkgeo%3Avkgeo-ios&metric=alert_status)](https://sonarcloud.io/dashboard?id=vkgeo%3Avkgeo-ios)
+[![SonarCloud Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=vkgeo_vkgeo-ios&metric=alert_status)](https://sonarcloud.io/dashboard?id=vkgeo_vkgeo-ios)
 
-[![SonarCloud Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=vkgeo%3Avkgeo-ios&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=vkgeo%3Avkgeo-ios)
-[![SonarCloud Security Rating](https://sonarcloud.io/api/project_badges/measure?project=vkgeo%3Avkgeo-ios&metric=security_rating)](https://sonarcloud.io/dashboard?id=vkgeo%3Avkgeo-ios)
-[![SonarCloud Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=vkgeo%3Avkgeo-ios&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=vkgeo%3Avkgeo-ios)
+[![SonarCloud Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=vkgeo_vkgeo-ios&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=vkgeo_vkgeo-ios)
+[![SonarCloud Security Rating](https://sonarcloud.io/api/project_badges/measure?project=vkgeo_vkgeo-ios&metric=security_rating)](https://sonarcloud.io/dashboard?id=vkgeo_vkgeo-ios)
+[![SonarCloud Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=vkgeo_vkgeo-ios&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=vkgeo_vkgeo-ios)
 
-[![SonarCloud Bugs](https://sonarcloud.io/api/project_badges/measure?project=vkgeo%3Avkgeo-ios&metric=bugs)](https://sonarcloud.io/dashboard?id=vkgeo%3Avkgeo-ios)
-[![SonarCloud Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=vkgeo%3Avkgeo-ios&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=vkgeo%3Avkgeo-ios)
-[![SonarCloud Code Smells](https://sonarcloud.io/api/project_badges/measure?project=vkgeo%3Avkgeo-ios&metric=code_smells)](https://sonarcloud.io/dashboard?id=vkgeo%3Avkgeo-ios)
+[![SonarCloud Bugs](https://sonarcloud.io/api/project_badges/measure?project=vkgeo_vkgeo-ios&metric=bugs)](https://sonarcloud.io/dashboard?id=vkgeo_vkgeo-ios)
+[![SonarCloud Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=vkgeo_vkgeo-ios&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=vkgeo_vkgeo-ios)
+[![SonarCloud Code Smells](https://sonarcloud.io/api/project_badges/measure?project=vkgeo_vkgeo-ios&metric=code_smells)](https://sonarcloud.io/dashboard?id=vkgeo_vkgeo-ios)
