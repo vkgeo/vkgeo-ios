@@ -8,7 +8,6 @@
 #import <Foundation/Foundation.h>
 #import <GoogleMobileAds/GADNativeAdImage.h>
 #import <GoogleMobileAds/GADUnifiedNativeAdAssetIdentifiers.h>
-#import <GoogleMobileAds/GoogleMobileAdsDefines.h>
 
 /// Provides methods used for constructing native ads. The adapter must return an object conforming
 /// to this protocol for native ad requests.
@@ -58,6 +57,13 @@
 
 /// Media content aspect ratio (width/height) or 0 if there's no media content.
 @property(nonatomic, readonly) CGFloat mediaContentAspectRatio;
+
+/// The video's duration in seconds or 0 if there's no video or the duration is unknown.
+@property(nonatomic, readonly) NSTimeInterval duration;
+
+/// The video's current playback time in seconds or 0 if there's no video or the current playback
+/// time is unknown.
+@property(nonatomic, readonly) NSTimeInterval currentTime;
 
 /// Tells the receiver that it has been rendered in |view| with clickable asset views and
 /// nonclickable asset views. viewController should be used to present modal views for the ad.
