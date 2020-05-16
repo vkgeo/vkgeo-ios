@@ -49,8 +49,6 @@
 	<true/>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>You should allow access to your location to discover friends nearby and allow your trusted friends see you on the map</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>You should allow access to your location to discover friends nearby and allow your trusted friends see you on the map</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>You should allow access to your location to discover friends nearby and allow your trusted friends see you on the map</string>
 	<key>UIBackgroundModes</key>
