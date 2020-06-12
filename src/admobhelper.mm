@@ -11,7 +11,9 @@ const QString AdMobHelper::ADMOB_BANNERVIEW_UNIT_ID  (QStringLiteral("ca-app-pub
 const QString AdMobHelper::ADMOB_INTERSTITIAL_UNIT_ID(QStringLiteral("ca-app-pub-2455088855015693/6215026625"));
 const QString AdMobHelper::ADMOB_TEST_DEVICE_ID      (QStringLiteral(""));
 
-static constexpr NSTimeInterval AD_RELOAD_ON_FAILURE_DELAY = 60.0;
+namespace {
+    constexpr NSTimeInterval AD_RELOAD_ON_FAILURE_DELAY = 60.0;
+}
 
 @interface BannerViewDelegate : NSObject<GADBannerViewDelegate>
 

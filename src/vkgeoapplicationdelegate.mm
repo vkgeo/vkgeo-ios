@@ -9,10 +9,12 @@
 
 #include "vkgeoapplicationdelegate.h"
 
-static const QString VK_APP_ID(QStringLiteral("6459902")),
-                     VK_API_V (QStringLiteral("5.103"));
+namespace {
+    const QString VK_APP_ID(QStringLiteral("6459902")),
+                  VK_API_V (QStringLiteral("5.103"));
 
-static LocationManagerDelegate *LocationManagerDelegateInstance = nil;
+    LocationManagerDelegate *LocationManagerDelegateInstance = nil;
+}
 
 @interface QIOSApplicationDelegate : UIResponder<UIApplicationDelegate>
 @end
@@ -49,7 +51,9 @@ static LocationManagerDelegate *LocationManagerDelegateInstance = nil;
 
 @end
 
-static VKGeoApplicationDelegate *VKGeoApplicationDelegateInstance = nil;
+namespace {
+    VKGeoApplicationDelegate *VKGeoApplicationDelegateInstance = nil;
+}
 
 void InitializeVKGeoApplicationDelegate()
 {
