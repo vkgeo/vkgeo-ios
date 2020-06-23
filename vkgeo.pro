@@ -50,8 +50,8 @@ QML_DESIGNER_IMPORT_PATH =
 ios {
     CONFIG += qtquickcompiler no_default_rpath
 
-    INCLUDEPATH += $$PWD/ios/frameworks
-    DEPENDPATH += $$PWD/ios/frameworks
+    INCLUDEPATH += ios/frameworks
+    DEPENDPATH += ios/frameworks
 
     LIBS += -F $$PWD/ios/frameworks \
             -framework GoogleAppMeasurement \
