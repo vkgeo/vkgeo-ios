@@ -14,22 +14,24 @@
 #include "locationmanagerdelegate.h"
 
 namespace {
-    constexpr qint64             CENTRAL_LOCATION_CHANGE_TIMEOUT       = 900;
-    constexpr NSTimeInterval     LOCATION_ACCURACY_ADJUSTMENT_INTERVAL = 60.0;
-    constexpr CLLocationDistance LOCATION_DISTANCE_FILTER              = 100.0,
-                                 CURRENT_REGION_RADIUS                 = 100.0,
-                                 CENTRAL_LOCATION_CHANGE_DISTANCE      = 500.0;
 
-    qint64 elapsedNanos()
-    {
-        struct timespec elapsed_time = {};
+constexpr qint64             CENTRAL_LOCATION_CHANGE_TIMEOUT       = 900;
+constexpr NSTimeInterval     LOCATION_ACCURACY_ADJUSTMENT_INTERVAL = 60.0;
+constexpr CLLocationDistance LOCATION_DISTANCE_FILTER              = 100.0,
+                             CURRENT_REGION_RADIUS                 = 100.0,
+                             CENTRAL_LOCATION_CHANGE_DISTANCE      = 500.0;
 
-        if (clock_gettime(CLOCK_MONOTONIC_RAW, &elapsed_time) == 0) {
-            return static_cast<qint64>(elapsed_time.tv_sec) * 1000000000 + elapsed_time.tv_nsec;
-        } else {
-            return 0;
-        }
+qint64 elapsedNanos()
+{
+    struct timespec elapsed_time = {};
+
+    if (clock_gettime(CLOCK_MONOTONIC_RAW, &elapsed_time) == 0) {
+        return static_cast<qint64>(elapsed_time.tv_sec) * 1000000000 + elapsed_time.tv_nsec;
+    } else {
+        return 0;
     }
+}
+
 }
 
 @implementation LocationManagerDelegate

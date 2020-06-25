@@ -21,7 +21,9 @@ const QString VKHelper::TRUSTED_FRIENDS_LIST_NAME(QStringLiteral("VKGeo Trusted 
 const QString VKHelper::TRACKED_FRIENDS_LIST_NAME(QStringLiteral("VKGeo Tracked Friends"));
 
 namespace {
-    NSArray *AUTH_SCOPE = @[@"friends", @"notes", @"groups", @"offline"];
+
+NSArray *AUTH_SCOPE = @[@"friends", @"notes", @"groups", @"offline"];
+
 }
 
 @interface VKDelegate : NSObject<VKSdkDelegate, VKSdkUIDelegate>
@@ -162,6 +164,8 @@ namespace {
 
 @end
 
+namespace {
+
 bool compareFriends(const QVariant &friend_1, const QVariant &friend_2)
 {
     bool friend_1_trusted = friend_1.toMap().contains(QStringLiteral("trusted")) ? (friend_1.toMap())[QStringLiteral("trusted")].toBool() : false;
@@ -197,6 +201,8 @@ bool compareFriends(const QVariant &friend_1, const QVariant &friend_2)
     } else {
         return friend_1_trusted;
     }
+}
+
 }
 
 VKHelper::VKHelper(QObject *parent) :
