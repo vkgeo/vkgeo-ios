@@ -11,7 +11,8 @@ Page {
     id: trackedFriendsPage
 
     header: PageHeader {
-        text: qsTr("Tracked friends")
+        bannerViewHeight: trackedFriendsPage.bannerViewHeight
+        text:             qsTr("Tracked friends")
 
         onBackClicked: {
             mainStackView.pop();
@@ -38,9 +39,11 @@ Page {
         color: UIHelper.darkTheme ? "black" : "white"
     }
 
-    property int trackedFriendsCount: 0
+    readonly property int bannerViewHeight: AdMobHelper.bannerViewHeight
 
-    property var friendsList:         []
+    property int trackedFriendsCount:       0
+
+    property var friendsList:               []
 
     function updateModel() {
         trackedFriendsListModel.clear();

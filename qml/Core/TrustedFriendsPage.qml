@@ -11,7 +11,8 @@ Page {
     id: trustedFriendsPage
 
     header: PageHeader {
-        text: qsTr("Trusted friends")
+        bannerViewHeight: trustedFriendsPage.bannerViewHeight
+        text:             qsTr("Trusted friends")
 
         onBackClicked: {
             mainStackView.pop();
@@ -38,9 +39,11 @@ Page {
         color: UIHelper.darkTheme ? "black" : "white"
     }
 
-    property int trustedFriendsCount: 0
+    readonly property int bannerViewHeight: AdMobHelper.bannerViewHeight
 
-    property var friendsList:         []
+    property int trustedFriendsCount:       0
+
+    property var friendsList:               []
 
     function updateModel() {
         trustedFriendsListModel.clear();

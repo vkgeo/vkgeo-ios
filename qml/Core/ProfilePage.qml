@@ -11,6 +11,7 @@ Page {
     id: profilePage
 
     header: PageHeader {
+        bannerViewHeight:  profilePage.bannerViewHeight
         text:              qsTr("Profile info")
         doneButtonVisible: profilePage.editable
 
@@ -35,26 +36,28 @@ Page {
         color: UIHelper.darkTheme ? "black" : "white"
     }
 
-    property bool editable:          false
-    property bool online:            false
-    property bool dataAvailable:     false
-    property bool locationAvailable: false
+    readonly property int bannerViewHeight: AdMobHelper.bannerViewHeight
 
-    property int batteryLevel:       0
+    property bool editable:                 false
+    property bool online:                   false
+    property bool dataAvailable:            false
+    property bool locationAvailable:        false
 
-    property real latitude:          0.0
-    property real longitude:         0.0
+    property int batteryLevel:              0
 
-    property double updateTime:      0.0
+    property real latitude:                 0.0
+    property real longitude:                0.0
 
-    property string userId:          ""
-    property string firstName:       ""
-    property string lastName:        ""
-    property string bigPhotoUrl:     ""
-    property string screenName:      ""
-    property string status:          ""
-    property string batteryStatus:   ""
-    property string sharedKey:       ""
+    property double updateTime:             0.0
+
+    property string userId:                 ""
+    property string firstName:              ""
+    property string lastName:               ""
+    property string bigPhotoUrl:            ""
+    property string screenName:             ""
+    property string status:                 ""
+    property string batteryStatus:          ""
+    property string sharedKey:              ""
 
     signal locationOnMapRequested(string userId)
 
