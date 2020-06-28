@@ -2,7 +2,7 @@
 
 NUMBER_OF_PROCESSORS=$(sysctl -n hw.ncpu)
 
-PATH=$PATH:~/Qt/5.12.8/ios/bin:~/SonarCloud/build-wrapper-macosx-x86:~/SonarCloud/sonar-scanner-4.3.0.2102-macosx/bin
+PATH=$PATH:~/Qt/5.12.9/ios/bin:~/SonarCloud/build-wrapper-macosx-x86:~/SonarCloud/sonar-scanner-4.3.0.2102-macosx/bin
 
 if [ "$#" = "1" ]; then
     cd .. && \
@@ -18,7 +18,7 @@ if [ "$#" = "1" ]; then
                   -Dsonar.organization=vkgeo-github \
                   -Dsonar.sources=. \
                   -Dsonar.sourceEncoding=UTF-8 \
-                  -Dsonar.exclusions="qml_*.cpp,qrc_*.cpp,qml/**/*,translations/*" \
+                  -Dsonar.exclusions="qml_*.cpp,qrc_*.cpp,3rdparty/**/*,qml/**/*,translations/*" \
                   -Dsonar.cfamily.build-wrapper-output=.sonarbuild/bw-output \
                   -Dsonar.cfamily.cache.enabled=false \
                   -Dsonar.cfamily.threads=$NUMBER_OF_PROCESSORS \

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PATH=$PATH:~/Qt/5.12.8/ios/bin
+PATH=$PATH:~/Qt/5.12.9/ios/bin
 
 lupdate -locations absolute ../vkgeo.pro -ts ../translations/vkgeo_ru.src.ts
 lupdate -locations absolute ../qml       -ts ../translations/vkgeo_ru.qml.ts
