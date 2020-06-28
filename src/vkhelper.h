@@ -48,31 +48,15 @@ class VKHelper : public QObject
     Q_PROPERTY(QString photoUrl     READ photoUrl     NOTIFY photoUrlChanged)
     Q_PROPERTY(QString bigPhotoUrl  READ bigPhotoUrl  NOTIFY bigPhotoUrlChanged)
 
-    Q_PROPERTY(int maxTrustedFriendsCount READ maxTrustedFriendsCount WRITE setMaxTrustedFriendsCount NOTIFY maxTrustedFriendsCountChanged)
-    Q_PROPERTY(int maxTrackedFriendsCount READ maxTrackedFriendsCount WRITE setMaxTrackedFriendsCount NOTIFY maxTrackedFriendsCountChanged)
+    Q_PROPERTY(bool encryptionEnabled      READ encryptionEnabled      WRITE setEncryptionEnabled      NOTIFY encryptionEnabledChanged)
+    Q_PROPERTY(int  maxTrustedFriendsCount READ maxTrustedFriendsCount WRITE setMaxTrustedFriendsCount NOTIFY maxTrustedFriendsCountChanged)
+    Q_PROPERTY(int  maxTrackedFriendsCount READ maxTrackedFriendsCount WRITE setMaxTrackedFriendsCount NOTIFY maxTrackedFriendsCountChanged)
 
 private:
     explicit VKHelper(QObject *parent = nullptr);
     ~VKHelper() noexcept override;
 
 public:
-    static constexpr int DEFAULT_MAX_TRUSTED_FRIENDS_COUNT    = 5,
-                         DEFAULT_MAX_TRACKED_FRIENDS_COUNT    = 5,
-                         MAX_SEND_DATA_TRIES_COUNT            = 5,
-                         REQUEST_QUEUE_TIMER_INTERVAL         = 1000,
-                         SEND_DATA_ON_UPDATE_TIMER_INTERVAL   = 100,
-                         SEND_DATA_TIMER_INTERVAL             = 60000,
-                         SEND_DATA_INTERVAL                   = 300,
-                         UPDATE_TRACKED_FRIENDS_DATA_INTERVAL = 60,
-                         MAX_BATCH_SIZE                       = 25,
-                         MAX_NOTES_GET_COUNT                  = 100,
-                         MAX_FRIENDS_GET_COUNT                = 500;
-
-    static const QString DEFAULT_PHOTO_URL,
-                         DATA_NOTE_TITLE,
-                         TRUSTED_FRIENDS_LIST_NAME,
-                         TRACKED_FRIENDS_LIST_NAME;
-
     VKHelper(const VKHelper &) = delete;
     VKHelper(VKHelper &&) noexcept = delete;
 
@@ -93,6 +77,9 @@ public:
     QString lastName() const;
     QString photoUrl() const;
     QString bigPhotoUrl() const;
+
+    bool encryptionEnabled() const;
+    void setEncryptionEnabled(bool enabled);
 
     int maxTrustedFriendsCount() const;
     void setMaxTrustedFriendsCount(int count);
@@ -133,6 +120,7 @@ signals:
     void lastNameChanged(const QString &lastName);
     void photoUrlChanged(const QString &photoUrl);
     void bigPhotoUrlChanged(const QString &bigPhotoUrl);
+    void encryptionEnabledChanged(bool encryptionEnabled);
     void maxTrustedFriendsCountChanged(int maxTrustedFriendsCount);
     void maxTrackedFriendsCountChanged(int maxTrackedFriendsCount);
     void locationUpdated();
@@ -186,12 +174,28 @@ private:
     void HandleGroupsJoinResponse(const QString &response, const QVariantMap &resp_request);
     void HandleGroupsJoinError(const QVariantMap &err_request);
 
+    static constexpr int MAX_SEND_DATA_TRIES_COUNT            = 5,
+                         REQUEST_QUEUE_TIMER_INTERVAL         = 1000,
+                         SEND_DATA_ON_UPDATE_TIMER_INTERVAL   = 100,
+                         SEND_DATA_TIMER_INTERVAL             = 60000,
+                         SEND_DATA_INTERVAL                   = 300,
+                         UPDATE_TRACKED_FRIENDS_DATA_INTERVAL = 60,
+                         MAX_BATCH_SIZE                       = 25,
+                         MAX_NOTES_GET_COUNT                  = 100,
+                         MAX_FRIENDS_GET_COUNT                = 500;
+
+    static const QString DEFAULT_PHOTO_URL,
+                         DATA_NOTE_TITLE,
+                         TRUSTED_FRIENDS_LIST_NAME,
+                         TRACKED_FRIENDS_LIST_NAME;
+
     enum DataState {
         DataNotUpdated,
         DataUpdated,
         DataUpdatedAndSent
     };
 
+    bool                EncryptionEnabled;
     int                 CurrentDataState, AuthState, MaxTrustedFriendsCount,
                         MaxTrackedFriendsCount, SendDataTryNumber;
     qint64              LastSendDataTime, LastUpdateTrackedFriendsDataTime,

@@ -2,6 +2,8 @@
 
 #include <QtCore/QtGlobal>
 #include <QtCore/QtMath>
+#include <QtGui/QClipboard>
+#include <QtGui/QGuiApplication>
 
 #include "uihelper.h"
 
@@ -63,6 +65,16 @@ void UIHelper::setConfiguredTheme(int theme)
             emit darkThemeChanged(DarkTheme);
         }
     }
+}
+
+void UIHelper::copyToClipboard(const QString &text) const
+{
+    QGuiApplication::clipboard()->setText(text);
+}
+
+QString UIHelper::pasteFromClipboard() const
+{
+    return QGuiApplication::clipboard()->text();
 }
 
 QString UIHelper::getAppSettingsUrl() const

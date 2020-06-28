@@ -1,13 +1,18 @@
 TEMPLATE = app
 TARGET = vkgeo
 
-QT += quick quickcontrols2 sql location positioning purchasing
+QT += quick quickcontrols2 location positioning purchasing
 CONFIG += c++17
 
 DEFINES += QT_DEPRECATED_WARNINGS QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII
 
+INCLUDEPATH += 3rdparty
+
 SOURCES += \
+    3rdparty/qt-aes/qaesencryption.cpp \
+    src/appsettings.cpp \
     src/contextguard.cpp \
+    src/cryptohelper.cpp \
     src/main.cpp
 
 OBJECTIVE_SOURCES += \
@@ -22,10 +27,13 @@ OBJECTIVE_SOURCES += \
     src/vkhelper.mm
 
 HEADERS += \
+    3rdparty/qt-aes/qaesencryption.h \
     src/admobhelper.h \
     src/appinitialized.h \
+    src/appsettings.h \
     src/batteryhelper.h \
     src/contextguard.h \
+    src/cryptohelper.h \
     src/locationmanagerdelegate.h \
     src/notificationhelper.h \
     src/storehelper.h \

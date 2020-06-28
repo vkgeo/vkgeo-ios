@@ -14,6 +14,17 @@ Rectangle {
     color: "transparent"
 
     Toast {
+        id:              sharedKeyCopiedToClipboardToast
+        anchors.top:     parent.top
+        anchors.left:    parent.left
+        anchors.right:   parent.right
+        anchors.margins: UtilScript.dp(UIHelper.screenDpi, 4)
+        z:               1
+        height:          UtilScript.dp(UIHelper.screenDpi, 48)
+        text:            qsTr("The shared key has been copied to the clipboard")
+    }
+
+    Toast {
         id:              friendsListUpdatedToast
         anchors.top:     parent.top
         anchors.left:    parent.left
@@ -217,6 +228,97 @@ Rectangle {
                 Layout.alignment: Qt.AlignVCenter
             }
 
+            Text {
+                leftPadding:         UtilScript.dp(UIHelper.screenDpi, 16)
+                rightPadding:        UtilScript.dp(UIHelper.screenDpi, 16)
+                text:                qsTr("You can enable encryption of your location data. If you do this, your trusted friends <b>will additionally need this shared key</b> to see your location.")
+                color:               UIHelper.darkTheme ? "white"     : "black"
+                linkColor:           UIHelper.darkTheme ? "lightblue" : "blue"
+                font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 16)
+                font.family:         "Helvetica"
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment:   Text.AlignVCenter
+                wrapMode:            Text.Wrap
+                fontSizeMode:        Text.Fit
+                minimumPixelSize:    UtilScript.dp(UIHelper.screenDpi, 8)
+                textFormat:          Text.StyledText
+                Layout.fillWidth:    true
+                Layout.alignment:    Qt.AlignVCenter
+            }
+
+            Text {
+                leftPadding:         UtilScript.dp(UIHelper.screenDpi, 16)
+                rightPadding:        UtilScript.dp(UIHelper.screenDpi, 16)
+                text:                qsTr("Only pass this shared key to <b>trusted friends</b>. <b>Do not use VK services to transfer the key</b>; do this only through separate trusted and secure channels.")
+                color:               UIHelper.darkTheme ? "white"     : "black"
+                linkColor:           UIHelper.darkTheme ? "lightblue" : "blue"
+                font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 16)
+                font.family:         "Helvetica"
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment:   Text.AlignVCenter
+                wrapMode:            Text.Wrap
+                fontSizeMode:        Text.Fit
+                minimumPixelSize:    UtilScript.dp(UIHelper.screenDpi, 8)
+                textFormat:          Text.StyledText
+                Layout.fillWidth:    true
+                Layout.alignment:    Qt.AlignVCenter
+            }
+
+            Text {
+                leftPadding:         UtilScript.dp(UIHelper.screenDpi, 16)
+                rightPadding:        UtilScript.dp(UIHelper.screenDpi, 16)
+                text:                UtilScript.formatSharedKey(CryptoHelper.sharedKey)
+                color:               textColor(UIHelper.darkTheme, VKHelper.encryptionEnabled)
+                font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 20)
+                font.family:         "Helvetica"
+                font.italic:         true
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment:   Text.AlignVCenter
+                wrapMode:            Text.Wrap
+                fontSizeMode:        Text.Fit
+                minimumPixelSize:    UtilScript.dp(UIHelper.screenDpi, 8)
+                textFormat:          Text.PlainText
+                Layout.fillWidth:    true
+                Layout.alignment:    Qt.AlignVCenter
+
+                function textColor(dark_theme, encryption_enabled) {
+                    if (encryption_enabled) {
+                        return "green";
+                    } else if (dark_theme) {
+                        return "white";
+                    } else {
+                        return "black";
+                    }
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onPressAndHold: {
+                        UIHelper.copyToClipboard(UtilScript.formatSharedKey(CryptoHelper.sharedKey));
+
+                        sharedKeyCopiedToClipboardToast.visible = true;
+                    }
+                }
+            }
+
+            VKButton {
+                implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
+                implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
+                text:             qsTr("Encryption settings")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                onClicked: {
+                    encryptionSettingsDialog.open();
+                }
+            }
+
+            ToolSeparator {
+                orientation:      Qt.Horizontal
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignVCenter
+            }
+
             VKButton {
                 implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
                 implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
@@ -335,6 +437,7 @@ Rectangle {
                         var my_profile_page = mainStackView.push(component);
 
                         my_profile_page.userId            = VKHelper.userId;
+                        my_profile_page.editable          = false;
                         my_profile_page.online            = false;
                         my_profile_page.dataAvailable     = false;
                         my_profile_page.locationAvailable = false;
@@ -344,6 +447,7 @@ Rectangle {
                         my_profile_page.screenName        = "id%1".arg(VKHelper.userId);
                         my_profile_page.status            = "";
                         my_profile_page.batteryStatus     = "";
+                        my_profile_page.sharedKey         = "";
                     } else {
                         console.error(component.errorString());
                     }
@@ -363,6 +467,23 @@ Rectangle {
         }
     }
 
+    EncryptionSettingsDialog {
+        id:                encryptionSettingsDialog
+        encryptionEnabled: VKHelper.encryptionEnabled
+
+        onToggleEncryptionSelected: {
+            mainWindow.enableEncryption = !VKHelper.encryptionEnabled;
+        }
+
+        onRegenerateSharedKeySelected: {
+            regenerateSharedKeyMessageDialog.open();
+        }
+
+        onResetKeystoreSelected: {
+            resetKeystoreMessageDialog.open();
+        }
+    }
+
     ThemeSelectionDialog {
         id: themeSelectionDialog
 
@@ -376,6 +497,29 @@ Rectangle {
 
         onDarkThemeSelected: {
             mainWindow.configuredTheme = "DARK";
+        }
+    }
+
+    MessageDialog {
+        id:              regenerateSharedKeyMessageDialog
+        title:           qsTr("Regenerate the shared key")
+        text:            qsTr("Are you sure you want to regenerate the shared key?")
+        standardButtons: StandardButton.Yes | StandardButton.No
+
+        onYes: {
+            CryptoHelper.regenerateSharedKey();
+        }
+    }
+
+    MessageDialog {
+        id:              resetKeystoreMessageDialog
+        title:           qsTr("Reset the keystore")
+        text:            qsTr("Are you sure you want to reset the keystore? All keys associated with your friends will be deleted and your shared key will be regenerated.")
+        standardButtons: StandardButton.Yes | StandardButton.No
+
+        onYes: {
+            CryptoHelper.clearSharedKeysOfFriends();
+            CryptoHelper.regenerateSharedKey();
         }
     }
 

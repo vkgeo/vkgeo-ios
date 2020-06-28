@@ -11,11 +11,22 @@ Page {
     id: profilePage
 
     header: PageHeader {
-        bannerViewHeight:  profilePage.bannerViewHeight
         text:              qsTr("Profile info")
-        doneButtonVisible: false
+        doneButtonVisible: profilePage.editable
 
         onBackClicked: {
+            mainStackView.pop();
+        }
+
+        onDoneClicked: {
+            var key = UtilScript.concatSharedKey(sharedKeyTextField.displayText);
+
+            if (key !== "") {
+                CryptoHelper.setSharedKeyOfFriend(profilePage.userId, key);
+            } else {
+                CryptoHelper.removeSharedKeyOfFriend(profilePage.userId);
+            }
+
             mainStackView.pop();
         }
     }
@@ -24,26 +35,26 @@ Page {
         color: UIHelper.darkTheme ? "black" : "white"
     }
 
-    readonly property int bannerViewHeight: AdMobHelper.bannerViewHeight
+    property bool editable:          false
+    property bool online:            false
+    property bool dataAvailable:     false
+    property bool locationAvailable: false
 
-    property bool online:                   false
-    property bool dataAvailable:            false
-    property bool locationAvailable:        false
+    property int batteryLevel:       0
 
-    property int batteryLevel:              0
+    property real latitude:          0.0
+    property real longitude:         0.0
 
-    property real latitude:                 0.0
-    property real longitude:                0.0
+    property double updateTime:      0.0
 
-    property double updateTime:             0.0
-
-    property string userId:                 ""
-    property string firstName:              ""
-    property string lastName:               ""
-    property string bigPhotoUrl:            ""
-    property string screenName:             ""
-    property string status:                 ""
-    property string batteryStatus:          ""
+    property string userId:          ""
+    property string firstName:       ""
+    property string lastName:        ""
+    property string bigPhotoUrl:     ""
+    property string screenName:      ""
+    property string status:          ""
+    property string batteryStatus:   ""
+    property string sharedKey:       ""
 
     signal locationOnMapRequested(string userId)
 
@@ -243,6 +254,54 @@ Page {
                 onClicked: {
                     if (!Qt.openUrlExternally("vk://vk.com/%1".arg(profilePage.screenName))) {
                         Qt.openUrlExternally("https://m.vk.com/%1".arg(profilePage.screenName));
+                    }
+                }
+            }
+
+            ToolSeparator {
+                orientation:      Qt.Horizontal
+                visible:          profilePage.editable
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignVCenter
+            }
+
+            TextField {
+                id:                   sharedKeyTextField
+                text:                 UtilScript.formatSharedKey(profilePage.sharedKey)
+                placeholderText:      qsTr("Shared key")
+                font.pixelSize:       UtilScript.dp(UIHelper.screenDpi, 20)
+                font.family:          "Helvetica"
+                inputMethodHints:     Qt.ImhNoPredictiveText
+                horizontalAlignment:  TextField.AlignHCenter
+                verticalAlignment:    TextField.AlignVCenter
+                wrapMode:             TextField.Wrap
+                visible:              profilePage.editable
+                Layout.minimumHeight: UtilScript.dp(UIHelper.screenDpi, 64)
+                Layout.leftMargin:    UtilScript.dp(UIHelper.screenDpi, 16)
+                Layout.rightMargin:   UtilScript.dp(UIHelper.screenDpi, 16)
+                Layout.fillWidth:     true
+                Layout.alignment:     Qt.AlignVCenter
+
+                background: Rectangle {
+                    color:        UIHelper.darkTheme ? "lightgray" : "white"
+                    radius:       UtilScript.dp(UIHelper.screenDpi, 8)
+                    border.width: UtilScript.dp(UIHelper.screenDpi, 1)
+                    border.color: "steelblue"
+                }
+            }
+
+            VKButton {
+                implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
+                implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
+                text:             qsTr("Paste from the clipboard")
+                visible:          profilePage.editable
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                onClicked: {
+                    var text = UIHelper.pasteFromClipboard();
+
+                    if (text !== "") {
+                        sharedKeyTextField.text = text;
                     }
                 }
             }

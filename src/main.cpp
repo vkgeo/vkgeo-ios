@@ -8,7 +8,9 @@
 
 #include "admobhelper.h"
 #include "appinitialized.h"
+#include "appsettings.h"
 #include "batteryhelper.h"
+#include "cryptohelper.h"
 #include "notificationhelper.h"
 #include "storehelper.h"
 #include "uihelper.h"
@@ -36,7 +38,9 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
     engine.rootContext()->setContextProperty(QStringLiteral("AdMobHelper"), &AdMobHelper::GetInstance());
+    engine.rootContext()->setContextProperty(QStringLiteral("AppSettings"), &AppSettings::GetInstance());
     engine.rootContext()->setContextProperty(QStringLiteral("BatteryHelper"), &BatteryHelper::GetInstance());
+    engine.rootContext()->setContextProperty(QStringLiteral("CryptoHelper"), &CryptoHelper::GetInstance());
     engine.rootContext()->setContextProperty(QStringLiteral("NotificationHelper"), &NotificationHelper::GetInstance());
     engine.rootContext()->setContextProperty(QStringLiteral("StoreHelper"), &StoreHelper::GetInstance());
     engine.rootContext()->setContextProperty(QStringLiteral("UIHelper"), &UIHelper::GetInstance());

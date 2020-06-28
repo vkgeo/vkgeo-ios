@@ -39,6 +39,7 @@ Rectangle {
                 var my_profile_page = mainStackView.push(component);
 
                 my_profile_page.userId            = VKHelper.userId;
+                my_profile_page.editable          = false;
                 my_profile_page.online            = false;
                 my_profile_page.dataAvailable     = false;
                 my_profile_page.locationAvailable = false;
@@ -48,6 +49,7 @@ Rectangle {
                 my_profile_page.screenName        = "id%1".arg(VKHelper.userId);
                 my_profile_page.status            = "";
                 my_profile_page.batteryStatus     = "";
+                my_profile_page.sharedKey         = "";
             } else {
                 for (var i = 0; i < friendsListModel.count; i++) {
                     var frnd = friendsListModel.get(i);
@@ -56,6 +58,7 @@ Rectangle {
                         var profile_page = mainStackView.push(component);
 
                         profile_page.userId            = frnd.userId;
+                        profile_page.editable          = true;
                         profile_page.online            = frnd.online;
                         profile_page.dataAvailable     = frnd.dataAvailable;
                         profile_page.locationAvailable = frnd.locationAvailable;
@@ -69,6 +72,7 @@ Rectangle {
                         profile_page.screenName        = frnd.screenName;
                         profile_page.status            = frnd.status;
                         profile_page.batteryStatus     = frnd.batteryStatus;
+                        profile_page.sharedKey         = CryptoHelper.getSharedKeyOfFriend(frnd.userId);
 
                         profile_page.locationOnMapRequested.connect(friendsSwipe.locationOnMapRequested);
 

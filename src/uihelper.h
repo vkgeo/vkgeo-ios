@@ -45,6 +45,9 @@ public:
     int configuredTheme() const;
     void setConfiguredTheme(int theme);
 
+    Q_INVOKABLE void copyToClipboard(const QString &text) const;
+    Q_INVOKABLE QString pasteFromClipboard() const;
+
     Q_INVOKABLE QString getAppSettingsUrl() const;
 
     Q_INVOKABLE void sendInvitation(const QString &text) const;

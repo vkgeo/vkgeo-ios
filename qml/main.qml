@@ -1,6 +1,5 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
-import QtQuick.LocalStorage 2.12
 import QtPurchasing 1.0
 import UIHelper 1.0
 import VKHelper 1.0
@@ -12,20 +11,25 @@ ApplicationWindow {
     title:   qsTr("VKGeo")
     visible: false
 
-    readonly property bool appInForeground: Qt.application.state === Qt.ApplicationActive
+    readonly property bool appInForeground:    Qt.application.state === Qt.ApplicationActive
 
-    readonly property int screenDpi:        UIHelper.screenDpi
-    readonly property int vkAuthState:      VKHelper.authState
+    readonly property int screenDpi:           UIHelper.screenDpi
+    readonly property int vkAuthState:         VKHelper.authState
 
-    property bool componentCompleted:       false
-    property bool disableAds:               false
-    property bool enableTrackedFriends:     false
-    property bool increaseTrackingLimits:   false
+    readonly property string sharedKey:        CryptoHelper.sharedKey
 
-    property string configuredTheme:        ""
-    property string adMobConsent:           ""
+    readonly property var sharedKeysOfFriends: CryptoHelper.sharedKeysOfFriends
 
-    property var loginPage:                 null
+    property bool componentCompleted:          false
+    property bool disableAds:                  false
+    property bool enableEncryption:            false
+    property bool enableTrackedFriends:        false
+    property bool increaseTrackingLimits:      false
+
+    property string configuredTheme:           ""
+    property string adMobConsent:              ""
+
+    property var loginPage:                    null
 
     onAppInForegroundChanged: {
         if (appInForeground && componentCompleted) {
@@ -59,6 +63,18 @@ ApplicationWindow {
         }
     }
 
+    onSharedKeyChanged: {
+        if (componentCompleted) {
+            AppSettings.sharedKey = sharedKey;
+        }
+    }
+
+    onSharedKeysOfFriendsChanged: {
+        if (componentCompleted) {
+            AppSettings.sharedKeysOfFriends = sharedKeysOfFriends;
+        }
+    }
+
     onComponentCompletedChanged: {
         if (appInForeground && componentCompleted) {
             visible = true;
@@ -74,64 +90,46 @@ ApplicationWindow {
             } else if (vkAuthState === VKAuthState.StateAuthorized) {
                 closeLoginPage();
             }
+
+            AppSettings.sharedKey           = sharedKey;
+            AppSettings.sharedKeysOfFriends = sharedKeysOfFriends;
         }
     }
 
     onDisableAdsChanged: {
-        setSetting("DisableAds", disableAds ? "true" : "false");
+        AppSettings.disableAds = disableAds;
+
+        updateFeatures();
+    }
+
+    onEnableEncryptionChanged: {
+        AppSettings.enableEncryption = enableEncryption;
 
         updateFeatures();
     }
 
     onEnableTrackedFriendsChanged: {
-        setSetting("EnableTrackedFriends", enableTrackedFriends ? "true" : "false");
+        AppSettings.enableTrackedFriends = enableTrackedFriends;
 
         updateFeatures();
     }
 
     onIncreaseTrackingLimitsChanged: {
-        setSetting("IncreaseTrackingLimits", increaseTrackingLimits ? "true" : "false");
+        AppSettings.increaseTrackingLimits = increaseTrackingLimits;
 
         updateFeatures();
     }
 
     onConfiguredThemeChanged: {
-        setSetting("ConfiguredTheme", configuredTheme);
+        AppSettings.configuredTheme = configuredTheme;
 
         updateFeatures();
     }
 
     onAdMobConsentChanged: {
-        setSetting("AdMobConsent", adMobConsent);
+        AppSettings.adMobConsent = adMobConsent;
 
         updateFeatures();
-    }
-
-    function setSetting(key, value) {
-        var db = LocalStorage.openDatabaseSync("VKGeoDB", "1.0", "VKGeoDB", 1000000);
-
-        db.transaction(function(tx) {
-            tx.executeSql("CREATE TABLE IF NOT EXISTS SETTINGS(KEY TEXT PRIMARY KEY, VALUE TEXT)");
-
-            tx.executeSql("REPLACE INTO SETTINGS (KEY, VALUE) VALUES (?, ?)", [key, value]);
-        });
-    }
-
-    function getSetting(key, defaultValue) {
-        var value = defaultValue;
-        var db    = LocalStorage.openDatabaseSync("VKGeoDB", "1.0", "VKGeoDB", 1000000);
-
-        db.transaction(function(tx) {
-            tx.executeSql("CREATE TABLE IF NOT EXISTS SETTINGS(KEY TEXT PRIMARY KEY, VALUE TEXT)");
-
-            var res = tx.executeSql("SELECT VALUE FROM SETTINGS WHERE KEY=?", [key]);
-
-            if (res.rows.length > 0) {
-                value = res.rows.item(0).VALUE;
-            }
-        });
-
-        return value;
     }
 
     function openLoginPage() {
@@ -171,6 +169,8 @@ ApplicationWindow {
         } else {
             AdMobHelper.hideBannerView();
         }
+
+        VKHelper.encryptionEnabled = enableEncryption;
 
         if (increaseTrackingLimits) {
             VKHelper.maxTrustedFriendsCount = 15;
@@ -327,11 +327,20 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        disableAds             = (getSetting("DisableAds",             "false") === "true");
-        enableTrackedFriends   = (getSetting("EnableTrackedFriends",   "false") === "true");
-        increaseTrackingLimits = (getSetting("IncreaseTrackingLimits", "false") === "true");
-        configuredTheme        =  getSetting("ConfiguredTheme",        "");
-        adMobConsent           =  getSetting("AdMobConsent",           "");
+        if (AppSettings.sharedKey !== "") {
+            CryptoHelper.sharedKey = AppSettings.sharedKey;
+        } else {
+            CryptoHelper.regenerateSharedKey();
+        }
+
+        CryptoHelper.sharedKeysOfFriends = AppSettings.sharedKeysOfFriends;
+
+        disableAds             = AppSettings.disableAds;
+        enableEncryption       = AppSettings.enableEncryption;
+        enableTrackedFriends   = AppSettings.enableTrackedFriends;
+        increaseTrackingLimits = AppSettings.increaseTrackingLimits;
+        configuredTheme        = AppSettings.configuredTheme;
+        adMobConsent           = AppSettings.adMobConsent;
 
         updateFeatures();
 

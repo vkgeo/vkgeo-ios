@@ -3,13 +3,14 @@
 
 #include <QtCore/QtGlobal>
 #include <QtCore/QtMath>
+#include <QtCore/QLatin1String>
 #include <QtCore/QDebug>
 
 #include "admobhelper.h"
 
 const QString AdMobHelper::ADMOB_BANNERVIEW_UNIT_ID  (QStringLiteral("ca-app-pub-2455088855015693/6159186300"));
 const QString AdMobHelper::ADMOB_INTERSTITIAL_UNIT_ID(QStringLiteral("ca-app-pub-2455088855015693/6215026625"));
-const QString AdMobHelper::ADMOB_TEST_DEVICE_ID      (QStringLiteral(""));
+const QString AdMobHelper::ADMOB_TEST_DEVICE_ID      (QLatin1String(""));
 
 namespace {
 
@@ -337,7 +338,7 @@ void AdMobHelper::initAds()
     if (!Initialized) {
         [GADMobileAds sharedInstance].requestConfiguration.maxAdContentRating = GADMaxAdContentRatingGeneral;
 
-        if (AdMobHelper::ADMOB_TEST_DEVICE_ID != QStringLiteral("")) {
+        if (AdMobHelper::ADMOB_TEST_DEVICE_ID != QLatin1String("")) {
             [GADMobileAds sharedInstance].requestConfiguration.testDeviceIdentifiers = @[AdMobHelper::ADMOB_TEST_DEVICE_ID.toNSString()];
         }
 
