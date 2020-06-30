@@ -17,6 +17,29 @@
     </message>
 </context>
 <context>
+    <name>EncryptionSettingsDialog</name>
+    <message>
+        <source>Disable encryption</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable encryption</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Regenerate the shared key</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset the keystore</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Отменить</translation>
+    </message>
+</context>
+<context>
     <name>FriendsSwipe</name>
     <message>
         <source>I invite you to install the VKGeo Friends on Map app and join the community: https://vkgeo.sourceforge.io/</source>
@@ -94,9 +117,21 @@
         <source>Open profile</source>
         <translation>Открыть профиль</translation>
     </message>
+    <message>
+        <source>Shared key</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Paste from the clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsSwipe</name>
+    <message>
+        <source>The shared key has been copied to the clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <source>Settings has been updated successfully</source>
         <translation>Настройки успешно обновлены</translation>
@@ -146,6 +181,18 @@
         <translation>Список отслеживаемых друзей</translation>
     </message>
     <message>
+        <source>You can enable encryption of your location data. If you do this, your trusted friends &lt;b&gt;will additionally need this shared key&lt;/b&gt; to see your location.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Only pass this shared key to &lt;b&gt;trusted friends&lt;/b&gt;. &lt;b&gt;Do not use VK services to transfer the key&lt;/b&gt;; do this only through separate trusted and secure channels.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Encryption settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>light</source>
         <translation>светлая</translation>
     </message>
@@ -192,6 +239,22 @@
     <message>
         <source>Log out of VK</source>
         <translation>Выход из ВКонтакте</translation>
+    </message>
+    <message>
+        <source>Regenerate the shared key</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to regenerate the shared key?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset the keystore</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to reset the keystore? All keys associated with your friends will be deleted and your shared key will be regenerated.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Join group</source>
