@@ -20,23 +20,23 @@
     <name>EncryptionSettingsDialog</name>
     <message>
         <source>Disable encryption</source>
-        <translation type="unfinished"></translation>
+        <translation>Выключить шифрование</translation>
     </message>
     <message>
         <source>Enable encryption</source>
-        <translation type="unfinished"></translation>
+        <translation>Включить шифрование</translation>
     </message>
     <message>
         <source>Regenerate the shared key</source>
-        <translation type="unfinished"></translation>
+        <translation>Перегенерировать общий ключ</translation>
     </message>
     <message>
         <source>Reset the keystore</source>
-        <translation type="unfinished"></translation>
+        <translation>Очистить хранилище ключей</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Отменить</translation>
+        <translation>Отменить</translation>
     </message>
 </context>
 <context>
@@ -119,18 +119,18 @@
     </message>
     <message>
         <source>Shared key</source>
-        <translation type="unfinished"></translation>
+        <translation>Общий ключ</translation>
     </message>
     <message>
         <source>Paste from the clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Вставить из буфера обмена</translation>
     </message>
 </context>
 <context>
     <name>SettingsSwipe</name>
     <message>
         <source>The shared key has been copied to the clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Общий ключ был скопирован в буфер обмена</translation>
     </message>
     <message>
         <source>Settings has been updated successfully</source>
@@ -182,15 +182,15 @@
     </message>
     <message>
         <source>You can enable encryption of your location data. If you do this, your trusted friends &lt;b&gt;will additionally need this shared key&lt;/b&gt; to see your location.</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы можете включить шифрование данных о вашем местоположении. Если вы сделаете это, вашим доверенным друзьям &lt;b&gt;дополнительно понадобится этот общий ключ&lt;/b&gt; для того, чтобы видеть ваше местоположение.</translation>
     </message>
     <message>
         <source>Only pass this shared key to &lt;b&gt;trusted friends&lt;/b&gt;. &lt;b&gt;Do not use VK services to transfer the key&lt;/b&gt;; do this only through separate trusted and secure channels.</source>
-        <translation type="unfinished"></translation>
+        <translation>Передавайте этот общий ключ только &lt;b&gt;доверенным друзьям&lt;/b&gt;. &lt;b&gt;Не используйте сервисы ВКонтакте для передачи ключа&lt;/b&gt;; делайте это только по отдельным доверенным и безопасным каналам.</translation>
     </message>
     <message>
         <source>Encryption settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Настройки шифрования</translation>
     </message>
     <message>
         <source>light</source>
@@ -242,19 +242,19 @@
     </message>
     <message>
         <source>Regenerate the shared key</source>
-        <translation type="unfinished"></translation>
+        <translation>Перегенерировать общий ключ</translation>
     </message>
     <message>
         <source>Are you sure you want to regenerate the shared key?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы уверены, что хотите перегенерировать общий ключ?</translation>
     </message>
     <message>
         <source>Reset the keystore</source>
-        <translation type="unfinished"></translation>
+        <translation>Очистить хранилище ключей</translation>
     </message>
     <message>
         <source>Are you sure you want to reset the keystore? All keys associated with your friends will be deleted and your shared key will be regenerated.</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы уверены, что хотите очистить хранилище ключей? Все ключи, привязанные к вашим друзьям, будут удалены, а ваш общий ключ будет перегенерирован.</translation>
     </message>
     <message>
         <source>Join group</source>
