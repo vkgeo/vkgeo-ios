@@ -24,27 +24,27 @@
     <message>
         <location filename="../qml/Core/Dialog/EncryptionSettingsDialog.qml" line="42"/>
         <source>Disable encryption</source>
-        <translation type="unfinished"></translation>
+        <translation>Выключить шифрование</translation>
     </message>
     <message>
         <location filename="../qml/Core/Dialog/EncryptionSettingsDialog.qml" line="42"/>
         <source>Enable encryption</source>
-        <translation type="unfinished"></translation>
+        <translation>Включить шифрование</translation>
     </message>
     <message>
         <location filename="../qml/Core/Dialog/EncryptionSettingsDialog.qml" line="54"/>
         <source>Regenerate the shared key</source>
-        <translation type="unfinished"></translation>
+        <translation>Перегенерировать общий ключ</translation>
     </message>
     <message>
         <location filename="../qml/Core/Dialog/EncryptionSettingsDialog.qml" line="66"/>
         <source>Reset the keystore</source>
-        <translation type="unfinished"></translation>
+        <translation>Очистить хранилище ключей</translation>
     </message>
     <message>
         <location filename="../qml/Core/Dialog/EncryptionSettingsDialog.qml" line="78"/>
         <source>Cancel</source>
-        <translation type="unfinished">Отменить</translation>
+        <translation>Отменить</translation>
     </message>
 </context>
 <context>
@@ -136,12 +136,12 @@
     <message>
         <location filename="../qml/Core/ProfilePage.qml" line="274"/>
         <source>Shared key</source>
-        <translation type="unfinished"></translation>
+        <translation>Общий ключ</translation>
     </message>
     <message>
         <location filename="../qml/Core/ProfilePage.qml" line="299"/>
         <source>Paste from the clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Вставить из буфера обмена</translation>
     </message>
     <message>
         <location filename="../qml/Core/ProfilePage.qml" line="240"/>
@@ -199,17 +199,17 @@
     <message>
         <location filename="../qml/Core/Main/SettingsSwipe.qml" line="234"/>
         <source>You can enable encryption of your location data. If you do this, your trusted friends &lt;b&gt;will additionally need this shared key&lt;/b&gt; to see your location.</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы можете включить шифрование данных о вашем местоположении. Если вы сделаете это, вашим доверенным друзьям &lt;b&gt;дополнительно понадобится этот общий ключ&lt;/b&gt; для того, чтобы видеть ваше местоположение.</translation>
     </message>
     <message>
         <location filename="../qml/Core/Main/SettingsSwipe.qml" line="252"/>
         <source>Only pass this shared key to &lt;b&gt;trusted friends&lt;/b&gt;. &lt;b&gt;Do not use VK services to transfer the key&lt;/b&gt;; do this only through separate trusted and secure channels.</source>
-        <translation type="unfinished"></translation>
+        <translation>Передавайте этот общий ключ только &lt;b&gt;доверенным друзьям&lt;/b&gt;. &lt;b&gt;Не используйте сервисы ВКонтакте для передачи ключа&lt;/b&gt;; делайте это только по отдельным доверенным и безопасным каналам.</translation>
     </message>
     <message>
         <location filename="../qml/Core/Main/SettingsSwipe.qml" line="308"/>
         <source>Encryption settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Настройки шифрования</translation>
     </message>
     <message>
         <location filename="../qml/Core/Main/SettingsSwipe.qml" line="373"/>
@@ -249,22 +249,22 @@
     <message>
         <location filename="../qml/Core/Main/SettingsSwipe.qml" line="505"/>
         <source>Regenerate the shared key</source>
-        <translation type="unfinished"></translation>
+        <translation>Перегенерировать общий ключ</translation>
     </message>
     <message>
         <location filename="../qml/Core/Main/SettingsSwipe.qml" line="506"/>
         <source>Are you sure you want to regenerate the shared key?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы уверены, что хотите перегенерировать общий ключ?</translation>
     </message>
     <message>
         <location filename="../qml/Core/Main/SettingsSwipe.qml" line="516"/>
         <source>Reset the keystore</source>
-        <translation type="unfinished"></translation>
+        <translation>Очистить хранилище ключей</translation>
     </message>
     <message>
         <location filename="../qml/Core/Main/SettingsSwipe.qml" line="517"/>
         <source>Are you sure you want to reset the keystore? All keys associated with your friends will be deleted and your shared key will be regenerated.</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы уверены, что хотите очистить хранилище ключей? Все ключи, привязанные к вашим друзьям, будут удалены, а ваш общий ключ будет перегенерирован.</translation>
     </message>
     <message>
         <location filename="../qml/Core/Main/SettingsSwipe.qml" line="529"/>
@@ -279,7 +279,7 @@
     <message>
         <location filename="../qml/Core/Main/SettingsSwipe.qml" line="24"/>
         <source>The shared key has been copied to the clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Общий ключ был скопирован в буфер обмена</translation>
     </message>
     <message>
         <location filename="../qml/Core/Main/SettingsSwipe.qml" line="35"/>
