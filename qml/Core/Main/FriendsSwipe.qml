@@ -341,14 +341,33 @@ Rectangle {
                                 } else {
                                     frnd.nearby = false;
                                 }
+                            } else {
+                                frnd.nearby = false;
                             }
+                        } else {
+                            frnd.nearby            = false;
+                            frnd.locationAvailable = false;
+                            frnd.latitude          = 0;
+                            frnd.longitude         = 0;
                         }
 
                         if (typeof friendData.battery_status === "string" &&
                             typeof friendData.battery_level  === "number" && isFinite(friendData.battery_level)) {
                             frnd.batteryStatus = friendData.battery_status;
                             frnd.batteryLevel  = friendData.battery_level;
+                        } else {
+                            frnd.batteryStatus = "";
+                            frnd.batteryLevel  = 0;
                         }
+                    } else {
+                        frnd.nearby            = false;
+                        frnd.dataAvailable     = false;
+                        frnd.updateTime        = 0;
+                        frnd.locationAvailable = false;
+                        frnd.latitude          = 0;
+                        frnd.longitude         = 0;
+                        frnd.batteryStatus     = "";
+                        frnd.batteryLevel      = 0;
                     }
 
                     friendsSwipe.friendsList[i] = frnd;
@@ -370,13 +389,28 @@ Rectangle {
                             friendsListModel.set(j, {"locationAvailable" : true,
                                                      "latitude"          : friendData.latitude,
                                                      "longitude"         : friendData.longitude});
+                        } else {
+                            friendsListModel.set(j, {"locationAvailable" : false,
+                                                     "latitude"          : 0,
+                                                     "longitude"         : 0});
                         }
 
                         if (typeof friendData.battery_status === "string" &&
                             typeof friendData.battery_level  === "number" && isFinite(friendData.battery_level)) {
                             friendsListModel.set(j, {"batteryStatus" : friendData.battery_status,
                                                      "batteryLevel"  : friendData.battery_level});
+                        } else {
+                            friendsListModel.set(j, {"batteryStatus" : "",
+                                                     "batteryLevel"  : 0});
                         }
+                    } else {
+                        friendsListModel.set(j, {"dataAvailable"     : false,
+                                                 "updateTime"        : 0,
+                                                 "locationAvailable" : false,
+                                                 "latitude"          : 0,
+                                                 "longitude"         : 0,
+                                                 "batteryStatus"     : "",
+                                                 "batteryLevel"      : 0});
                     }
 
                     break;
