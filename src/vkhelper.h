@@ -137,7 +137,7 @@ signals:
 private:
     void Cleanup();
 
-    void SendData();
+    bool SendData();
 
     void ContextTrackerAddRequest(const QVariantMap &request);
     void ContextTrackerDelRequest(const QVariantMap &request);
