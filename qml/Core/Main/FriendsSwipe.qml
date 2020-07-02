@@ -327,7 +327,7 @@ Rectangle {
                             frnd.longitude         = friendData.longitude;
 
                             if (VKHelper.locationValid) {
-                                var my_coordinate = QtPositioning.coordinate(VKHelper.locationLatitude, VKHelper.locationLongitude);
+                                var my_coordinate = QtPositioning.coordinate(VKHelper.latitude, VKHelper.longitude);
 
                                 if (my_coordinate.distanceTo(QtPositioning.coordinate(frnd.latitude, frnd.longitude)) < friendsSwipe.nearbyDistance) {
                                     if (!frnd.nearby) {

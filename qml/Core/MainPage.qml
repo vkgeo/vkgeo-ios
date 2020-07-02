@@ -167,7 +167,7 @@ Page {
         target: CryptoHelper
 
         onSharedKeyChanged: {
-            VKHelper.sendData();
+            VKHelper.sendDataImmediately();
         }
 
         onSharedKeysOfFriendsChanged: {
@@ -177,6 +177,10 @@ Page {
 
     Connections {
         target: VKHelper
+
+        onEncryptionEnabledChanged: {
+            VKHelper.sendDataImmediately();
+        }
 
         onDataSent: {
             VKHelper.updateTrackedFriendsData(true);

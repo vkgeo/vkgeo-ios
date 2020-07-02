@@ -35,10 +35,10 @@ class VKHelper : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(bool   locationValid      READ locationValid)
-    Q_PROPERTY(qint64 locationUpdateTime READ locationUpdateTime)
-    Q_PROPERTY(qreal  locationLatitude   READ locationLatitude)
-    Q_PROPERTY(qreal  locationLongitude  READ locationLongitude)
+    Q_PROPERTY(bool   locationValid READ locationValid)
+    Q_PROPERTY(qint64 updateTime    READ updateTime)
+    Q_PROPERTY(qreal  latitude      READ latitude)
+    Q_PROPERTY(qreal  longitude     READ longitude)
 
     Q_PROPERTY(int     authState    READ authState    NOTIFY authStateChanged)
     Q_PROPERTY(int     friendsCount READ friendsCount NOTIFY friendsCountChanged)
@@ -66,9 +66,9 @@ public:
     static VKHelper &GetInstance();
 
     bool locationValid() const;
-    qint64 locationUpdateTime() const;
-    qreal locationLatitude() const;
-    qreal locationLongitude() const;
+    qint64 updateTime() const;
+    qreal latitude() const;
+    qreal longitude() const;
 
     int authState() const;
     int friendsCount() const;
@@ -92,7 +92,7 @@ public:
 
     Q_INVOKABLE void updateLocation(qreal latitude, qreal longitude);
     Q_INVOKABLE void updateBatteryStatus(const QString &status, int level);
-    Q_INVOKABLE void sendData();
+    Q_INVOKABLE void sendDataImmediately();
 
     Q_INVOKABLE void updateFriends();
     Q_INVOKABLE QVariantMap getFriends() const;
@@ -101,7 +101,7 @@ public:
     Q_INVOKABLE void updateTrustedFriendsList(const QVariantList &trusted_friends_list);
     Q_INVOKABLE void updateTrackedFriendsList(const QVariantList &tracked_friends_list);
 
-    Q_INVOKABLE void updateTrackedFriendsData(bool expedited);
+    Q_INVOKABLE void updateTrackedFriendsData(bool immediately);
 
     Q_INVOKABLE void joinGroup(const QString &group_id);
 
@@ -109,7 +109,6 @@ public:
 
 private slots:
     void handleRequestQueueTimerTimeout();
-    void handleSendDataOnUpdateTimerTimeout();
     void handleSendDataTimerTimeout();
 
 signals:
@@ -138,7 +137,7 @@ signals:
 private:
     void Cleanup();
 
-    void SendData(bool expedited);
+    void SendData();
 
     void ContextTrackerAddRequest(const QVariantMap &request);
     void ContextTrackerDelRequest(const QVariantMap &request);
