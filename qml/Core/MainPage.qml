@@ -164,18 +164,6 @@ Page {
     }
 
     Connections {
-        target: CryptoHelper
-
-        onSharedKeyChanged: {
-            VKHelper.sendDataImmediately();
-        }
-
-        onSharedKeysOfFriendsChanged: {
-            VKHelper.updateTrackedFriendsData(true);
-        }
-    }
-
-    Connections {
         target: VKHelper
 
         onEncryptionEnabledChanged: {
