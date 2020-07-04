@@ -268,39 +268,34 @@ Page {
                 Layout.alignment: Qt.AlignVCenter
             }
 
-            Rectangle {
-                color:                  UIHelper.darkTheme ? "lightgray" : "white"
-                radius:                 UtilScript.dp(UIHelper.screenDpi, 8)
+            ScrollView {
                 visible:                profilePage.editable
-                border.width:           UtilScript.dp(UIHelper.screenDpi, 1)
-                border.color:           "steelblue"
                 Layout.preferredHeight: UtilScript.dp(UIHelper.screenDpi, 80)
                 Layout.leftMargin:      UtilScript.dp(UIHelper.screenDpi, 16)
                 Layout.rightMargin:     UtilScript.dp(UIHelper.screenDpi, 16)
                 Layout.fillWidth:       true
                 Layout.alignment:       Qt.AlignVCenter
 
-                ScrollView {
-                    anchors.fill: parent
+                background: Rectangle {
+                    color:        UIHelper.darkTheme ? "lightgray" : "white"
+                    radius:       UtilScript.dp(UIHelper.screenDpi, 8)
+                    border.width: UtilScript.dp(UIHelper.screenDpi, 1)
+                    border.color: "steelblue"
+                }
+
+                TextArea {
+                    id:                  publicKeyTextArea
+                    text:                profilePage.publicKey
+                    placeholderText:     qsTr("No public key")
+                    font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 20)
+                    font.family:         "Helvetica"
+                    readOnly:            true
+                    horizontalAlignment: TextArea.AlignHCenter
+                    verticalAlignment:   TextArea.AlignVCenter
+                    wrapMode:            TextArea.WrapAnywhere
 
                     background: Rectangle {
                         color: "transparent"
-                    }
-
-                    TextArea {
-                        id:                  publicKeyTextArea
-                        text:                profilePage.publicKey
-                        placeholderText:     qsTr("No public key")
-                        font.pixelSize:      UtilScript.dp(UIHelper.screenDpi, 20)
-                        font.family:         "Helvetica"
-                        readOnly:            true
-                        horizontalAlignment: TextArea.AlignHCenter
-                        verticalAlignment:   TextArea.AlignVCenter
-                        wrapMode:            TextArea.WrapAnywhere
-
-                        background: Rectangle {
-                            color: "transparent"
-                        }
                     }
                 }
             }
