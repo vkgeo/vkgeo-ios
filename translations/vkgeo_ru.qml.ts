@@ -34,7 +34,7 @@
     <message>
         <location filename="../qml/Core/Dialog/EncryptionSettingsDialog.qml" line="54"/>
         <source>Regenerate the key pair</source>
-        <translation type="unfinished"></translation>
+        <translation>Перегенерировать ключевую пару</translation>
     </message>
     <message>
         <location filename="../qml/Core/Dialog/EncryptionSettingsDialog.qml" line="66"/>
@@ -136,12 +136,12 @@
     <message>
         <location filename="../qml/Core/ProfilePage.qml" line="289"/>
         <source>No public key</source>
-        <translation type="unfinished"></translation>
+        <translation>Нет открытого ключа</translation>
     </message>
     <message>
         <location filename="../qml/Core/ProfilePage.qml" line="322"/>
         <source>Delete the key</source>
-        <translation type="unfinished"></translation>
+        <translation>Удалить ключ</translation>
     </message>
     <message>
         <location filename="../qml/Core/ProfilePage.qml" line="306"/>
@@ -229,22 +229,22 @@
     <message>
         <location filename="../qml/Core/Main/SettingsSwipe.qml" line="24"/>
         <source>The public key has been copied to the clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Открытый ключ был скопирован в буфер обмена</translation>
     </message>
     <message>
         <location filename="../qml/Core/Main/SettingsSwipe.qml" line="509"/>
         <source>Regenerate the key pair</source>
-        <translation type="unfinished"></translation>
+        <translation>Перегенерировать ключевую пару</translation>
     </message>
     <message>
         <location filename="../qml/Core/Main/SettingsSwipe.qml" line="510"/>
         <source>Are you sure you want to regenerate the key pair?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы уверены, что хотите перегенерировать ключевую пару?</translation>
     </message>
     <message>
         <location filename="../qml/Core/Main/SettingsSwipe.qml" line="521"/>
         <source>Are you sure you want to reset the keystore? All keys associated with your friends will be deleted and your key pair will be regenerated.</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы уверены, что хотите очистить хранилище ключей? Все ключи, привязанные к вашим друзьям, будут удалены, а ваша ключевая пара будет перегенерирована.</translation>
     </message>
     <message>
         <location filename="../qml/Core/Main/SettingsSwipe.qml" line="532"/>
@@ -299,12 +299,12 @@
     <message>
         <location filename="../qml/Core/Main/SettingsSwipe.qml" line="234"/>
         <source>You can enable encryption of your location data. If you do this, &lt;b&gt;your location will only be visible&lt;/b&gt; to trusted friends &lt;b&gt;whose public keys you have&lt;/b&gt;.</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы можете включить шифрование данных о вашем местоположении. Если вы сделаете это, &lt;b&gt;ваше местоположение будет видно&lt;/b&gt; только тем доверенным друзьям, &lt;b&gt;чьи открытые ключи у вас есть&lt;/b&gt;.</translation>
     </message>
     <message>
         <location filename="../qml/Core/Main/SettingsSwipe.qml" line="252"/>
         <source>&lt;b&gt;Pass this public key&lt;/b&gt; to trusted and tracked friends who use encryption and &lt;b&gt;whose location you want to see&lt;/b&gt;. Press and hold your finger on the partial public key text below to copy the public key to the clipboard.</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Передайте этот открытый ключ&lt;/b&gt; доверенным и отслеживаемым друзьям, которые используют шифрование, и &lt;b&gt;местоположение которых вы хотите видеть&lt;/b&gt;. Вы можете скопировать открытый ключ в буфер обмена длительным нажатием пальца на находящемся ниже частичном тексте открытого ключа.</translation>
     </message>
     <message>
         <location filename="../qml/Core/Main/SettingsSwipe.qml" line="340"/>
