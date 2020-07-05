@@ -137,7 +137,7 @@ signals:
 private:
     void Cleanup();
 
-    bool SendData();
+    void SendData();
 
     void ContextTrackerAddRequest(const QVariantMap &request);
     void ContextTrackerDelRequest(const QVariantMap &request);
@@ -173,8 +173,7 @@ private:
     void HandleGroupsJoinResponse(const QString &response, const QVariantMap &resp_request);
     void HandleGroupsJoinError(const QVariantMap &err_request);
 
-    static constexpr int MAX_SEND_DATA_TRIES_COUNT            = 5,
-                         REQUEST_QUEUE_TIMER_INTERVAL         = 1000,
+    static constexpr int REQUEST_QUEUE_TIMER_INTERVAL         = 1000,
                          SEND_DATA_ON_UPDATE_TIMER_INTERVAL   = 100,
                          SEND_DATA_TIMER_INTERVAL             = 60000,
                          SEND_DATA_INTERVAL                   = 300,
@@ -190,14 +189,14 @@ private:
                          ENCRYPTED_PAYLOAD_COOKIE;
 
     enum DataState {
-        DataNotUpdated,
-        DataUpdated,
-        DataUpdatedAndSent
+        StateNoNewData,
+        StateNewDataArrived,
+        StateDataIsBeingSent
     };
 
     bool                EncryptionEnabled;
     int                 CurrentDataState, AuthState, MaxTrustedFriendsCount,
-                        MaxTrackedFriendsCount, SendDataTryNumber;
+                        MaxTrackedFriendsCount;
     qint64              LastSendDataTime, LastUpdateTrackedFriendsDataTime,
                         NextRequestQueueTimerTimeout;
     QString             UserId, FirstName, LastName, PhotoUrl, BigPhotoUrl,
