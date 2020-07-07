@@ -190,7 +190,7 @@
     </message>
     <message>
         <source>&lt;b&gt;Pass this public key&lt;/b&gt; to trusted and tracked friends who use encryption and &lt;b&gt;whose location you want to see&lt;/b&gt;. Press and hold down your finger on the public key text to copy it to the clipboard.</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Передайте этот открытый ключ&lt;/b&gt; доверенным и отслеживаемым друзьям, которые используют шифрование, и &lt;b&gt;местоположение которых вы хотите видеть&lt;/b&gt;. Вы можете скопировать открытый ключ в буфер обмена длительным нажатием пальца на тексте этого ключа.</translation>
     </message>
     <message>
         <source>Encryption settings</source>
