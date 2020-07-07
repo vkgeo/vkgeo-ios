@@ -189,8 +189,8 @@
         <translation>Вы можете включить шифрование данных о вашем местоположении. Если вы сделаете это, &lt;b&gt;ваше местоположение будет видно&lt;/b&gt; только тем доверенным друзьям, &lt;b&gt;чьи открытые ключи у вас есть&lt;/b&gt;.</translation>
     </message>
     <message>
-        <source>&lt;b&gt;Pass this public key&lt;/b&gt; to trusted and tracked friends who use encryption and &lt;b&gt;whose location you want to see&lt;/b&gt;. Press and hold down your finger on the partial public key text below to copy the public key to the clipboard.</source>
-        <translation>&lt;b&gt;Передайте этот открытый ключ&lt;/b&gt; доверенным и отслеживаемым друзьям, которые используют шифрование, и &lt;b&gt;местоположение которых вы хотите видеть&lt;/b&gt;. Вы можете скопировать открытый ключ в буфер обмена длительным нажатием пальца на приведенном ниже частичном тексте открытого ключа.</translation>
+        <source>&lt;b&gt;Pass this public key&lt;/b&gt; to trusted and tracked friends who use encryption and &lt;b&gt;whose location you want to see&lt;/b&gt;. Press and hold down your finger on the public key text to copy it to the clipboard.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Encryption settings</source>
@@ -267,6 +267,10 @@
     <message>
         <source>Do you want to join the VKGeo Friends on Map group?</source>
         <translation>Вы действительно хотите вступить в группу VKGeo Друзья на Карте?</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Pass this public key&lt;/b&gt; to trusted and tracked friends who use encryption and &lt;b&gt;whose location you want to see&lt;/b&gt;. Press and hold down your finger on the partial public key text below to copy the public key to the clipboard.</source>
+        <translation type="vanished">&lt;b&gt;Передайте этот открытый ключ&lt;/b&gt; доверенным и отслеживаемым друзьям, которые используют шифрование, и &lt;b&gt;местоположение которых вы хотите видеть&lt;/b&gt;. Вы можете скопировать открытый ключ в буфер обмена длительным нажатием пальца на приведенном ниже частичном тексте открытого ключа.</translation>
     </message>
 </context>
 <context>
