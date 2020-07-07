@@ -7,13 +7,9 @@ CONFIG += c++17
 DEFINES += QT_DEPRECATED_WARNINGS QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII
 
 INCLUDEPATH += \
-    3rdparty/qt-secret/src/mini-gmp/src \
-    3rdparty/qt-secret/src/Qt-RSA
+    3rdparty/libsodium/include
 
 SOURCES += \
-    3rdparty/qt-secret/src/mini-gmp/src/bigint.cpp \
-    3rdparty/qt-secret/src/mini-gmp/src/mini-gmp.c \
-    3rdparty/qt-secret/src/Qt-RSA/qrsaencryption.cpp \
     src/appsettings.cpp \
     src/contextguard.cpp \
     src/cryptohelper.cpp \
@@ -31,10 +27,69 @@ OBJECTIVE_SOURCES += \
     src/vkhelper.mm
 
 HEADERS += \
-    3rdparty/qt-secret/src/mini-gmp/src/bigint.h \
-    3rdparty/qt-secret/src/mini-gmp/src/mini-gmp.h \
-    3rdparty/qt-secret/src/mini-gmp/src/minigmp_global.h \
-    3rdparty/qt-secret/src/Qt-RSA/qrsaencryption.h \
+    3rdparty/libsodium/include/sodium.h \
+    3rdparty/libsodium/include/sodium/core.h \
+    3rdparty/libsodium/include/sodium/crypto_aead_aes256gcm.h \
+    3rdparty/libsodium/include/sodium/crypto_aead_chacha20poly1305.h \
+    3rdparty/libsodium/include/sodium/crypto_aead_xchacha20poly1305.h \
+    3rdparty/libsodium/include/sodium/crypto_auth.h \
+    3rdparty/libsodium/include/sodium/crypto_auth_hmacsha256.h \
+    3rdparty/libsodium/include/sodium/crypto_auth_hmacsha512.h \
+    3rdparty/libsodium/include/sodium/crypto_auth_hmacsha512256.h \
+    3rdparty/libsodium/include/sodium/crypto_box.h \
+    3rdparty/libsodium/include/sodium/crypto_box_curve25519xchacha20poly1305.h \
+    3rdparty/libsodium/include/sodium/crypto_box_curve25519xsalsa20poly1305.h \
+    3rdparty/libsodium/include/sodium/crypto_core_ed25519.h \
+    3rdparty/libsodium/include/sodium/crypto_core_hchacha20.h \
+    3rdparty/libsodium/include/sodium/crypto_core_hsalsa20.h \
+    3rdparty/libsodium/include/sodium/crypto_core_ristretto255.h \
+    3rdparty/libsodium/include/sodium/crypto_core_salsa20.h \
+    3rdparty/libsodium/include/sodium/crypto_core_salsa2012.h \
+    3rdparty/libsodium/include/sodium/crypto_core_salsa208.h \
+    3rdparty/libsodium/include/sodium/crypto_generichash.h \
+    3rdparty/libsodium/include/sodium/crypto_generichash_blake2b.h \
+    3rdparty/libsodium/include/sodium/crypto_hash.h \
+    3rdparty/libsodium/include/sodium/crypto_hash_sha256.h \
+    3rdparty/libsodium/include/sodium/crypto_hash_sha512.h \
+    3rdparty/libsodium/include/sodium/crypto_kdf.h \
+    3rdparty/libsodium/include/sodium/crypto_kdf_blake2b.h \
+    3rdparty/libsodium/include/sodium/crypto_kx.h \
+    3rdparty/libsodium/include/sodium/crypto_onetimeauth.h \
+    3rdparty/libsodium/include/sodium/crypto_onetimeauth_poly1305.h \
+    3rdparty/libsodium/include/sodium/crypto_pwhash.h \
+    3rdparty/libsodium/include/sodium/crypto_pwhash_argon2i.h \
+    3rdparty/libsodium/include/sodium/crypto_pwhash_argon2id.h \
+    3rdparty/libsodium/include/sodium/crypto_pwhash_scryptsalsa208sha256.h \
+    3rdparty/libsodium/include/sodium/crypto_scalarmult.h \
+    3rdparty/libsodium/include/sodium/crypto_scalarmult_curve25519.h \
+    3rdparty/libsodium/include/sodium/crypto_scalarmult_ed25519.h \
+    3rdparty/libsodium/include/sodium/crypto_scalarmult_ristretto255.h \
+    3rdparty/libsodium/include/sodium/crypto_secretbox.h \
+    3rdparty/libsodium/include/sodium/crypto_secretbox_xchacha20poly1305.h \
+    3rdparty/libsodium/include/sodium/crypto_secretbox_xsalsa20poly1305.h \
+    3rdparty/libsodium/include/sodium/crypto_secretstream_xchacha20poly1305.h \
+    3rdparty/libsodium/include/sodium/crypto_shorthash.h \
+    3rdparty/libsodium/include/sodium/crypto_shorthash_siphash24.h \
+    3rdparty/libsodium/include/sodium/crypto_sign.h \
+    3rdparty/libsodium/include/sodium/crypto_sign_ed25519.h \
+    3rdparty/libsodium/include/sodium/crypto_sign_edwards25519sha512batch.h \
+    3rdparty/libsodium/include/sodium/crypto_stream.h \
+    3rdparty/libsodium/include/sodium/crypto_stream_chacha20.h \
+    3rdparty/libsodium/include/sodium/crypto_stream_salsa20.h \
+    3rdparty/libsodium/include/sodium/crypto_stream_salsa2012.h \
+    3rdparty/libsodium/include/sodium/crypto_stream_salsa208.h \
+    3rdparty/libsodium/include/sodium/crypto_stream_xchacha20.h \
+    3rdparty/libsodium/include/sodium/crypto_stream_xsalsa20.h \
+    3rdparty/libsodium/include/sodium/crypto_verify_16.h \
+    3rdparty/libsodium/include/sodium/crypto_verify_32.h \
+    3rdparty/libsodium/include/sodium/crypto_verify_64.h \
+    3rdparty/libsodium/include/sodium/export.h \
+    3rdparty/libsodium/include/sodium/randombytes.h \
+    3rdparty/libsodium/include/sodium/randombytes_internal_random.h \
+    3rdparty/libsodium/include/sodium/randombytes_sysrandom.h \
+    3rdparty/libsodium/include/sodium/runtime.h \
+    3rdparty/libsodium/include/sodium/utils.h \
+    3rdparty/libsodium/include/sodium/version.h \
     src/admobhelper.h \
     src/appinitialized.h \
     src/appsettings.h \
@@ -68,6 +123,10 @@ ios {
     INCLUDEPATH += ios/frameworks
     DEPENDPATH += ios/frameworks
 
+    OTHER_FILES += \
+        ios/3rdparty/libsodium/LICENSE \
+        ios/3rdparty/libsodium/libsodium.a
+
     LIBS += -F $$PWD/ios/frameworks \
             -framework GoogleAppMeasurement \
             -framework GoogleMobileAds \
@@ -78,7 +137,9 @@ ios {
             -framework UIKit \
             -framework StoreKit \
             -framework CoreLocation \
-            -framework UserNotifications
+            -framework UserNotifications \
+            -L$$PWD/ios/3rdparty/libsodium \
+            -lsodium
 
     VK_SDK_FRAMEWORK.files = ios/Frameworks/VKSdkFramework.framework
     VK_SDK_FRAMEWORK.path = Frameworks
