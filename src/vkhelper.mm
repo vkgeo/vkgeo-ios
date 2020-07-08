@@ -1,4 +1,5 @@
 #import <UIKit/UIKit.h>
+
 #import <VKSdkFramework/VKSdkFramework.h>
 
 #include <algorithm>
