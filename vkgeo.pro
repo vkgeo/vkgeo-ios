@@ -123,10 +123,6 @@ ios {
     INCLUDEPATH += ios/frameworks
     DEPENDPATH += ios/frameworks
 
-    OTHER_FILES += \
-        ios/3rdparty/libsodium/LICENSE \
-        ios/3rdparty/libsodium/libsodium.a
-
     LIBS += -F $$PWD/ios/frameworks \
             -framework GoogleAppMeasurement \
             -framework GoogleMobileAds \
