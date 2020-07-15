@@ -56,7 +56,7 @@ constexpr NSTimeInterval AD_RELOAD_ON_FAILURE_DELAY = 60.0;
         BannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeSmartBannerPortrait];
 
         BannerView.adUnitID                                  = AdMobHelper::ADMOB_BANNERVIEW_UNIT_ID.toNSString();
-        BannerView.autoloadEnabled                           = YES;
+        BannerView.autoloadEnabled                           = NO;
         BannerView.translatesAutoresizingMaskIntoConstraints = NO;
         BannerView.rootViewController                        = root_view_controller;
         BannerView.delegate                                  = self;
