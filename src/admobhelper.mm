@@ -60,23 +60,6 @@ constexpr NSTimeInterval AD_RELOAD_ON_FAILURE_DELAY = 60.0;
         BannerView.translatesAutoresizingMaskIntoConstraints = NO;
         BannerView.rootViewController                        = root_view_controller;
         BannerView.delegate                                  = self;
-
-        [root_view_controller.view addSubview:BannerView];
-
-        UILayoutGuide *guide = root_view_controller.view.safeAreaLayoutGuide;
-
-        [NSLayoutConstraint activateConstraints:@[
-            [BannerView.centerXAnchor constraintEqualToAnchor:guide.centerXAnchor],
-            [BannerView.topAnchor     constraintEqualToAnchor:guide.topAnchor]
-        ]];
-
-        CGSize  status_bar_size   = UIApplication.sharedApplication.statusBarFrame.size;
-        CGFloat status_bar_height = qMin(status_bar_size.width, status_bar_size.height);
-
-        if (AdMobHelperInstance != nullptr) {
-            AdMobHelperInstance->SetBannerViewHeight(qFloor(BannerView.frame.size.height + root_view_controller.view.safeAreaInsets.top
-                                                                                         - status_bar_height));
-        }
     }
 
     return self;
@@ -120,6 +103,31 @@ constexpr NSTimeInterval AD_RELOAD_ON_FAILURE_DELAY = 60.0;
 - (void)adViewDidReceiveAd:(GADBannerView *)adView
 {
     Q_UNUSED(adView)
+
+    UIViewController * __block root_view_controller = nil;
+
+    [UIApplication.sharedApplication.windows enumerateObjectsUsingBlock:^(UIWindow * _Nonnull window, NSUInteger, BOOL * _Nonnull stop) {
+        root_view_controller = window.rootViewController;
+
+        *stop = (root_view_controller != nil);
+    }];
+
+    [root_view_controller.view addSubview:BannerView];
+
+    UILayoutGuide *guide = root_view_controller.view.safeAreaLayoutGuide;
+
+    [NSLayoutConstraint activateConstraints:@[
+        [BannerView.centerXAnchor constraintEqualToAnchor:guide.centerXAnchor],
+        [BannerView.topAnchor     constraintEqualToAnchor:guide.topAnchor]
+    ]];
+
+    CGSize  status_bar_size   = UIApplication.sharedApplication.statusBarFrame.size;
+    CGFloat status_bar_height = qMin(status_bar_size.width, status_bar_size.height);
+
+    if (AdMobHelperInstance != nullptr) {
+        AdMobHelperInstance->SetBannerViewHeight(qFloor(BannerView.frame.size.height + root_view_controller.view.safeAreaInsets.top
+                                                                                     - status_bar_height));
+    }
 }
 
 - (void)adViewWillPresentScreen:(GADBannerView *)adView
