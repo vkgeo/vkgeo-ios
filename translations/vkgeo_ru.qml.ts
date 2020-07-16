@@ -119,42 +119,42 @@
 <context>
     <name>ProfilePage</name>
     <message>
-        <location filename="../qml/Core/ProfilePage.qml" line="15"/>
+        <location filename="../qml/Core/ProfilePage.qml" line="14"/>
         <source>Profile info</source>
         <translation>Информация профиля</translation>
     </message>
     <message>
-        <location filename="../qml/Core/ProfilePage.qml" line="226"/>
+        <location filename="../qml/Core/ProfilePage.qml" line="223"/>
         <source>Locate on map</source>
         <translation>Показать на карте</translation>
     </message>
     <message>
-        <location filename="../qml/Core/ProfilePage.qml" line="254"/>
+        <location filename="../qml/Core/ProfilePage.qml" line="251"/>
         <source>Open profile</source>
         <translation>Открыть профиль</translation>
     </message>
     <message>
-        <location filename="../qml/Core/ProfilePage.qml" line="289"/>
+        <location filename="../qml/Core/ProfilePage.qml" line="286"/>
         <source>No public key</source>
         <translation>Нет открытого ключа</translation>
     </message>
     <message>
-        <location filename="../qml/Core/ProfilePage.qml" line="322"/>
+        <location filename="../qml/Core/ProfilePage.qml" line="319"/>
         <source>Delete the key</source>
         <translation>Удалить ключ</translation>
     </message>
     <message>
-        <location filename="../qml/Core/ProfilePage.qml" line="306"/>
+        <location filename="../qml/Core/ProfilePage.qml" line="303"/>
         <source>Paste from the clipboard</source>
         <translation>Вставить из буфера обмена</translation>
     </message>
     <message>
-        <location filename="../qml/Core/ProfilePage.qml" line="240"/>
+        <location filename="../qml/Core/ProfilePage.qml" line="237"/>
         <source>Get directions</source>
         <translation>Построить маршрут</translation>
     </message>
     <message>
-        <location filename="../qml/Core/ProfilePage.qml" line="207"/>
+        <location filename="../qml/Core/ProfilePage.qml" line="204"/>
         <source>Last update at: %1</source>
         <translation>Последнее обновление: %1</translation>
     </message>
@@ -335,27 +335,27 @@
 <context>
     <name>StorePage</name>
     <message>
-        <location filename="../qml/Core/StorePage.qml" line="14"/>
+        <location filename="../qml/Core/StorePage.qml" line="13"/>
         <source>Store</source>
         <translation>Магазин</translation>
     </message>
     <message>
-        <location filename="../qml/Core/StorePage.qml" line="62"/>
+        <location filename="../qml/Core/StorePage.qml" line="59"/>
         <source>Tracked friends</source>
         <translation>Отслеживаемые друзья</translation>
     </message>
     <message>
-        <location filename="../qml/Core/StorePage.qml" line="105"/>
+        <location filename="../qml/Core/StorePage.qml" line="102"/>
         <source>Tracking limits x 3</source>
         <translation>Лимиты отслеживания x 3</translation>
     </message>
     <message>
-        <location filename="../qml/Core/StorePage.qml" line="147"/>
+        <location filename="../qml/Core/StorePage.qml" line="144"/>
         <source>Restore purchases</source>
         <translation>Восстановить покупки</translation>
     </message>
     <message>
-        <location filename="../qml/Core/StorePage.qml" line="163"/>
+        <location filename="../qml/Core/StorePage.qml" line="160"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -386,12 +386,12 @@
 <context>
     <name>TrackedFriendsPage</name>
     <message>
-        <location filename="../qml/Core/TrackedFriendsPage.qml" line="15"/>
+        <location filename="../qml/Core/TrackedFriendsPage.qml" line="14"/>
         <source>Tracked friends</source>
         <translation>Отслеживаемые друзья</translation>
     </message>
     <message>
-        <location filename="../qml/Core/TrackedFriendsPage.qml" line="104"/>
+        <location filename="../qml/Core/TrackedFriendsPage.qml" line="101"/>
         <source>Quick search</source>
         <translation>Быстрый поиск</translation>
     </message>
@@ -399,12 +399,12 @@
 <context>
     <name>TrustedFriendsPage</name>
     <message>
-        <location filename="../qml/Core/TrustedFriendsPage.qml" line="15"/>
+        <location filename="../qml/Core/TrustedFriendsPage.qml" line="14"/>
         <source>Trusted friends</source>
         <translation>Доверенные друзья</translation>
     </message>
     <message>
-        <location filename="../qml/Core/TrustedFriendsPage.qml" line="104"/>
+        <location filename="../qml/Core/TrustedFriendsPage.qml" line="101"/>
         <source>Quick search</source>
         <translation>Быстрый поиск</translation>
     </message>
