@@ -35,7 +35,7 @@ NSArray *AUTH_SCOPE = @[@"friends", @"notes", @"groups", @"offline"];
 
 - (instancetype)init NS_UNAVAILABLE;
 - (instancetype)initWithHelper:(VKHelper *)helper NS_DESIGNATED_INITIALIZER;
-- (void)removeHelperAndAutorelease;
+- (void)cleanupAndAutorelease;
 
 @end
 
@@ -76,7 +76,7 @@ NSArray *AUTH_SCOPE = @[@"friends", @"notes", @"groups", @"offline"];
     return self;
 }
 
-- (void)removeHelperAndAutorelease
+- (void)cleanupAndAutorelease
 {
     VKHelperInstance = nullptr;
 
@@ -241,7 +241,7 @@ VKHelper::VKHelper(QObject *parent) :
 
 VKHelper::~VKHelper() noexcept
 {
-    [VKDelegateInstance removeHelperAndAutorelease];
+    [VKDelegateInstance cleanupAndAutorelease];
 }
 
 VKHelper &VKHelper::GetInstance()

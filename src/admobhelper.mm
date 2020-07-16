@@ -24,7 +24,7 @@ constexpr NSTimeInterval AD_RELOAD_ON_FAILURE_DELAY = 60.0;
 - (instancetype)init NS_UNAVAILABLE;
 - (instancetype)initWithHelper:(AdMobHelper *)helper NS_DESIGNATED_INITIALIZER;
 - (void)dealloc;
-- (void)removeHelperAndAutorelease;
+- (void)cleanupAndAutorelease;
 - (void)setPersonalization:(BOOL)personalized;
 - (void)loadAd;
 
@@ -73,9 +73,11 @@ constexpr NSTimeInterval AD_RELOAD_ON_FAILURE_DELAY = 60.0;
     [super dealloc];
 }
 
-- (void)removeHelperAndAutorelease
+- (void)cleanupAndAutorelease
 {
     AdMobHelperInstance = nullptr;
+
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
 
     [self autorelease];
 }
@@ -161,7 +163,7 @@ constexpr NSTimeInterval AD_RELOAD_ON_FAILURE_DELAY = 60.0;
 - (instancetype)init NS_UNAVAILABLE;
 - (instancetype)initWithHelper:(AdMobHelper *)helper NS_DESIGNATED_INITIALIZER;
 - (void)dealloc;
-- (void)removeHelperAndAutorelease;
+- (void)cleanupAndAutorelease;
 - (void)setPersonalization:(BOOL)personalized;
 - (void)loadAd;
 - (void)show;
@@ -196,9 +198,11 @@ constexpr NSTimeInterval AD_RELOAD_ON_FAILURE_DELAY = 60.0;
     [super dealloc];
 }
 
-- (void)removeHelperAndAutorelease
+- (void)cleanupAndAutorelease
 {
     AdMobHelperInstance = nullptr;
+
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
 
     [self autorelease];
 }
@@ -312,8 +316,8 @@ AdMobHelper::AdMobHelper(QObject *parent) :
 
 AdMobHelper::~AdMobHelper() noexcept
 {
-    [BannerViewDelegateInstance   removeHelperAndAutorelease];
-    [InterstitialDelegateInstance removeHelperAndAutorelease];
+    [BannerViewDelegateInstance   cleanupAndAutorelease];
+    [InterstitialDelegateInstance cleanupAndAutorelease];
 }
 
 AdMobHelper &AdMobHelper::GetInstance()
@@ -375,7 +379,7 @@ void AdMobHelper::setPersonalization(bool personalized)
 void AdMobHelper::showBannerView()
 {
     if (Initialized) {
-        [BannerViewDelegateInstance removeHelperAndAutorelease];
+        [BannerViewDelegateInstance cleanupAndAutorelease];
 
         if (BannerViewHeight != 0) {
             BannerViewHeight = 0;
@@ -393,7 +397,7 @@ void AdMobHelper::showBannerView()
 void AdMobHelper::hideBannerView()
 {
     if (Initialized) {
-        [BannerViewDelegateInstance removeHelperAndAutorelease];
+        [BannerViewDelegateInstance cleanupAndAutorelease];
 
         if (BannerViewHeight != 0) {
             BannerViewHeight = 0;
