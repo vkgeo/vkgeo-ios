@@ -35,6 +35,7 @@ NSArray *AUTH_SCOPE = @[@"friends", @"notes", @"groups", @"offline"];
 
 - (instancetype)init NS_UNAVAILABLE;
 - (instancetype)initWithHelper:(VKHelper *)helper NS_DESIGNATED_INITIALIZER;
+- (void)dealloc;
 - (void)cleanupAndAutorelease;
 
 @end
@@ -52,7 +53,8 @@ NSArray *AUTH_SCOPE = @[@"friends", @"notes", @"groups", @"offline"];
         VKHelperInstance = helper;
 
         [[VKSdk instance] registerDelegate:self];
-        [[VKSdk instance] setUiDelegate:self];
+
+        [VKSdk instance].uiDelegate = self;
 
         [VKSdk wakeUpSession:AUTH_SCOPE completeBlock:^(VKAuthorizationState state, NSError *error) {
             if (error != nil) {
@@ -74,6 +76,15 @@ NSArray *AUTH_SCOPE = @[@"friends", @"notes", @"groups", @"offline"];
     }
 
     return self;
+}
+
+- (void)dealloc
+{
+    [[VKSdk instance] unregisterDelegate:self];
+
+    [VKSdk instance].uiDelegate = nil;
+
+    [super dealloc];
 }
 
 - (void)cleanupAndAutorelease

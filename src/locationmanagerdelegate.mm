@@ -85,6 +85,8 @@ qint64 elapsedNanos()
 
 - (void)dealloc
 {
+    LocationManager.delegate = nil;
+
     [CurrentLocation release];
     [CurrentRegion   release];
     [CentralLocation release];
