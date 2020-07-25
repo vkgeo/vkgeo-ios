@@ -20,10 +20,11 @@ OBJECTIVE_SOURCES += \
     src/batteryhelper.mm \
     src/locationmanagerdelegate.mm \
     src/notificationhelper.mm \
+    src/qiosapplicationdelegate+vkgeo.mm \
+    src/qiosviewcontroller+vkgeo.mm \
     src/storehelper.mm \
     src/uihelper.mm \
     src/vkgeoapplicationdelegate.mm \
-    src/vkgeoviewcontroller.mm \
     src/vkhelper.mm
 
 HEADERS += \
@@ -98,6 +99,7 @@ HEADERS += \
     src/cryptohelper.h \
     src/locationmanagerdelegate.h \
     src/notificationhelper.h \
+    src/qiosapplicationdelegate.h \
     src/storehelper.h \
     src/uihelper.h \
     src/vkgeoapplicationdelegate.h \

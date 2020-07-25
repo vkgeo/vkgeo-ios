@@ -5,10 +5,10 @@
 @interface QIOSViewController : UIViewController
 @end
 
-@interface QIOSViewController (QIOSViewControllerVKGeoCategory)
+@interface QIOSViewController (VKGeo)
 @end
 
-@implementation QIOSViewController (QIOSViewControllerVKGeoCategory)
+@implementation QIOSViewController (VKGeo)
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection API_AVAILABLE(ios(8))
 {
