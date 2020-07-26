@@ -1,5 +1,6 @@
 #import <UserNotifications/UserNotifications.h>
 
+#include <QtCore/QtGlobal>
 #include <QtCore/QDebug>
 
 #include "notificationhelper.h"
