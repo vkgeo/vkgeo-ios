@@ -182,7 +182,7 @@ NSArray *AUTH_SCOPE = @[@"friends", @"notes", @"groups", @"offline"];
 
 namespace {
 
-bool compareFriends(const QVariant &friend_1, const QVariant &friend_2)
+bool CompareFriends(const QVariant &friend_1, const QVariant &friend_2)
 {
     bool friend_1_trusted = friend_1.toMap().contains(QStringLiteral("trusted")) ? (friend_1.toMap())[QStringLiteral("trusted")].toBool() : false;
     bool friend_2_trusted = friend_2.toMap().contains(QStringLiteral("trusted")) ? (friend_2.toMap())[QStringLiteral("trusted")].toBool() : false;
@@ -441,7 +441,7 @@ QVariantList VKHelper::getFriendsList() const
 {
     QVariantList friends_list = FriendsData.values();
 
-    std::sort(friends_list.begin(), friends_list.end(), compareFriends);
+    std::sort(friends_list.begin(), friends_list.end(), CompareFriends);
 
     return friends_list;
 }
