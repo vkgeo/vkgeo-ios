@@ -2,7 +2,7 @@
 
 NUMBER_OF_PROCESSORS=$(sysctl -n hw.ncpu)
 
-PATH="$PATH:~/Qt/5.12.9/ios/bin:~/SonarCloud/build-wrapper-macosx-x86:~/SonarCloud/sonar-scanner-4.3.0.2102-macosx/bin"
+PATH="$PATH:$HOME/Qt/5.12.9/ios/bin:$HOME/SonarCloud/build-wrapper-macosx-x86:$HOME/SonarCloud/sonar-scanner-4.3.0.2102-macosx/bin"
 
 if [ "$#" = "1" ]; then
     cd .. && \
