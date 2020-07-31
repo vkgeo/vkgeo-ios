@@ -1,0 +1,76 @@
+language: cpp
+
+os: osx
+
+osx_image: xcode12u
+
+addons:
+  sonarcloud:
+    organization: "vkgeo-github"
+    token:
+      secure: "JAAENFm+ffrsIHvdgt4z1XcL2C6gL2wTb95W13QvxgF2pBl/ROI7DnEUWSfZfte+wXfeQTIkJ7rptSrXNH/5wWSj3dsqdg8dVrfbTHmbpxCrw740eJimVUEvzvDaGf+4HicBiYmIFdIKfe8Cez8NlxvXQNZw1UJFQMy1RF1cVW8uDT52DkNgJiDBea7tShkaKjAbumAtJOWwgNAOvWiSv6tVX3Ysv9sYoWfQalCdMGqN36d2e7Kbd2GuD5PqZJndBkG7cMfrSEdDtAaAu7rz6ABJWmfpz/2VCiMUJjJTewuOUPW2RG75rnmKNHoMeSs9c1ieE2e5X7zbnz/2bLWcMUEJwra/7fzdOyqhUJ1j1j4nopF5QoVba7386yMte+QqMzVvo+wbzD8Vvc/SRTtlhq0fv/Idn117ej6aN3pmEld7bjNIO31W8K1GpbAkBvpxw4CFhODr9tqMzyjEcLd/CZYPGVx3YR9uf6cfnW6TBFnLtqPVWsi0pu9Cpt4sXjxc/VGYpA/gbMLw0Y/+BM9+uqG/7Nqjljb+Ovm3AjPe3Rj/+rfXdYinr84xJqJe51Bf1bDsTfp2bMgCJl89nG5vjqpstoS+Q+h3G1O9XxlYkDiY5WG7uqhWTHkJhLqfE+4sZoIsHgVHBfqSNDWWrk5KtI9nBTjyUnkpZg2BzlOi0PA="
+
+install:
+  - |
+    echo && \
+    echo "---- INSTALLATION OF HOMEBREW PACKAGES ----" && \
+    echo && \
+    brew install p7zip && \
+    echo && \
+    echo "------- INSTALLATION OF QT PACKAGES -------" && \
+    echo && \
+    bash tools/install-qt.sh --version 5.12.9 --target ios --toolchain ios --directory "$HOME/Qt" qtbase qtdeclarative qtquickcontrols2 qtlocation qtpurchasing && \
+    echo && \
+    echo "----------- END OF INSTALLATION -----------" && \
+    echo
+
+script:
+  - |
+    echo && \
+    echo "---------- ENVIRONMENT VARIABLES ----------" && \
+    echo && \
+    export PATH="$HOME/Qt/5.12.9/ios/bin:$PATH" && \
+    echo && \
+    echo "--------- UNSHALLOW GIT FOR SONAR ---------" && \
+    echo && \
+    git fetch --unshallow && \
+    echo && \
+    echo "---------- CREATE BUILD DIRECTORY ---------" && \
+    echo && \
+    mkdir .build && \
+    cd .build && \
+    echo && \
+    echo "------------------ QMAKE ------------------" && \
+    echo && \
+    qmake ../vkgeo.pro && \
+    echo && \
+    echo "------------------ MAKE -------------------" && \
+    echo && \
+    make XCODEBUILD_FLAGS="CODE_SIGN_IDENTITY=\"\" CODE_SIGNING_REQUIRED=NO" debug-device && \
+    if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then \
+        echo && \
+        echo "------------- MAKE DISTCLEAN --------------" && \
+        echo && \
+        make distclean && \
+        echo && \
+        echo "------------------ QMAKE ------------------" && \
+        echo && \
+        qmake ../vkgeo.pro && \
+        echo && \
+        echo "-------------- SONAR WRAPPER --------------" && \
+        echo && \
+        build-wrapper-macosx-x86 --out-dir bw-output make XCODEBUILD_FLAGS="CODE_SIGN_IDENTITY=\"\" CODE_SIGNING_REQUIRED=NO" debug-device && \
+        echo && \
+        echo "-------------- SONAR SCANNER --------------" && \
+        echo && \
+        cd .. && \
+        sonar-scanner -Dsonar.projectKey=vkgeo_vkgeo-ios \
+                      -Dsonar.projectName="VKGeo iOS" \
+                      -Dsonar.sources=. \
+                      -Dsonar.sourceEncoding=UTF-8 \
+                      -Dsonar.exclusions="qml_*.cpp,qrc_*.cpp,3rdparty/**/*,qml/**/*,translations/*" \
+                      -Dsonar.cfamily.build-wrapper-output=.build/bw-output \
+                      -Dsonar.cfamily.cache.enabled=false \
+                      -Dsonar.cfamily.threads=1 \
+                      -Dsonar.cpp.file.suffixes=.cpp,.mm; \
+    fi
