@@ -9,8 +9,8 @@ if [ "$#" = "1" ]; then
     mkdir -p .sonarbuild && \
     cd .sonarbuild && \
     ([ -d bw-output ] && rm -r bw-output || true) && \
+    ([ -f Makefile ] && make distclean || true) && \
     qmake ../vkgeo.pro && \
-    make clean && \
     build-wrapper-macosx-x86 --out-dir bw-output make -j$NUMBER_OF_PROCESSORS debug-device && \
     cd .. && \
     sonar-scanner -Dsonar.projectKey=vkgeo_vkgeo-ios \
