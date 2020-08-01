@@ -15,7 +15,7 @@ const QString AdMobHelper::ADMOB_TEST_DEVICE_ID      (QLatin1String(""));
 
 namespace {
 
-constexpr NSTimeInterval AD_RELOAD_DELAY = 60.0;
+constexpr NSTimeInterval AD_RELOAD_ON_FAILURE_DELAY = 60.0;
 
 }
 
@@ -56,7 +56,7 @@ constexpr NSTimeInterval AD_RELOAD_DELAY = 60.0;
         BannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeSmartBannerPortrait];
 
         BannerView.adUnitID                                  = AdMobHelper::ADMOB_BANNERVIEW_UNIT_ID.toNSString();
-        BannerView.autoloadEnabled                           = NO;
+        BannerView.autoloadEnabled                           = YES;
         BannerView.translatesAutoresizingMaskIntoConstraints = NO;
         BannerView.rootViewController                        = root_view_controller;
         BannerView.delegate                                  = self;
@@ -133,8 +133,6 @@ constexpr NSTimeInterval AD_RELOAD_DELAY = 60.0;
         AdMobHelperInstance->SetBannerViewHeight(qFloor(BannerView.frame.size.height + root_view_controller.view.safeAreaInsets.top
                                                                                      - status_bar_height));
     }
-
-    [self performSelector:@selector(loadAd) withObject:nil afterDelay:AD_RELOAD_DELAY];
 }
 
 - (void)adViewWillPresentScreen:(GADBannerView *)adView
@@ -158,7 +156,7 @@ constexpr NSTimeInterval AD_RELOAD_DELAY = 60.0;
 
     qWarning() << QString::fromNSString(error.localizedDescription);
 
-    [self performSelector:@selector(loadAd) withObject:nil afterDelay:AD_RELOAD_DELAY];
+    [self performSelector:@selector(loadAd) withObject:nil afterDelay:AD_RELOAD_ON_FAILURE_DELAY];
 }
 
 @end
@@ -310,7 +308,7 @@ constexpr NSTimeInterval AD_RELOAD_DELAY = 60.0;
 
     qWarning() << QString::fromNSString(error.localizedDescription);
 
-    [self performSelector:@selector(loadAd) withObject:nil afterDelay:AD_RELOAD_DELAY];
+    [self performSelector:@selector(loadAd) withObject:nil afterDelay:AD_RELOAD_ON_FAILURE_DELAY];
 }
 
 @end
