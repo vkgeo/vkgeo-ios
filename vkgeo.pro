@@ -148,6 +148,8 @@ ios {
 
     QMAKE_BUNDLE_DATA += VK_SDK_FRAMEWORK
 
+    QMAKE_OBJECTIVE_CFLAGS += $$(QMAKE_OBJECTIVE_CFLAGS_ENV)
+
     QMAKE_LFLAGS += -ObjC
     QMAKE_RPATHDIR = @executable_path/Frameworks
 
