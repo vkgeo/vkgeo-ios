@@ -30,6 +30,8 @@ script:
     echo "---------- ENVIRONMENT VARIABLES ----------" && \
     echo && \
     export PATH="$HOME/Qt/5.12.9/ios/bin:$PATH" && \
+    export QMAKE_CFLAGS_ENV="-Werror" && \
+    export QMAKE_CXXFLAGS_ENV="-Werror -Wno-error-objc-property-no-attribute" && \
     echo && \
     echo "--------- UNSHALLOW GIT FOR SONAR ---------" && \
     echo && \
