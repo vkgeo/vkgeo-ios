@@ -15,18 +15,6 @@ SOURCES += \
     src/cryptohelper.cpp \
     src/main.cpp
 
-OBJECTIVE_SOURCES += \
-    src/admobhelper.mm \
-    src/batteryhelper.mm \
-    src/locationmanagerdelegate.mm \
-    src/notificationhelper.mm \
-    src/qiosapplicationdelegate+vkgeo.mm \
-    src/qiosviewcontroller+vkgeo.mm \
-    src/storehelper.mm \
-    src/uihelper.mm \
-    src/vkgeoapplicationdelegate.mm \
-    src/vkhelper.mm
-
 HEADERS += \
     3rdparty/libsodium/include/sodium.h \
     3rdparty/libsodium/include/sodium/core.h \
@@ -128,6 +116,18 @@ ios {
 
     INCLUDEPATH += ios/frameworks
     DEPENDPATH += ios/frameworks
+
+    OBJECTIVE_SOURCES += \
+        src/admobhelper.mm \
+        src/batteryhelper.mm \
+        src/locationmanagerdelegate.mm \
+        src/notificationhelper.mm \
+        src/qiosapplicationdelegate+vkgeo.mm \
+        src/qiosviewcontroller+vkgeo.mm \
+        src/storehelper.mm \
+        src/uihelper.mm \
+        src/vkgeoapplicationdelegate.mm \
+        src/vkhelper.mm
 
     LIBS += -F $$PWD/ios/frameworks \
             -framework GoogleAppMeasurement \
