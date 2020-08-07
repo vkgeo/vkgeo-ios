@@ -50,6 +50,12 @@ script:
     echo "------------------ MAKE -------------------" && \
     echo && \
     make XCODEBUILD_FLAGS="CODE_SIGN_IDENTITY=\"\" CODE_SIGNING_REQUIRED=NO" debug-device && \
+    echo && \
+    echo "----------- XCODEBUILD ANALYZE ------------" && \
+    echo && \
+    xcodebuild -configuration Debug -sdk iphoneos analyze CLANG_ANALYZER_OUTPUT=text | tee .analyze-output.txt && \
+    [[ "$(grep warning: .analyze-output.txt)" == "" ]] && \
+    [[ "$(grep note: .analyze-output.txt)" == "" ]] && \
     if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then \
         echo && \
         echo "------------- MAKE DISTCLEAN --------------" && \
