@@ -54,6 +54,7 @@ script:
     echo "----------- XCODEBUILD ANALYZE ------------" && \
     echo && \
     xcodebuild CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CLANG_ANALYZER_OUTPUT=text -scheme vkgeo -configuration Debug -sdk iphoneos analyze | tee .analyze-output.txt && \
+    [[ "$(grep ": error:" .analyze-output.txt)" == "" ]] && \
     [[ "$(grep ": warning:" .analyze-output.txt)" == "" ]] && \
     [[ "$(grep ": note:" .analyze-output.txt)" == "" ]] && \
     if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then \
