@@ -57,6 +57,7 @@ script:
     [[ "$(grep ": error:" .analyze-output.txt)" == "" ]] && \
     [[ "$(grep ": warning:" .analyze-output.txt)" == "" ]] && \
     [[ "$(grep ": note:" .analyze-output.txt)" == "" ]] && \
+    [[ "$(grep "ANALYZE FAILED" .analyze-output.txt)" == "" ]] && \
     if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then \
         echo && \
         echo "------------- MAKE DISTCLEAN --------------" && \
