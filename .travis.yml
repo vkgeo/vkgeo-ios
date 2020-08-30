@@ -32,7 +32,7 @@ script:
     export PATH="$HOME/Qt/5.12.9/ios/bin:$PATH" && \
     export QMAKE_CFLAGS_ENV="-Werror" && \
     export QMAKE_CXXFLAGS_ENV="-Werror" && \
-    export QMAKE_OBJECTIVE_CFLAGS_ENV="-Werror -Wno-error-objc-property-no-attribute" && \
+    export QMAKE_OBJECTIVE_CFLAGS_ENV="-Werror" && \
     echo && \
     echo "--------- UNSHALLOW GIT FOR SONAR ---------" && \
     echo && \
