@@ -6,7 +6,6 @@
 #include <QtQml/QQmlContext>
 #include <QtQuickControls2/QQuickStyle>
 
-#include "admobhelper.h"
 #include "appinitialized.h"
 #include "appsettings.h"
 #include "batteryhelper.h"
@@ -37,7 +36,6 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
-    engine.rootContext()->setContextProperty(QStringLiteral("AdMobHelper"), &AdMobHelper::GetInstance());
     engine.rootContext()->setContextProperty(QStringLiteral("AppSettings"), &AppSettings::GetInstance());
     engine.rootContext()->setContextProperty(QStringLiteral("BatteryHelper"), &BatteryHelper::GetInstance());
     engine.rootContext()->setContextProperty(QStringLiteral("CryptoHelper"), &CryptoHelper::GetInstance());

@@ -79,7 +79,6 @@ HEADERS += \
     3rdparty/libsodium/include/sodium/runtime.h \
     3rdparty/libsodium/include/sodium/utils.h \
     3rdparty/libsodium/include/sodium/version.h \
-    src/admobhelper.h \
     src/appinitialized.h \
     src/appsettings.h \
     src/batteryhelper.h \
@@ -118,7 +117,6 @@ ios {
     DEPENDPATH += ios/frameworks
 
     OBJECTIVE_SOURCES += \
-        src/admobhelper.mm \
         src/batteryhelper.mm \
         src/locationmanagerdelegate.mm \
         src/notificationhelper.mm \
@@ -130,11 +128,6 @@ ios {
         src/vkhelper.mm
 
     LIBS += -F $$PWD/ios/frameworks \
-            -framework GoogleAppMeasurement \
-            -framework GoogleMobileAds \
-            -framework GoogleUtilities \
-            -framework PromisesObjC \
-            -framework nanopb \
             -framework VKSdkFramework \
             -framework UIKit \
             -framework StoreKit \
@@ -149,7 +142,6 @@ ios {
     QMAKE_BUNDLE_DATA += VK_SDK_FRAMEWORK
 
     QMAKE_OBJECTIVE_CFLAGS += $$(QMAKE_OBJECTIVE_CFLAGS_ENV)
-    QMAKE_LFLAGS += -ObjC
 
     QMAKE_RPATHDIR = @executable_path/Frameworks
 

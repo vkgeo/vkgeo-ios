@@ -142,10 +142,6 @@ Rectangle {
 
                     if (component.status === Component.Ready) {
                         mainStackView.push(component);
-
-                        if (Math.random() < 0.30) {
-                            mainWindow.showInterstitial();
-                        }
                     } else {
                         console.error(component.errorString());
                     }
@@ -212,10 +208,6 @@ Rectangle {
 
                     if (component.status === Component.Ready) {
                         mainStackView.push(component);
-
-                        if (Math.random() < 0.30) {
-                            mainWindow.showInterstitial();
-                        }
                     } else {
                         console.error(component.errorString());
                     }
@@ -341,18 +333,6 @@ Rectangle {
                     }
 
                     return qsTr("Interface theme: %1").arg(theme_name);
-                }
-            }
-
-            VKButton {
-                implicitWidth:    UtilScript.dp(UIHelper.screenDpi, 280)
-                implicitHeight:   UtilScript.dp(UIHelper.screenDpi, 64)
-                text:             qsTr("Ad privacy settings")
-                enabled:          !mainWindow.disableAds
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-
-                onClicked: {
-                    adMobConsentDialog.open();
                 }
             }
 
