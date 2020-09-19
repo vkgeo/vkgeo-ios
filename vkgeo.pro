@@ -11,7 +11,6 @@ INCLUDEPATH += \
 
 SOURCES += \
     src/appsettings.cpp \
-    src/contextguard.cpp \
     src/cryptohelper.cpp \
     src/main.cpp
 
@@ -82,7 +81,6 @@ HEADERS += \
     src/appinitialized.h \
     src/appsettings.h \
     src/batteryhelper.h \
-    src/contextguard.h \
     src/cryptohelper.h \
     src/locationmanagerdelegate.h \
     src/notificationhelper.h \

@@ -11,8 +11,6 @@
 #include <QtCore/QVariantMap>
 #include <QtCore/QTimer>
 
-#include "contextguard.h"
-
 #ifdef __OBJC__
 @class VKRequest;
 @class VKDelegate;
@@ -215,7 +213,6 @@ private:
 #else
     void               *VKDelegateInstance;
 #endif
-    ContextGuard        ThisGuard;
 };
 
 #endif // VKHELPER_H

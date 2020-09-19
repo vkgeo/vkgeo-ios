@@ -5,6 +5,7 @@
 #include <algorithm>
 
 #include <QtCore/QLatin1String>
+#include <QtCore/QPointer>
 #include <QtCore/QByteArray>
 #include <QtCore/QDateTime>
 #include <QtCore/QVariant>
@@ -737,14 +738,14 @@ void VKHelper::handleRequestQueueTimerTimeout()
 
             execute_code = execute_code + QStringLiteral("];");
 
-            ContextGuard this_guard = ThisGuard;
+            QPointer this_guard(this);
 
             VKRequest * __block vk_request = [VKRequest requestWithMethod:@"execute" parameters:@{@"code": execute_code.toNSString()}];
 
             VKRequestTracker.insert(vk_request);
 
             [vk_request executeWithResultBlock:^(VKResponse *response) {
-                if (this_guard) {
+                if (!this_guard.isNull()) {
                     if (VKRequestTracker.contains(vk_request)) {
                         VKRequestTracker.remove(vk_request);
 
@@ -787,7 +788,7 @@ void VKHelper::handleRequestQueueTimerTimeout()
                     qWarning() << "handleRequestQueueTimerTimeout() : block context has been destroyed";
                 }
             } errorBlock:^(NSError *error) {
-                if (this_guard) {
+                if (!this_guard.isNull()) {
                     if (VKRequestTracker.contains(vk_request)) {
                         VKRequestTracker.remove(vk_request);
 
