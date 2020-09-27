@@ -34,10 +34,6 @@ script:
     export QMAKE_CXXFLAGS_ENV="-Werror" && \
     export QMAKE_OBJECTIVE_CFLAGS_ENV="-Werror" && \
     echo && \
-    echo "--------- UNSHALLOW GIT FOR SONAR ---------" && \
-    echo && \
-    git fetch --unshallow && \
-    echo && \
     echo "---------- CREATE BUILD DIRECTORY ---------" && \
     echo && \
     mkdir .build && \
@@ -59,6 +55,10 @@ script:
     [[ "$(grep ": note:" .analyze-output.txt)" == "" ]] && \
     [[ "$(grep "ANALYZE FAILED" .analyze-output.txt)" == "" ]] && \
     if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then \
+        echo && \
+        echo "--------- UNSHALLOW GIT FOR SONAR ---------" && \
+        echo && \
+        git fetch --unshallow && \
         echo && \
         echo "------------- MAKE DISTCLEAN --------------" && \
         echo && \
