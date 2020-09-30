@@ -718,7 +718,7 @@ void VKHelper::handleRequestQueueTimerTimeout()
             }
         }
 
-        if (request_list.count() > 0) {
+        if (!request_list.isEmpty()) {
             QString execute_code = QStringLiteral("return [");
 
             for (int i = 0; i < request_list.count(); i++) {
@@ -755,7 +755,7 @@ void VKHelper::handleRequestQueueTimerTimeout()
                             QString    error_str                = QLatin1String("");
                             QJsonArray json_execute_errors_list = json_document.object().value(QStringLiteral("execute_errors")).toArray();
 
-                            if (json_execute_errors_list.count() > 0 && json_execute_errors_list[0].toObject().contains(QStringLiteral("error_msg"))) {
+                            if (!json_execute_errors_list.isEmpty() && json_execute_errors_list[0].toObject().contains(QStringLiteral("error_msg"))) {
                                 error_str = json_execute_errors_list[0].toObject()[QStringLiteral("error_msg")].toString();
                             } else {
                                 error_str = QStringLiteral("response has execute_errors without error_msg");
@@ -1097,7 +1097,7 @@ void VKHelper::HandleNotesGetResponse(const QString &response, const QVariantMap
 
                 QVariantMap request, parameters;
 
-                if (json_items.count() > 0 && offset + json_items.count() < notes_count) {
+                if (!json_items.isEmpty() && offset + json_items.count() < notes_count) {
                     parameters[QStringLiteral("count")]  = MAX_NOTES_GET_COUNT;
                     parameters[QStringLiteral("offset")] = offset + json_items.count();
                     parameters[QStringLiteral("sort")]   = 0;
@@ -1105,10 +1105,10 @@ void VKHelper::HandleNotesGetResponse(const QString &response, const QVariantMap
                     request[QStringLiteral("method")]  = QStringLiteral("notes.get");
                     request[QStringLiteral("context")] = resp_request[QStringLiteral("context")].toString();
 
-                    if (trusted_friends.count() > 0) {
+                    if (!trusted_friends.isEmpty()) {
                         request[QStringLiteral("trusted_friends")] = trusted_friends.join(QStringLiteral(","));
                     }
-                    if (notes_to_delete.count() > 0) {
+                    if (!notes_to_delete.isEmpty()) {
                         request[QStringLiteral("notes_to_delete")] = notes_to_delete.join(QStringLiteral(","));
                     }
 
@@ -1159,7 +1159,7 @@ void VKHelper::HandleNotesGetResponse(const QString &response, const QVariantMap
                     request[QStringLiteral("method")]  = QStringLiteral("notes.add");
                     request[QStringLiteral("context")] = resp_request[QStringLiteral("context")].toString();
 
-                    if (notes_to_delete.count() > 0) {
+                    if (!notes_to_delete.isEmpty()) {
                         request[QStringLiteral("notes_to_delete")] = notes_to_delete.join(QStringLiteral(","));
                     }
 
@@ -1236,7 +1236,7 @@ void VKHelper::HandleNotesGetResponse(const QString &response, const QVariantMap
                         }
                     }
 
-                    if (!data_note_found && json_items.count() > 0 && offset + json_items.count() < notes_count) {
+                    if (!data_note_found && !json_items.isEmpty() && offset + json_items.count() < notes_count) {
                         QVariantMap request, parameters;
 
                         parameters[QStringLiteral("count")]   = MAX_NOTES_GET_COUNT;
@@ -1359,7 +1359,7 @@ void VKHelper::HandleFriendsGetResponse(const QString &response, const QVariantM
 
                     QVariantMap request, parameters;
 
-                    if (json_items.count() > 0 && offset + json_items.count() < friends_count) {
+                    if (!json_items.isEmpty() && offset + json_items.count() < friends_count) {
                         parameters[QStringLiteral("count")]   = MAX_FRIENDS_GET_COUNT;
                         parameters[QStringLiteral("offset")]  = offset + json_items.count();
                         parameters[QStringLiteral("list_id")] = list_id.toLongLong();
@@ -1367,7 +1367,7 @@ void VKHelper::HandleFriendsGetResponse(const QString &response, const QVariantM
                         request[QStringLiteral("method")]  = QStringLiteral("friends.get");
                         request[QStringLiteral("context")] = resp_request[QStringLiteral("context")].toString();
 
-                        if (trusted_friends.count() > 0) {
+                        if (!trusted_friends.isEmpty()) {
                             request[QStringLiteral("trusted_friends")] = trusted_friends.join(QStringLiteral(","));
                         }
 
@@ -1379,7 +1379,7 @@ void VKHelper::HandleFriendsGetResponse(const QString &response, const QVariantM
                         request[QStringLiteral("method")]  = QStringLiteral("notes.get");
                         request[QStringLiteral("context")] = resp_request[QStringLiteral("context")].toString();
 
-                        if (trusted_friends.count() > 0) {
+                        if (!trusted_friends.isEmpty()) {
                             request[QStringLiteral("trusted_friends")] = trusted_friends.join(QStringLiteral(","));
                         }
 
@@ -1525,7 +1525,7 @@ void VKHelper::HandleFriendsGetResponse(const QString &response, const QVariantM
                     qWarning() << "HandleFriendsGetResponse() : unknown list id";
                 }
 
-                if (json_items.count() > 0 && offset + json_items.count() < friends_count) {
+                if (!json_items.isEmpty() && offset + json_items.count() < friends_count) {
                     QVariantMap request, parameters;
 
                     parameters[QStringLiteral("count")]  = MAX_FRIENDS_GET_COUNT;
