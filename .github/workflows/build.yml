@@ -1,0 +1,66 @@
+name: "Build"
+
+on:
+  push:
+    branches:
+    - master
+
+  pull_request:
+    branches:
+    - master
+
+  schedule:
+    - cron: "0 10 * * 6"
+
+jobs:
+  build:
+    name: "Build"
+    runs-on: macos-latest
+
+    defaults:
+        run:
+            shell: bash
+
+    env:
+      QT_VERSION: 5.12.10
+
+    steps:
+    - name: "Checkout repository"
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 2
+
+    - name: "Checkout HEAD^2 for pull request"
+      if: ${{ github.event_name == 'pull_request' }}
+      run: |
+        git checkout HEAD^2
+
+    - name: "Install additional packages"
+      run: |
+        bash tools/install-qt.sh --version "$QT_VERSION" --target ios --toolchain ios --directory "$HOME/Qt" qtbase qtdeclarative qtquickcontrols2 qtlocation qtpurchasing
+
+    - name: "Run build"
+      env:
+        QMAKE_CFLAGS_ENV: "-Werror"
+        QMAKE_CXXFLAGS_ENV: "-Werror"
+        QMAKE_OBJECTIVE_CFLAGS_ENV: "-Werror"
+      run: |
+        export PATH="$HOME/Qt/$QT_VERSION/ios/bin:$PATH" && \
+        mkdir .build && \
+        cd .build && \
+        qmake ../vkgeo.pro && \
+        make XCODEBUILD_FLAGS="CODE_SIGN_IDENTITY=\"\" CODE_SIGNING_REQUIRED=NO" debug-device
+
+    - name: "Run Xcode Analyzer"
+      env:
+        QMAKE_CFLAGS_ENV: "-Werror"
+        QMAKE_CXXFLAGS_ENV: "-Werror"
+        QMAKE_OBJECTIVE_CFLAGS_ENV: "-Werror"
+      run: |
+        export PATH="$HOME/Qt/$QT_VERSION/ios/bin:$PATH" && \
+        cd .build && \
+        xcodebuild CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CLANG_ANALYZER_OUTPUT=text -scheme vkgeo -configuration Debug -sdk iphoneos analyze | tee .analyze-output.txt && \
+        [[ "$(grep ": error:" .analyze-output.txt)" == "" ]] && \
+        [[ "$(grep ": warning:" .analyze-output.txt)" == "" ]] && \
+        [[ "$(grep ": note:" .analyze-output.txt)" == "" ]] && \
+        [[ "$(grep "ANALYZE FAILED" .analyze-output.txt)" == "" ]]

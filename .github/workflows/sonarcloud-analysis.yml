@@ -1,0 +1,69 @@
+name: "SonarCloud Analysis"
+
+on:
+  push:
+    branches:
+    - master
+
+  schedule:
+    - cron: "0 11 * * 6"
+
+jobs:
+  analyze:
+    name: "Analyze"
+    runs-on: macos-latest
+
+    defaults:
+        run:
+            shell: bash
+
+    env:
+      QT_VERSION: 5.12.10
+      SONAR_SCANNER_VERSION: 4.5.0.2216
+
+    steps:
+    - name: "Checkout repository"
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: "Install additional packages"
+      run: |
+        bash tools/install-qt.sh --version "$QT_VERSION" --target ios --toolchain ios --directory "$HOME/Qt" qtbase qtdeclarative qtquickcontrols2 qtlocation qtpurchasing
+
+    - name: "Initialize SonarCloud"
+      run: |
+        mkdir -p "$HOME/SonarCloud" && \
+        wget -P "$HOME/SonarCloud" "https://sonarcloud.io/static/cpp/build-wrapper-macosx-x86.zip" && \
+        wget -P "$HOME/SonarCloud" "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_SCANNER_VERSION-macosx.zip" && \
+        unzip "$HOME/SonarCloud/build-wrapper-macosx-x86.zip" -d "$HOME/SonarCloud" && \
+        unzip "$HOME/SonarCloud/sonar-scanner-cli-$SONAR_SCANNER_VERSION-macosx.zip" -d "$HOME/SonarCloud"
+
+    - name: "Run build via SonarCloud wrapper"
+      env:
+        QMAKE_CFLAGS_ENV: "-Werror"
+        QMAKE_CXXFLAGS_ENV: "-Werror"
+        QMAKE_OBJECTIVE_CFLAGS_ENV: "-Werror"
+      run: |
+        export PATH="$HOME/Qt/$QT_VERSION/ios/bin:$PATH" && \
+        mkdir .build && \
+        cd .build && \
+        qmake ../vkgeo.pro && \
+        "$HOME/SonarCloud/build-wrapper-macosx-x86/build-wrapper-macosx-x86" --out-dir bw-output make XCODEBUILD_FLAGS="CODE_SIGN_IDENTITY=\"\" CODE_SIGNING_REQUIRED=NO" debug-device
+
+    - name: "Perform SonarCloud analysis"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: |
+        "$HOME/SonarCloud/sonar-scanner-$SONAR_SCANNER_VERSION-macosx/bin/sonar-scanner" -Dsonar.projectKey=vkgeo_vkgeo-ios \
+                                                                                         -Dsonar.projectName="VKGeo iOS" \
+                                                                                         -Dsonar.organization=vkgeo-github \
+                                                                                         -Dsonar.sources=. \
+                                                                                         -Dsonar.sourceEncoding=UTF-8 \
+                                                                                         -Dsonar.exclusions="qml_*.cpp,qrc_*.cpp,3rdparty/**/*,ios/frameworks/**/*,qml/**/*,translations/*" \
+                                                                                         -Dsonar.cfamily.build-wrapper-output=.build/bw-output \
+                                                                                         -Dsonar.cfamily.cache.enabled=false \
+                                                                                         -Dsonar.cfamily.threads=1 \
+                                                                                         -Dsonar.cpp.file.suffixes=.cpp,.mm \
+                                                                                         -Dsonar.host.url=https://sonarcloud.io
