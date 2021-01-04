@@ -141,8 +141,14 @@ ios {
 
     QMAKE_OBJECTIVE_CFLAGS += $$(QMAKE_OBJECTIVE_CFLAGS_ENV)
 
-    QMAKE_RPATHDIR = @executable_path/Frameworks
+    IOS_SIGNATURE_TEAM.name = "Oleg Derevenets"
+    IOS_SIGNATURE_TEAM.value = 87JNRRMN2P
+
+    QMAKE_MAC_XCODE_SETTINGS += IOS_SIGNATURE_TEAM
 
     QMAKE_APPLE_DEVICE_ARCHS = arm64
     QMAKE_INFO_PLIST = ios/Info.plist
+    QMAKE_IOS_DEPLOYMENT_TARGET = 12.0
+    QMAKE_RPATHDIR = @executable_path/Frameworks
+    QMAKE_TARGET_BUNDLE_PREFIX = "com.derevenetz.oleg"
 }
