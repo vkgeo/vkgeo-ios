@@ -134,12 +134,12 @@ ios {
             -L$$PWD/ios/3rdparty/libsodium \
             -lsodium
 
+    QMAKE_OBJECTIVE_CFLAGS += $$(QMAKE_OBJECTIVE_CFLAGS_ENV)
+
     VK_SDK_FRAMEWORK.files = ios/Frameworks/VKSdkFramework.framework
     VK_SDK_FRAMEWORK.path = Frameworks
 
     QMAKE_BUNDLE_DATA += VK_SDK_FRAMEWORK
-
-    QMAKE_OBJECTIVE_CFLAGS += $$(QMAKE_OBJECTIVE_CFLAGS_ENV)
 
     IOS_SIGNATURE_TEAM.name = "Oleg Derevenets"
     IOS_SIGNATURE_TEAM.value = 87JNRRMN2P
