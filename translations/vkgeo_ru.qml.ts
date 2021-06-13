@@ -32,22 +32,22 @@
 <context>
     <name>FriendsSwipe</name>
     <message>
-        <location filename="../qml/Core/Main/FriendsSwipe.qml" line="122"/>
+        <location filename="../qml/Core/Main/FriendsSwipe.qml" line="115"/>
         <source>Quick search</source>
         <translation>Быстрый поиск</translation>
     </message>
     <message>
-        <location filename="../qml/Core/Main/FriendsSwipe.qml" line="337"/>
+        <location filename="../qml/Core/Main/FriendsSwipe.qml" line="330"/>
         <source>New friends nearby</source>
         <translation>Новые друзья поблизости</translation>
     </message>
     <message>
-        <location filename="../qml/Core/Main/FriendsSwipe.qml" line="338"/>
+        <location filename="../qml/Core/Main/FriendsSwipe.qml" line="331"/>
         <source>%1 is nearby</source>
         <translation>%1 сейчас поблизости</translation>
     </message>
     <message>
-        <location filename="../qml/Core/Main/FriendsSwipe.qml" line="114"/>
+        <location filename="../qml/Core/Main/FriendsSwipe.qml" line="107"/>
         <source>I invite you to install the VKGeo Friends on Map app and join the community: https://vkgeo.sourceforge.io/</source>
         <translation>Я приглашаю Вас установить приложение VKGeo Друзья на Карте и присоединиться к сообществу: https://vk.com/vkgeo_app</translation>
     </message>
@@ -204,7 +204,7 @@
         <translation>Поддержка</translation>
     </message>
     <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="440"/>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="433"/>
         <source>Log out of VK</source>
         <translation>Выход из ВКонтакте</translation>
     </message>
@@ -219,22 +219,22 @@
         <translation>Открытый ключ был скопирован в буфер обмена</translation>
     </message>
     <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="485"/>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="478"/>
         <source>Regenerate the key pair</source>
         <translation>Перегенерировать ключевую пару</translation>
     </message>
     <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="486"/>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="479"/>
         <source>Are you sure you want to regenerate the key pair?</source>
         <translation>Вы уверены, что хотите перегенерировать ключевую пару?</translation>
     </message>
     <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="497"/>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="490"/>
         <source>Are you sure you want to reset the keystore? All keys associated with your friends will be deleted and your key pair will be regenerated.</source>
         <translation>Вы уверены, что хотите очистить хранилище ключей? Все ключи, привязанные к вашим друзьям, будут удалены, а ваша ключевая пара будет перегенерирована.</translation>
     </message>
     <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="508"/>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="501"/>
         <source>Join group</source>
         <translation>Вступить в группу</translation>
     </message>
@@ -249,12 +249,12 @@
         <translation>Вступить в группу VKGeo Друзья на Карте</translation>
     </message>
     <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="496"/>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="489"/>
         <source>Reset the keystore</source>
         <translation>Очистить хранилище ключей</translation>
     </message>
     <message>
-        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="509"/>
+        <location filename="../qml/Core/Main/SettingsSwipe.qml" line="502"/>
         <source>Do you want to join the VKGeo Friends on Map group?</source>
         <translation>Вы действительно хотите вступить в группу VKGeo Друзья на Карте?</translation>
     </message>
