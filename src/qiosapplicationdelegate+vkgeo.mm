@@ -10,7 +10,7 @@
 namespace {
 
 const QString VK_APP_ID(QStringLiteral("6459902")),
-              VK_API_V (QStringLiteral("5.120"));
+              VK_API_V (QStringLiteral("5.131"));
 
 LocationManagerDelegate *LocationManagerDelegateInstance = nil;
 
