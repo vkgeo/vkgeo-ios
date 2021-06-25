@@ -8,6 +8,8 @@
 /vkgeo.pro.user
 /vkgeo_plugin_import.cpp
 /vkgeo_qml_plugin_import.cpp
+/.scannerwork/
+/.sonarbuild/
 /.xcode/
 /Debug-iphoneos/
 /Release-iphoneos/
