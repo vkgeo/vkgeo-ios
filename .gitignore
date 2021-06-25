@@ -5,6 +5,7 @@
 /qml_*.cpp
 /qmlcache_loader.cpp
 /qrc_*.cpp
+/vkgeo.pro.user
 /vkgeo_plugin_import.cpp
 /vkgeo_qml_plugin_import.cpp
 /.xcode/
