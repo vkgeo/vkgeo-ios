@@ -49,7 +49,7 @@ jobs:
         mkdir .build
         cd .build
         qmake ../vkgeo.pro
-        "$HOME/SonarCloud/build-wrapper-macosx-x86/build-wrapper-macosx-x86" --out-dir bw-output make XCODEBUILD_FLAGS="CODE_SIGN_IDENTITY=\"\" CODE_SIGNING_REQUIRED=NO" debug-device
+        "$HOME/SonarCloud/build-wrapper-macosx-x86/build-wrapper-macosx-x86" --out-dir .bw-output make XCODEBUILD_FLAGS="CODE_SIGN_IDENTITY=\"\" CODE_SIGNING_REQUIRED=NO" debug-device
 
     - name: "Perform SonarCloud analysis"
       env:
@@ -62,7 +62,7 @@ jobs:
                                                                                          -Dsonar.sources=. \
                                                                                          -Dsonar.sourceEncoding=UTF-8 \
                                                                                          -Dsonar.exclusions="qml_*.cpp,qrc_*.cpp,3rdparty/**/*,ios/frameworks/**/*,qml/**/*,translations/*" \
-                                                                                         -Dsonar.cfamily.build-wrapper-output=.build/bw-output \
+                                                                                         -Dsonar.cfamily.build-wrapper-output=.build/.bw-output \
                                                                                          -Dsonar.cfamily.cache.enabled=false \
                                                                                          -Dsonar.cfamily.threads=1 \
                                                                                          -Dsonar.cpp.file.suffixes=.cpp,.mm \
