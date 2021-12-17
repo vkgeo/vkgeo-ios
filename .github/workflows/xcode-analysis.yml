@@ -1,4 +1,4 @@
-name: "Build"
+name: "Xcode Analysis"
 
 on:
   push:
@@ -10,11 +10,11 @@ on:
     - master
 
   schedule:
-  - cron: "0 10 * * 6"
+  - cron: "0 12 * * 6"
 
 jobs:
-  build:
-    name: "Build"
+  xcode:
+    name: "Xcode Analysis"
     runs-on: macos-latest
 
     defaults:
@@ -32,7 +32,7 @@ jobs:
       run: |
         bash tools/install-qt.sh --version "$QT_VERSION" --target ios --toolchain ios --directory "$HOME/Qt" qtbase qtdeclarative qtquickcontrols2 qtlocation qtpurchasing
 
-    - name: "Run build"
+    - name: "Perform Xcode analysis"
       env:
         QMAKE_CFLAGS_ENV: "-Werror"
         QMAKE_CXXFLAGS_ENV: ""
@@ -42,4 +42,8 @@ jobs:
         mkdir .build
         cd .build
         qmake ../vkgeo.pro
-        make XCODEBUILD_FLAGS="CODE_SIGN_IDENTITY=\"\" CODE_SIGNING_REQUIRED=NO -UseModernBuildSystem=NO" debug-device
+        xcodebuild CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CLANG_ANALYZER_OUTPUT=text -UseModernBuildSystem=NO -scheme vkgeo -configuration Debug -sdk iphoneos analyze | tee .analyze-output.txt
+        [[ "$(grep ": error:" .analyze-output.txt)" == "" ]]
+        [[ "$(grep ": warning:" .analyze-output.txt)" == "" ]]
+        [[ "$(grep ": note:" .analyze-output.txt)" == "" ]]
+        [[ "$(grep "ANALYZE FAILED" .analyze-output.txt)" == "" ]]
